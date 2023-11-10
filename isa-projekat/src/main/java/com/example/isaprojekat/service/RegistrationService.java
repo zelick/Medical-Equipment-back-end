@@ -24,6 +24,10 @@ public class RegistrationService {
         if(!isValidEmail){
             throw new IllegalStateException("email not valid");
         }
+
+        if(request.getFirstName().isEmpty() || request.getLastName().isEmpty() || request.getEmail().isEmpty() || request.getPassword().isEmpty()){
+            throw new IllegalStateException("All fields must be filled in!");
+        }
         String token = userService.signUpUser(
                 new User(request.getFirstName(),
                         request.getLastName(),
