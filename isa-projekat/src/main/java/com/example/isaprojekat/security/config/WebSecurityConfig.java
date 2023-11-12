@@ -25,7 +25,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .permitAll()
                 .anyRequest()
                 .authenticated().and()
-                .formLogin();
+                .formLogin()
+                .defaultSuccessUrl("http://localhost:4200/homepage", true);
     }
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception{
