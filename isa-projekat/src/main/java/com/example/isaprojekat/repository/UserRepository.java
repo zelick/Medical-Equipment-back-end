@@ -20,6 +20,7 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     public Page<User> findAll(Pageable pageable);
     public List<User> findAllByFirstName(String firstName);
     Optional<UserDetails> findByEmail(String email);
+    public User findUserByEmail(String email);
     @Transactional
     @Modifying
     @Query("UPDATE User a " +
