@@ -11,8 +11,8 @@ public class Company {
     private Integer id;
     @Column(name = "name", nullable = false)
     private String name;
-    @Column(name = "adress", nullable = false)
-    private String adress; //promeniti na Loacation sa mape
+    @Column(name = "address", nullable = false)
+    private String address; //promeniti na Loacation sa mape
     @Column(name = "description", nullable = true)
     private String description;
     @Column(name = "averageGrade", nullable = true)
@@ -23,9 +23,9 @@ public class Company {
 
     public Company() {
     }
-    public Company(String name, String adress, String description, double averageGrade) {
+    public Company(String name, String address, String description, double averageGrade) {
         this.name = name;
-        this.adress = adress;
+        this.address = address;
         this.description = description;
         this.averageGrade = averageGrade;
     }
@@ -46,12 +46,12 @@ public class Company {
         this.name = name;
     }
 
-    public String getAdress() {
-        return adress;
+    public String getAddress() {
+        return address;
     }
 
-    public void setAdress(String adress) {
-        this.adress = adress;
+    public void setAddress(String address) {
+        this.address = address;
     }
 
     public String getDescription() {
