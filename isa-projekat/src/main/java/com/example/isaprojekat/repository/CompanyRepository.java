@@ -11,4 +11,5 @@ import java.util.List;
 @Repository
 @Transactional(readOnly = true)
 public interface CompanyRepository extends JpaRepository<Company, Integer> {
+    
 }

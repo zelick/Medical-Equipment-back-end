@@ -1,5 +1,6 @@
 package com.example.isaprojekat.service;
 
+import com.example.isaprojekat.dto.CompanyDTO;
 import com.example.isaprojekat.model.Company;
 import com.example.isaprojekat.model.Equipment;
 import com.example.isaprojekat.model.User;
@@ -8,6 +9,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.List;
 
 @Service
@@ -22,5 +24,21 @@ public class CompanyService {
     public List<Company> findAll() {
         return companyRepository.findAll();
     }
+
+    public Company updateCompany(Integer id, CompanyDTO companyDTO) {
+        Company existingCompany = findOne(id);
+
+        if (existingCompany == null) {
+            throw new EntityNotFoundException("Company not found with ID: " + id);
+        }
+
+        existingCompany.setName(companyDTO.getName());
+        existingCompany.setAddress(companyDTO.getAddress());
+        existingCompany.setDescription(companyDTO.getDescription());
+        existingCompany.setAverageGrade(companyDTO.getAverageGrade());
+
+        return companyRepository.save(existingCompany);
+    }
+
 
 }

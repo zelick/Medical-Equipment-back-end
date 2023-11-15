@@ -55,4 +55,17 @@ public class CompanyController {
         return new ResponseEntity<>(companyDTO, HttpStatus.OK);
     }
 
+    @PutMapping(value = "/update/{id}")
+    @CrossOrigin(origins = "http://localhost:4200")
+    public ResponseEntity<CompanyDTO> updateCompany(@PathVariable Integer id, @RequestBody CompanyDTO companyDTO) {
+        try {
+            Company updatedCompany = companyService.updateCompany(id, companyDTO);
+            return new ResponseEntity<>(new CompanyDTO(updatedCompany), HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+
 }
