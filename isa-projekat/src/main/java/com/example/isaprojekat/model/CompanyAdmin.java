@@ -6,26 +6,37 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "CompanyAdmin")
-public class CompanyAdmin extends User{
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "company_id")
+public class CompanyAdmin{
+    @Id
+    @ManyToOne
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    private User user;
+
+    @Id
+    @ManyToOne
+    @JoinColumn(name = "company_id", referencedColumnName = "id")
     private Company company;
-
-    public CompanyAdmin(String firstName, String lastName, String email,
-                        String password, Boolean isLocked,
-                        Boolean isEnabled, UserRole userRole, Company company) {
-
-        super(firstName, lastName, email, password, isLocked, isEnabled, userRole);
-        this.company = company;
-    }
 
     public CompanyAdmin() {
 
+    }
+    public CompanyAdmin(User user, Company company) {
+        this.user = user;
+        this.company = company;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public Company getCompany() {
         return company;
     }
+
     public void setCompany(Company company) {
         this.company = company;
     }
