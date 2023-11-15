@@ -7,6 +7,8 @@ import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @AllArgsConstructor
 public class CompanyService {
@@ -15,5 +17,8 @@ public class CompanyService {
 
     public Company findOne(Integer id) {
         return companyRepository.findById(id).orElseGet(null);
+    }
+    public List<Company> findAll() {
+        return companyRepository.findAll();
     }
 }
