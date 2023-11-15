@@ -21,6 +21,14 @@ public class Company {
     @OneToMany(mappedBy = "company", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<CompanyAdmin> administrations = new HashSet<CompanyAdmin>();
 
+    @ManyToMany
+    @JoinTable(
+            name = "company_equipment",
+            joinColumns = @JoinColumn(name = "company_id"),
+            inverseJoinColumns = @JoinColumn(name = "equipment_id")
+    )
+    private Set<Equipment> equipments = new HashSet<>();
+
     public Company() {
     }
     public Company(String name, String address, String description, double averageGrade) {
@@ -84,5 +92,23 @@ public class Company {
     public void removeAdministrator(CompanyAdmin admin) {
         this.administrations.remove(admin);
         admin.setCompany(null);
+    }
+
+    public Set<Equipment> getEquipments() {
+        return equipments;
+    }
+
+    public void setEquipments(Set<Equipment> equipments) {
+        this.equipments = equipments;
+    }
+
+    public void addEquipment(Equipment equipment) {
+        this.equipments.add(equipment);
+        equipment.getCompanies().add(this);
+    }
+
+    public void removeEquipment(Equipment equipment) {
+        this.equipments.remove(equipment);
+        equipment.getCompanies().remove(this);
     }
 }
