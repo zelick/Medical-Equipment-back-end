@@ -1,8 +1,10 @@
 package com.example.isaprojekat.controller;
 
 import com.example.isaprojekat.dto.CompanyDTO;
+import com.example.isaprojekat.dto.EquipmentDTO;
 import com.example.isaprojekat.dto.UserDTO;
 import com.example.isaprojekat.model.Company;
+import com.example.isaprojekat.model.Equipment;
 import com.example.isaprojekat.model.User;
 import com.example.isaprojekat.service.CompanyService;
 import lombok.AllArgsConstructor;
@@ -52,4 +54,5 @@ public class CompanyController {
 
         return new ResponseEntity<>(companyDTO, HttpStatus.OK);
     }
+
 }

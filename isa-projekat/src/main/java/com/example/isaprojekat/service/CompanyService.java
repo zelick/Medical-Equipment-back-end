@@ -1,6 +1,7 @@
 package com.example.isaprojekat.service;
 
 import com.example.isaprojekat.model.Company;
+import com.example.isaprojekat.model.Equipment;
 import com.example.isaprojekat.model.User;
 import com.example.isaprojekat.repository.CompanyRepository;
 import lombok.AllArgsConstructor;
@@ -21,4 +22,5 @@ public class CompanyService {
     public List<Company> findAll() {
         return companyRepository.findAll();
     }
+
 }
