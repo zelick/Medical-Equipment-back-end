@@ -9,6 +9,9 @@ import javax.persistence.*;
 import java.util.Collection;
 import java.util.Collections;
 
+import java.lang.Double;
+
+
 @Entity
 @EqualsAndHashCode
 @Table(name = "users")
@@ -31,15 +34,19 @@ public class User {
     private Boolean isLocked =false;
     @Column(name = "isEnabled", nullable = false)
     private Boolean isEnabled = false;
+
     @Column(name = "userRole", nullable = false)
     @Enumerated(EnumType.STRING)
     private UserRole userRole;
+
+    @Column(name = "penalityPoints", nullable = false)
+    private Double penaltyPoints = 0.0;
 
     public User(){super();}
 
     public User(Integer id, String firstName, String lastName,
                 String email, String password, boolean isLocked,
-                boolean isEnabled, UserRole userRole){
+                boolean isEnabled, UserRole userRole, Double penaltyPoints){
         super();
         this.id=id;
         this.firstName=firstName;
@@ -49,6 +56,7 @@ public class User {
         this.isEnabled=isEnabled;
         this.isLocked=isLocked;
         this.userRole=userRole;
+        this.penaltyPoints = penaltyPoints;
     }
 
     public User(String firstName,
@@ -174,4 +182,7 @@ public class User {
     public void setUserRole(UserRole userRole) {
         this.userRole = userRole;
     }
+
+    public Double getPenaltyPoints() { return penaltyPoints; }
+    public void setPenaltyPoints(Double penalityPoints) { this.penaltyPoints = penalityPoints; }
 }
