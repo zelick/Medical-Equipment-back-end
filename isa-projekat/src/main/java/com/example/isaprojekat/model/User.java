@@ -83,6 +83,7 @@ public class User {
     public User(String firstName,
                 String lastName,
                 String email,
+
                 String password,
                 UserRole appUserRole) {
         this.firstName = firstName;
