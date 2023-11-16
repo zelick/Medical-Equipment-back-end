@@ -39,7 +39,7 @@ public class User {
     @Enumerated(EnumType.STRING)
     private UserRole userRole;
 
-    @Column(name = "penalityPoints", nullable = false)
+    @Column(name = "penaltyPoints", nullable = false)
     private Double penaltyPoints = 0.0;
 
     public User(){super();}
