@@ -38,6 +38,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable()
                 .authorizeRequests()
+                .antMatchers("/api/users/getUserByUsername/").permitAll()
+                .antMatchers("/api/companies/getById/**").permitAll() // izmenjeno
+                .antMatchers("/api/companies/all").permitAll()
+                .antMatchers("/api/registration/").permitAll()
+                .antMatchers("/api/equipment/getEquipmentForCompany/**").permitAll()
+                .antMatchers("/api/companies/update/**").permitAll()
+                .antMatchers("/api/companies/create").permitAll()
                 .antMatchers("/api/users/getUserByUsername/**").permitAll()
                 .antMatchers("/api/users/updateUser/**").permitAll()
                 .antMatchers("/api/registration/**").permitAll()
@@ -76,3 +83,4 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         return source;
     }
 }
+
