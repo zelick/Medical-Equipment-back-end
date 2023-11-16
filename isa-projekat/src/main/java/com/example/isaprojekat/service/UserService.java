@@ -37,8 +37,8 @@ public class UserService implements UserDetailsService {
     public Page<User> findAll(Pageable page) {
         return userRepository.findAll(page);
     }
-    public User save(User student) {
-        return userRepository.save(student);
+    public User save(User user) {
+        return userRepository.save(user);
     }
 
     public void remove(Integer id) {

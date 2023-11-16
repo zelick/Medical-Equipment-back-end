@@ -95,6 +95,22 @@ public class UserController {
         return new ResponseEntity<>(new UserDTO(user), HttpStatus.OK);
     }
 
+    @PutMapping(value= "/updateUser/{username}")
+    public ResponseEntity<UserDTO> updateUser (@PathVariable String username, @RequestBody User updatedUser) {
+        User exactUser = userService.findOneByEmail(username);
+
+        if (exactUser == null) {
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        }
+
+        exactUser.setFirstName(updatedUser.getFirstName());
+        exactUser.setLastName(updatedUser.getLastName());
+
+        userService.save(exactUser);
+
+        return new ResponseEntity<>(new UserDTO(exactUser), HttpStatus.OK);
+    }
+
     @PostMapping(consumes = "application/json")
     public ResponseEntity<UserDTO> saveUser(@RequestBody UserDTO usersDTO) {
 
