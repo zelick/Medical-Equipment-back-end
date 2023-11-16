@@ -67,5 +67,18 @@ public class CompanyController {
         }
     }
 
+    @PostMapping(value = "/create")
+    @CrossOrigin(origins = "http://localhost:4200")
+    public ResponseEntity<CompanyDTO> createCompany(@RequestBody CompanyDTO companyDTO) {
+        try {
+            Company createdCompany = companyService.createCompany(companyDTO);
+            return new ResponseEntity<>(new CompanyDTO(createdCompany), HttpStatus.CREATED);
+        } catch (Exception e) {
+
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+
 
 }

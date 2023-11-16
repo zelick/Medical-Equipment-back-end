@@ -40,5 +40,15 @@ public class CompanyService {
         return companyRepository.save(existingCompany);
     }
 
+    public Company createCompany(CompanyDTO companyDTO) {
+
+        Company newCompany = new Company();
+        newCompany.setName(companyDTO.getName());
+        newCompany.setAddress(companyDTO.getAddress());
+        newCompany.setDescription(companyDTO.getDescription());
+        newCompany.setAverageGrade(5.0);
+        newCompany.setEquipments(null);
+        return companyRepository.save(newCompany);
+    }
 
 }

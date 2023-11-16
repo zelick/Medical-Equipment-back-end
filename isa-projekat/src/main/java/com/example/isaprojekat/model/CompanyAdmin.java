@@ -4,10 +4,10 @@ import com.example.isaprojekat.enums.UserRole;
 
 import javax.persistence.*;
 
-@Entity
-@Table(name = "CompanyAdmin")
+//@Entity
+//@Table(name = "CompanyAdmin")
 public class CompanyAdmin{
-    @Id
+   /* @Id
     @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
@@ -39,5 +39,5 @@ public class CompanyAdmin{
 
     public void setCompany(Company company) {
         this.company = company;
-    }
+    }*/
 }

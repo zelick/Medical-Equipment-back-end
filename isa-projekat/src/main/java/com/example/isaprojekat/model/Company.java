@@ -18,8 +18,6 @@ public class Company {
     @Column(name = "averageGrade", nullable = true)
     private double averageGrade;
     //slobodni termini za preuzimanje opreme - dodati
-    @OneToMany(mappedBy = "company", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private Set<CompanyAdmin> administrations = new HashSet<CompanyAdmin>();
 
     @ManyToMany
     @JoinTable(
@@ -76,22 +74,6 @@ public class Company {
 
     public void setAverageGrade(double averageGrade) {
         this.averageGrade = averageGrade;
-    }
-
-    public Set<CompanyAdmin> getAdministrations() {
-        return administrations;
-    }
-
-    public void setAdministrations(Set<CompanyAdmin> administrations) {
-        this.administrations = administrations;
-    }
-    public void addAdminstrator(CompanyAdmin admin) {
-        this.administrations.add(admin);
-        admin.setCompany(this);
-    }
-    public void removeAdministrator(CompanyAdmin admin) {
-        this.administrations.remove(admin);
-        admin.setCompany(null);
     }
 
     public Set<Equipment> getEquipments() {
