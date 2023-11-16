@@ -45,6 +45,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/equipment/getEquipmentForCompany/**").permitAll()
                 .antMatchers("/api/companies/update/**").permitAll()
                 .antMatchers("/api/companies/create").permitAll()
+                .antMatchers("/api/users/getUserByUsername/**").permitAll()
+                .antMatchers("/api/registration/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .cors()
@@ -79,6 +81,5 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         source.registerCorsConfiguration("/**", configuration);
         return source;
     }
-
-
 }
+

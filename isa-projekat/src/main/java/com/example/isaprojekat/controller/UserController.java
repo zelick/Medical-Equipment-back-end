@@ -3,11 +3,15 @@ package com.example.isaprojekat.controller;
 import com.example.isaprojekat.dto.UserDTO;
 import com.example.isaprojekat.model.User;
 import com.example.isaprojekat.service.UserService;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -15,6 +19,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping(value = "api/users")
+@CrossOrigin(origins = "http://localhost:4200")
 public class UserController {
     @Autowired
     private UserService userService;
@@ -32,6 +37,23 @@ public class UserController {
 
         return new ResponseEntity<>(usersDTO, HttpStatus.OK);
     }
+    @GetMapping("/profile")
+    @CrossOrigin(origins = "http://localhost:4200")
+    public Object secured(Authentication authentication)
+    {
+
+        return authentication.getPrincipal();
+    }
+
+    @GetMapping("/loggedUser")
+    @CrossOrigin(origins = "http://localhost:4200")
+    public User findLoggedUser() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String name = auth.getName();
+        User user = userService.findOneByEmail(name);
+        return user;
+    }
+
     @GetMapping
     public ResponseEntity<List<UserDTO>> getUsersPage(Pageable page) {
 
@@ -54,6 +76,18 @@ public class UserController {
         User user = userService.findOne(id);
 
         // studen must exist
+        if (user == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        return new ResponseEntity<>(new UserDTO(user), HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/getUserByUsername/{username}")
+    public ResponseEntity<UserDTO> getUserByUsername(@PathVariable String username) {
+
+        User user = userService.findOneByEmail(username);
+
         if (user == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
@@ -101,8 +135,6 @@ public class UserController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
-
-
 
     @GetMapping(value = "/findLastName")
     public ResponseEntity<List<UserDTO>> getUsersByLastName(@RequestParam String firstName) {
