@@ -46,7 +46,7 @@ public class CompanyController {
 
         List<Company> companies = companyService.findAll();
 
-        // convert students to DTOs
+        // convert comapnies to DTOs
         List<CompanyDTO> companyDTO = new ArrayList<>();
         for (Company s : companies) {
             companyDTO.add(new CompanyDTO(s));
@@ -79,6 +79,29 @@ public class CompanyController {
         }
     }
 
+    @GetMapping(value = "/search")
+    @CrossOrigin(origins = "http://localhost:4200")
+    public ResponseEntity<List<CompanyDTO>> searchCompany(
+            @RequestParam(required = false) String searchName,
+            @RequestParam(required = false) String searchLocation
+    )
+    {
+        List<Company> foundCompanies = new ArrayList<>();
+
+        for (Company c : companyService.findAll()) {
+            if ((searchName == null || c.getName().toLowerCase().contains(searchName.toLowerCase())) &&
+                    (searchLocation == null || c.getAddress().toLowerCase().contains(searchLocation.toLowerCase()))) {
+                foundCompanies.add(c);
+            }
+        }
+
+        List<CompanyDTO> companyDTO = new ArrayList<>();
+        for (Company c : foundCompanies) {
+            companyDTO.add(new CompanyDTO(c));
+        }
+
+        return new ResponseEntity<>(companyDTO, HttpStatus.OK);
+    }
 
 
 }
