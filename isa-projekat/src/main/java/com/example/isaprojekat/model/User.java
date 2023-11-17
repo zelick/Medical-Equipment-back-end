@@ -42,11 +42,31 @@ public class User {
     @Column(name = "penaltyPoints", nullable = false)
     private Double penaltyPoints = 0.0;
 
+    @Column(name = "city", nullable = false)
+    private String city;
+
+    @Column(name = "country", nullable = false)
+    private String country;
+
+    @Column(name = "phoneNumber", nullable = false)
+    private String phoneNumber;
+
+    @Column(name = "occupation", nullable = false)
+    private String occupation;
+
+    @Column(name = "companyInfo", nullable = false)
+    private String companyInfo;
+
     public User(){super();}
 
     public User(Integer id, String firstName, String lastName,
                 String email, String password, boolean isLocked,
-                boolean isEnabled, UserRole userRole, Double penaltyPoints){
+                boolean isEnabled, UserRole userRole, Double penaltyPoints,
+                String city,
+                String country,
+                String phoneNumber,
+                String occupation,
+                String companyInfo){
         super();
         this.id=id;
         this.firstName=firstName;
@@ -57,6 +77,11 @@ public class User {
         this.isLocked=isLocked;
         this.userRole=userRole;
         this.penaltyPoints = penaltyPoints;
+        this.city = city;
+        this.country = country;
+        this.phoneNumber = phoneNumber;
+        this.occupation = occupation;
+        this.companyInfo = companyInfo;
     }
 
     public User(String firstName,
@@ -65,7 +90,12 @@ public class User {
                 String password,
                 Boolean isLocked,
                 Boolean isEnabled,
-                UserRole userRole) {
+                UserRole userRole,
+                String city,
+                String country,
+                String phoneNumber,
+                String occupation,
+                String companyInfo) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
@@ -73,6 +103,50 @@ public class User {
         this.isLocked = isLocked;
         this.isEnabled = isEnabled;
         this.userRole = userRole;
+        this.city = city;
+        this.country = country;
+        this.phoneNumber = phoneNumber;
+        this.occupation = occupation;
+        this.companyInfo = companyInfo;
+    }
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    public String getOccupation() {
+        return occupation;
+    }
+
+    public void setOccupation(String occupation) {
+        this.occupation = occupation;
+    }
+
+    public String getCompanyInfo() {
+        return companyInfo;
+    }
+
+    public void setCompanyInfo(String companyInfo) {
+        this.companyInfo = companyInfo;
     }
     public String getUsername(){
         return email;
@@ -85,23 +159,43 @@ public class User {
                 String email,
 
                 String password,
-                UserRole appUserRole) {
+                UserRole appUserRole,
+                String city,
+                String country,
+                String phoneNumber,
+                String occupation,
+                String companyInfo) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.password = password;
         this.userRole = appUserRole;
+        this.city = city;
+        this.country = country;
+        this.phoneNumber = phoneNumber;
+        this.occupation = occupation;
+        this.companyInfo = companyInfo;
     }
     public User(String firstName,
                 String lastName,
                 String email,
                 String password,
-                int role) {
+                int role,
+                String city,
+                String country,
+                String phoneNumber,
+                String occupation,
+                String companyInfo) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.password = password;
         this.userRole = UserRole.USER;
+        this.city = city;
+        this.country = country;
+        this.phoneNumber = phoneNumber;
+        this.occupation = occupation;
+        this.companyInfo = companyInfo;
     }
     public Collection<? extends GrantedAuthority> getAuthorities() {
         SimpleGrantedAuthority authority =

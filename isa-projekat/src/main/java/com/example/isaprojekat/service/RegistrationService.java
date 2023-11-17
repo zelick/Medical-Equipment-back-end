@@ -25,7 +25,12 @@ public class RegistrationService {
             throw new IllegalStateException("email not valid");
         }
 
-        if(request.getFirstName().isEmpty() || request.getLastName().isEmpty() || request.getEmail().isEmpty() || request.getPassword().isEmpty()){
+        if(request.getFirstName().isEmpty() || request.getLastName().isEmpty() || request.getEmail().isEmpty() || request.getPassword().isEmpty()
+        || request.getCity().isEmpty() ||   // Add new fields to the validation
+                request.getCountry().isEmpty() ||
+                request.getPhoneNumber().isEmpty() ||
+                request.getOccupation().isEmpty() ||
+                request.getCompanyInfo().isEmpty()){
             throw new IllegalStateException("All fields must be filled in!");
         }
         String token = userService.signUpUser(
@@ -33,7 +38,12 @@ public class RegistrationService {
                         request.getLastName(),
                         request.getEmail(),
                         request.getPassword(),
-                        UserRole.USER)
+                        UserRole.USER,
+                request.getCity(),
+                request.getCountry(),
+                request.getPhoneNumber(),
+                request.getOccupation(),
+                request.getCompanyInfo())
         );
         String link = "http://localhost:8080/api/registration/confirm?token=" + token;
         emailSender.send(request.getEmail(),buildEmail(request.getFirstName(),link ));
