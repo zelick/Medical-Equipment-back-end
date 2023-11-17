@@ -3,6 +3,7 @@ package com.example.isaprojekat.repository;
 import com.example.isaprojekat.model.Company;
 import com.example.isaprojekat.model.Equipment;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -12,4 +13,6 @@ import java.util.List;
 @Transactional(readOnly = true)
 public interface EquipmentRepository extends JpaRepository<Equipment, Integer> {
     List<Equipment> findAllByCompanies_Id(Integer companyId);
+    @Query("SELECT DISTINCT e FROM Equipment e JOIN FETCH e.companies")
+    List<Equipment> findAllWithCompanies();
 }

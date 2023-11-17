@@ -1,6 +1,12 @@
 package com.example.isaprojekat.dto;
 
+import com.example.isaprojekat.model.Company;
 import com.example.isaprojekat.model.Equipment;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 public class EquipmentDTO {
     private Integer id;
@@ -10,12 +16,11 @@ public class EquipmentDTO {
     private double grade;
     private String type;
 
-    // Nema polje za Set<Company> companies, jer u DTO-u obično ne prenosimo kompleksne veze
-
+    private List<CompanyDTO> companies = new ArrayList<>(); //mozda treba Set?
     public EquipmentDTO() {
     }
 
-    public EquipmentDTO(Equipment equipment) {
+    /*public EquipmentDTO(Equipment equipment) {
         this(equipment.getId(), equipment.getName(),
                 equipment.getDescription(), equipment.getPrice(),
                 equipment.getGrade(), equipment.getType());
@@ -28,6 +33,25 @@ public class EquipmentDTO {
         this.price = price;
         this.grade = grade;
         this.type = type;
+        //this.companies = convertCompaniesToDTOs(companiesSet);
+        this.companies = new ArrayList<>();
+    }*/
+    public EquipmentDTO(Equipment equipment) {
+        this.id = equipment.getId();
+        this.name = equipment.getName();
+        this.description = equipment.getDescription();
+        this.price = equipment.getPrice();
+        this.grade = equipment.getGrade();
+        this.type = equipment.getType();
+        this.companies = convertCompaniesToDTOs(equipment.getCompaniesSet());
+    }
+
+    private List<CompanyDTO> convertCompaniesToDTOs(Set<Company> companies) {
+        List<CompanyDTO> companyDTOs = new ArrayList<>();
+        for (Company company : companies) {
+            companyDTOs.add(new CompanyDTO(company));
+        }
+        return companyDTOs;
     }
 
     public Integer getId() {

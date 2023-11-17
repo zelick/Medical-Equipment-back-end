@@ -99,10 +99,12 @@ public class Equipment {
     public Set<Company> getCompanies() {
         return companies;
     }
+    public Set<Company> getCompaniesSet(){ return  this.companies; }
 
     public void setCompanies(Set<Company> companies) {
         this.companies = companies;
     }
+
 
     public void addCompany(Company company) {
         this.companies.add(company);
@@ -113,4 +115,5 @@ public class Equipment {
         this.companies.remove(company);
         company.getEquipments().remove(this);
     }
+
 }
