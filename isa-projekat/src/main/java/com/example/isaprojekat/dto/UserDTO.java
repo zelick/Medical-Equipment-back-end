@@ -87,4 +87,25 @@ public class UserDTO {
     public String getCompanyInfo() {
         return companyInfo;
     }
+
+    //seteri:
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public void setPenaltyPoints(Double penaltyPoints) {
+        this.penaltyPoints = penaltyPoints;
+    }
+
+    public void setUserRole(UserRole userRole) {
+        this.userRole = userRole;
+    }
 }
