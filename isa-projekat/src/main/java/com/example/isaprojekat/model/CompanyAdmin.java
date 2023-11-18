@@ -1,43 +1,31 @@
 package com.example.isaprojekat.model;
 
-import com.example.isaprojekat.enums.UserRole;
-
 import javax.persistence.*;
 
-//@Entity
-//@Table(name = "CompanyAdmin")
+@Entity
+@Table(name = "companyAdmin")
 public class CompanyAdmin{
-   /* @Id
-    @ManyToOne
-    @JoinColumn(name = "user_id", referencedColumnName = "id")
-    private User user;
 
     @Id
-    @ManyToOne
-    @JoinColumn(name = "company_id", referencedColumnName = "id")
-    private Company company;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
+    @Column(name = "user_id", nullable = false)
+    private Integer user_id;
+    @Column(name = "company_id", nullable = false)
+    private Integer company_id;
+    public CompanyAdmin() {}
 
-    public CompanyAdmin() {
-
+    public Integer getUser_id() {
+        return user_id;
     }
-    public CompanyAdmin(User user, Company company) {
-        this.user = user;
-        this.company = company;
+    public void setUser_id(Integer user_id) {
+        this.user_id = user_id;
     }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
+    public Integer getCompany_id() {
+        return company_id;
     }
 
-    public Company getCompany() {
-        return company;
+    public void setCompany_id(Integer company_id) {
+        this.company_id = company_id;
     }
-
-    public void setCompany(Company company) {
-        this.company = company;
-    }*/
 }

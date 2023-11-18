@@ -18,6 +18,7 @@ import java.util.Optional;
 @Transactional(readOnly = true)
 public interface UserRepository extends JpaRepository<User, Integer> {
     public Page<User> findAll(Pageable pageable);
+   // public  List<User> findAll(); //nez jel radi
     public List<User> findAllByFirstName(String firstName);
     Optional<UserDetails> findByEmail(String email);
     public User findUserByEmail(String email);
@@ -26,5 +27,6 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     @Query("UPDATE User a " +
             "SET a.isEnabled = TRUE WHERE a.email = ?1")
     int enableAppUser(String email);
+    public List<User> findAllByIdNotIn(List<Integer> userIds);
 
 }

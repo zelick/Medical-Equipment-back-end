@@ -1,7 +1,7 @@
 package com.example.isaprojekat.service;
 
+
 import com.example.isaprojekat.model.Equipment;
-import com.example.isaprojekat.repository.CompanyRepository;
 import com.example.isaprojekat.repository.EquipmentRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,4 +16,11 @@ public class EquipmentService {
     private EquipmentRepository equipmentRepository;
 
     public List<Equipment> findAllByCompanies_Id(Integer id){return equipmentRepository.findAllByCompanies_Id(id);}
+    public List<Equipment> findAll() {
+        return equipmentRepository.findAll();
+    }
+    public List<Equipment> getAllEquipmentWithCompanies() {
+        return equipmentRepository.findAllWithCompanies();
+    }
+
 }
