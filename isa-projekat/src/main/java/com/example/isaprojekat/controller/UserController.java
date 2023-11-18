@@ -105,6 +105,10 @@ public class UserController {
 
         exactUser.setFirstName(updatedUser.getFirstName());
         exactUser.setLastName(updatedUser.getLastName());
+        exactUser.setCity(updatedUser.getCity());
+        exactUser.setCountry(updatedUser.getCountry());
+        exactUser.setPhoneNumber(updatedUser.getPhoneNumber());
+        exactUser.setOccupation(updatedUser.getOccupation());
 
         userService.save(exactUser);
 
