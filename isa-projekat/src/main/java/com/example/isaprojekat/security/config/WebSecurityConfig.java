@@ -45,7 +45,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/equipment/getEquipmentForCompany/**").permitAll()
                 .antMatchers("/api/equipment/searchByName").permitAll() //search equipment controller
                 .antMatchers("/api/equipment/all").permitAll()          //all equipment
-                .antMatchers("/api/equipment/getAllEquipmentWithCompanies").permitAll()
+                .antMatchers("/api/equipment/getAllEquipmentWithCompanies").permitAll()  //dodala
                 .antMatchers("/api/companies/update/**").permitAll()
                 .antMatchers("/api/companies/create").permitAll()
                 .antMatchers("/api/users/getUserByUsername/**").permitAll()

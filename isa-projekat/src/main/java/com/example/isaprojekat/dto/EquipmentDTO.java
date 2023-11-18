@@ -16,7 +16,7 @@ public class EquipmentDTO {
     private double grade;
     private String type;
 
-    private List<CompanyDTO> companies = new ArrayList<>(); //mozda treba Set?
+    private List<CompanyDTO> companies = new ArrayList<>();
     public EquipmentDTO() {
     }
 
@@ -76,5 +76,12 @@ public class EquipmentDTO {
 
     public String getType() {
         return type;
+    }
+
+    public void setCompanies(List<CompanyDTO> companies) {
+        this.companies = companies;
+    }
+    public List<CompanyDTO> getCompanies() {
+        return companies;
     }
 }
