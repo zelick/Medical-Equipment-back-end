@@ -115,6 +115,20 @@ public class UserController {
         return new ResponseEntity<>(new UserDTO(exactUser), HttpStatus.OK);
     }
 
+    /*
+    @GetMapping(value= "/validatePassword/{newPassword}/{username}")
+    public boolean validateUsersPassword(@PathVariable String newPassword, @PathVariable String username) {
+        User exactUser = userService.findOneByEmail(username);
+
+        if (exactUser.getPassword().equals(newPassword)) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+    */
+
     @PostMapping(consumes = "application/json")
     public ResponseEntity<UserDTO> saveUser(@RequestBody UserDTO usersDTO) {
 
