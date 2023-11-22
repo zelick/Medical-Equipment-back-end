@@ -7,6 +7,8 @@ public class UserDTO {
     private Integer id;
     private String firstName;
     private String lastName;
+    private String password;
+    private boolean isEnabled;
     private Double penaltyPoints;
     private UserRole userRole;
     private String city;
@@ -30,12 +32,15 @@ public class UserDTO {
                 user.getCountry(),
                 user.getPhoneNumber(),
                 user.getOccupation(),
-                user.getCompanyInfo()
+                user.getCompanyInfo(),
+                user.getPassword(),
+                user.getEnabled()
         );
     }
 
     public UserDTO(Integer id, String firstName, String lastName, Double penaltyPoints, UserRole userRole,
-                   String city, String country, String phoneNumber, String occupation, String companyInfo) {
+                   String city, String country, String phoneNumber, String occupation, String companyInfo,
+                   String password, boolean isEnabled) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -46,6 +51,8 @@ public class UserDTO {
         this.phoneNumber = phoneNumber;
         this.occupation = occupation;
         this.companyInfo = companyInfo;
+        this.password= password;
+        this.isEnabled=isEnabled;
     }
 
     public Integer getId() {
@@ -107,5 +114,21 @@ public class UserDTO {
 
     public void setUserRole(UserRole userRole) {
         this.userRole = userRole;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public boolean isEnabled() {
+        return isEnabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        isEnabled = enabled;
     }
 }
