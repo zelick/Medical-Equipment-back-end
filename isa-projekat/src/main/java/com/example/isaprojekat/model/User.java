@@ -1,21 +1,24 @@
 package com.example.isaprojekat.model;
 
 import com.example.isaprojekat.enums.UserRole;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.EqualsAndHashCode;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import java.util.Collection;
 import java.util.Collections;
 
 import java.lang.Double;
+import java.util.List;
 
 
 @Entity
 @EqualsAndHashCode
 @Table(name = "users")
-public class User {
+public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -35,9 +38,11 @@ public class User {
     @Column(name = "isEnabled", nullable = false)
     private Boolean isEnabled = false;
 
-    @Column(name = "userRole", nullable = false)
-    @Enumerated(EnumType.STRING)
-    private UserRole userRole;
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "user_role",
+            joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
+    private List<Role> roles;
 
     @Column(name = "penaltyPoints", nullable = false)
     private Double penaltyPoints = 0.0;
@@ -59,7 +64,7 @@ public class User {
 
     public User(){super();}
 
-    public User(Integer id, String firstName, String lastName,
+    /*public User(Integer id, String firstName, String lastName,
                 String email, String password, boolean isLocked,
                 boolean isEnabled, UserRole userRole, Double penaltyPoints,
                 String city,
@@ -108,7 +113,7 @@ public class User {
         this.phoneNumber = phoneNumber;
         this.occupation = occupation;
         this.companyInfo = companyInfo;
-    }
+    }*/
     public String getCity() {
         return city;
     }
@@ -154,7 +159,7 @@ public class User {
     public void setUsername(String username){
         this.email=username;
     }
-    public User(String firstName,
+    /*public User(String firstName,
                 String lastName,
                 String email,
 
@@ -175,12 +180,11 @@ public class User {
         this.phoneNumber = phoneNumber;
         this.occupation = occupation;
         this.companyInfo = companyInfo;
-    }
+    }*/
     public User(String firstName,
                 String lastName,
                 String email,
                 String password,
-                int role,
                 String city,
                 String country,
                 String phoneNumber,
@@ -190,30 +194,18 @@ public class User {
         this.lastName = lastName;
         this.email = email;
         this.password = password;
-        this.userRole = UserRole.USER;
         this.city = city;
         this.country = country;
         this.phoneNumber = phoneNumber;
         this.occupation = occupation;
         this.companyInfo = companyInfo;
     }
+    @JsonIgnore
+    @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        SimpleGrantedAuthority authority =
-                new SimpleGrantedAuthority(userRole.name());
-        return Collections.singletonList(authority);
-    }
-    public boolean isAccountNonExpired() {
-        return true;
+        return this.roles;
     }
 
-
-    public boolean isAccountNonLocked() {
-        return !isLocked;
-    }
-
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
 
     public Integer getId() {
         return id;
@@ -261,8 +253,8 @@ public class User {
     public void setLocked(Boolean locked) {
         isLocked = locked;
     }
-
-    public Boolean getEnabled() {
+    @Override
+    public boolean isEnabled() {
         return isEnabled;
     }
 
@@ -270,14 +262,31 @@ public class User {
         isEnabled = enabled;
     }
 
-    public UserRole getUserRole() {
-        return userRole;
+    public void setRoles(List<Role> roles) {
+        this.roles = roles;
     }
 
-    public void setUserRole(UserRole userRole) {
-        this.userRole = userRole;
+    public List<Role> getRoles() {
+        return roles;
     }
 
     public Double getPenaltyPoints() { return penaltyPoints; }
     public void setPenaltyPoints(Double penalityPoints) { this.penaltyPoints = penalityPoints; }
+    @JsonIgnore
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @JsonIgnore
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @JsonIgnore
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
 }

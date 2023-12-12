@@ -5,7 +5,27 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e9c8321f-f1cc-4d1f-87e3-6d77573d9a3b" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/isa-projekat/src/main/java/com/example/isaprojekat/model/Role.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/isa-projekat/src/main/java/com/example/isaprojekat/repository/RoleRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/isa-projekat/src/main/java/com/example/isaprojekat/service/RoleService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/isa-projekat/src/main/resources/import.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/1c3d0718-be71-462f-92a6-d68ea473cc74.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/1c3d0718-be71-462f-92a6-d68ea473cc74/storage_v2/_src_/database/postgres.edMnLQ.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/1c3d0718-be71-462f-92a6-d68ea473cc74/storage_v2/_src_/database/postgres.edMnLQ/schema/information_schema.FNRwLQ.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/1c3d0718-be71-462f-92a6-d68ea473cc74/storage_v2/_src_/database/postgres.edMnLQ/schema/pg_catalog.0S1ZNQ.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/1c3d0718-be71-462f-92a6-d68ea473cc74/storage_v2/_src_/database/postgres.edMnLQ/schema/public.abK9xQ.meta" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/isa-projekat/src/main/java/com/example/isaprojekat/controller/UserController.java" beforeDir="false" afterPath="$PROJECT_DIR$/isa-projekat/src/main/java/com/example/isaprojekat/controller/UserController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/isa-projekat/src/main/java/com/example/isaprojekat/dto/UserDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/isa-projekat/src/main/java/com/example/isaprojekat/dto/UserDTO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/isa-projekat/src/main/java/com/example/isaprojekat/model/ConfirmationToken.java" beforeDir="false" afterPath="$PROJECT_DIR$/isa-projekat/src/main/java/com/example/isaprojekat/model/ConfirmationToken.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/isa-projekat/src/main/java/com/example/isaprojekat/model/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/isa-projekat/src/main/java/com/example/isaprojekat/model/User.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/isa-projekat/src/main/java/com/example/isaprojekat/repository/UserRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/isa-projekat/src/main/java/com/example/isaprojekat/repository/UserRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/isa-projekat/src/main/java/com/example/isaprojekat/service/CompanyAdminService.java" beforeDir="false" afterPath="$PROJECT_DIR$/isa-projekat/src/main/java/com/example/isaprojekat/service/CompanyAdminService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/isa-projekat/src/main/java/com/example/isaprojekat/service/RegistrationService.java" beforeDir="false" afterPath="$PROJECT_DIR$/isa-projekat/src/main/java/com/example/isaprojekat/service/RegistrationService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/isa-projekat/src/main/java/com/example/isaprojekat/service/UserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/isa-projekat/src/main/java/com/example/isaprojekat/service/UserService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/isa-projekat/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/isa-projekat/src/main/resources/application.properties" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -18,9 +38,9 @@
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "associatedIndex": 5
-}]]></component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 5
+}</component>
   <component name="ProjectId" id="2YAfoKXPYu96hYlcTcHwOF1zkYK" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
@@ -32,7 +52,7 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "WebServerToolWindowFactoryState": "false",
     "git-widget-placeholder": "develop",
-    "last_opened_file_path": "C:/Users/pmili/OneDrive/Desktop/ISA BACK/isa-back/isa-projekat",
+    "last_opened_file_path": "C:/Users/PC/Desktop/isa-back/isa-back",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -57,6 +77,7 @@
       <option name="presentableId" value="Default" />
       <updated>1699973479181</updated>
       <workItem from="1699973483079" duration="1021000" />
+      <workItem from="1702400538922" duration="52000" />
     </task>
     <servers />
   </component>
