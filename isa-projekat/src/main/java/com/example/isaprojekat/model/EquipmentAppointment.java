@@ -26,13 +26,20 @@ public class EquipmentAppointment {
     private String appointmentTime;
     @Column(name = "appointmentDuration", nullable = false)
     private Integer appointmentDuration;
+    @Column(name = "quantity", nullable = false)
+    private Integer quantity;
+    @Column(name = "userId", nullable = false)
+    private Integer userId;
+    @Column(name = "qrCodeSent", nullable = false)
+    private Boolean qrCodeSent;
     public EquipmentAppointment() {
     }
 
     // Konstruktor sa svim poljima
     public EquipmentAppointment(Integer id, Integer equipmentId, Integer adminId, String adminName,
                                 String adminSurname, AppointmentStatus status, Date appointmentDate,
-                                String appointmentTime, Integer appointmentDuration) {
+                                String appointmentTime, Integer appointmentDuration, Integer quantity,
+                                Integer userId, Boolean qrCodeSent) {
         this.id = id;
         this.equipmentId = equipmentId;
         this.adminId = adminId;
@@ -42,6 +49,9 @@ public class EquipmentAppointment {
         this.appointmentDate = appointmentDate;
         this.appointmentTime = appointmentTime;
         this.appointmentDuration = appointmentDuration;
+        this.quantity = quantity;
+        this.userId = userId;
+        this.qrCodeSent = qrCodeSent;
     }
 
     // Getteri i setteri za sva polja
@@ -115,5 +125,26 @@ public class EquipmentAppointment {
 
     public void setAppointmentDuration(Integer appointmentDuration) {
         this.appointmentDuration = appointmentDuration;
+    }
+    public Integer getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(Integer quantity) {
+        this.quantity = quantity;
+    }
+    public Integer getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Integer userId) {
+        this.userId = userId;
+    }
+    public Boolean getQrCodeSent() {
+        return qrCodeSent;
+    }
+
+    public void setQrCodeSent(Boolean qrCodeSent) {
+        this.qrCodeSent = qrCodeSent;
     }
 }

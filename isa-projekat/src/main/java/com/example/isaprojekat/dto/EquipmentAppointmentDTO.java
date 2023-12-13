@@ -15,6 +15,9 @@ public class EquipmentAppointmentDTO {
     private Date appointmentDate;
     private String appointmentTime;
     private Integer appointmentDuration;
+    private Integer quantity;
+    private Integer userId;
+    private Boolean qrCodeSent;
     public EquipmentAppointmentDTO() {
     }
     public EquipmentAppointmentDTO(EquipmentAppointment equipmentAppointment) {
@@ -22,11 +25,13 @@ public class EquipmentAppointmentDTO {
                 equipmentAppointment.getAdminId(), equipmentAppointment.getAdminName(),
                 equipmentAppointment.getAdminSurname(), equipmentAppointment.getStatus(),
                 equipmentAppointment.getAppointmentDate(), equipmentAppointment.getAppointmentTime(),
-                equipmentAppointment.getAppointmentDuration());
+                equipmentAppointment.getAppointmentDuration(), equipmentAppointment.getQuantity(),
+                equipmentAppointment.getUserId(), equipmentAppointment.getQrCodeSent());
     }
     public EquipmentAppointmentDTO(Integer id, Integer equipmentId, Integer adminId, String adminName,
                                    String adminSurname, AppointmentStatus status, Date appointmentDate,
-                                   String appointmentTime, Integer appointmentDuration) {
+                                   String appointmentTime, Integer appointmentDuration, Integer quantity,
+                                   Integer userId, Boolean qrCodeSent) {
         this.id = id;
         this.equipmentId = equipmentId;
         this.adminId = adminId;
@@ -36,6 +41,9 @@ public class EquipmentAppointmentDTO {
         this.appointmentDate = appointmentDate;
         this.appointmentTime = appointmentTime;
         this.appointmentDuration = appointmentDuration;
+        this.quantity = quantity;
+        this.userId = userId;
+        this.qrCodeSent = qrCodeSent;
     }
 
     public Integer getId() {
@@ -76,4 +84,8 @@ public class EquipmentAppointmentDTO {
     public Integer getAppointmentDuration() {
         return appointmentDuration;
     }
+
+    public Integer getQuantity() { return quantity; }
+    public Integer getUserId() { return userId; }
+    public Boolean getQrCodeSent() { return qrCodeSent; }
 }
