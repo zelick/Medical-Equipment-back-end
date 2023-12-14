@@ -1,4 +1,4 @@
-insert into users (email, first_name, is_enabled, is_locked, last_name, password, penalty_points, user_role, city, company_info, country, occupation, phone_number)
+/*insert into users (email, first_name, is_enabled, is_locked, last_name, password, penalty_points, user_role, city, company_info, country, occupation, phone_number)
 values ('kovacevic.anja2002@gmail.com', 'Anja', true, false, 'Kovacevic', '$2a$10$8zpGNS6paziQhFVcHY0eK.X3S45KOJ1U7JzQTbmMf8jhQv64BGDWe', 0, 'USER', 'Kursumlija', 'Kompanija', 'Srbija', 'student', '0665748394');
 insert into users (email, first_name, is_enabled, is_locked, last_name, password, penalty_points, user_role, city, company_info, country, occupation, phone_number)
 values ('anaa.radovanovic2001@gmail.com', 'Ana', true, false, 'Radovanovic', '$2a$10$EwJPrNmPt501yieGlXXIUerWBH9z2CUWtNQB/TbzsBQ1dt307O55a', 0, 'USER', 'Novi Sad', 'Medicinska oprema', 'Srbija', 'student', '0658372947');
@@ -40,3 +40,4 @@ insert into company_equipment (equipment_id, company_id)
 values (2,2);
 insert into company_equipment (equipment_id, company_id)
 values (3,2);
+*/
