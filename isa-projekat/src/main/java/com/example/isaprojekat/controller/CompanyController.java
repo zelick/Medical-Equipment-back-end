@@ -79,6 +79,18 @@ public class CompanyController {
         }
     }
 
+    @GetMapping(value = "/getForAdmin/{id}")
+    @CrossOrigin(origins = "http://localhost:4200")
+    public ResponseEntity<CompanyDTO> getCompanyByAdminId(@PathVariable Integer id){
+        try {
+            Company company = companyService.findByAdminId(id);
+            CompanyDTO companyDTO = new CompanyDTO();
+            return new ResponseEntity<>(new CompanyDTO(company), HttpStatus.OK);
+        } catch (Exception e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
     @GetMapping(value = "/search")
     @CrossOrigin(origins = "http://localhost:4200")
     public ResponseEntity<List<CompanyDTO>> searchCompany(

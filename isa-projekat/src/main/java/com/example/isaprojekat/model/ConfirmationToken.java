@@ -28,7 +28,7 @@ public class ConfirmationToken {
     @Column(name = "confirmedAt")
     private LocalDateTime confirmedAt;
 
-    @ManyToOne
+    @ManyToOne//(cascade = CascadeType.PERSIST)
     @JoinColumn(nullable = false, name = "user_id")
     private User user;
 

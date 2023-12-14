@@ -17,6 +17,9 @@ public class Company {
     private String description;
     @Column(name = "averageGrade", nullable = true)
     private double averageGrade;
+
+    @Column(name = "adminId", nullable = true)
+    private Integer adminId;
     //slobodni termini za preuzimanje opreme - dodati
 
     @ManyToMany
@@ -29,11 +32,12 @@ public class Company {
 
     public Company() {
     }
-    public Company(String name, String address, String description, double averageGrade) {
+    public Company(String name, String address, String description, double averageGrade, Integer adminId) {
         this.name = name;
         this.address = address;
         this.description = description;
         this.averageGrade = averageGrade;
+        this.adminId = adminId;
     }
 
     public Integer getId() {
@@ -92,5 +96,13 @@ public class Company {
     public void removeEquipment(Equipment equipment) {
         this.equipments.remove(equipment);
         equipment.getCompanies().remove(this);
+    }
+
+    public Integer getAdminId() {
+        return adminId;
+    }
+
+    public void setAdminId(Integer adminId) {
+        this.adminId = adminId;
     }
 }
