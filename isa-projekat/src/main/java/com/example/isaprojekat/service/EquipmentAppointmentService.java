@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
+import javax.security.sasl.SaslServer;
 import java.util.List;
 
 @Service
@@ -35,8 +36,13 @@ public class EquipmentAppointmentService {
         newAppointment.setEquipmentId(equipmentAppointmentDTO.getEquipmentId());
         newAppointment.setAdminName(equipmentAppointmentDTO.getAdminName());
         newAppointment.setAdminSurname(equipmentAppointmentDTO.getAdminSurname());
-        newAppointment.setStatus(equipmentAppointmentDTO.getStatus());
         newAppointment.setAdminId(equipmentAppointmentDTO.getAdminId());
+        System.out.println("Novi termin za preuzimanje:");
+        System.out.println(newAppointment.getAppointmentTime());
+        System.out.println(newAppointment.getEquipmentId());
+        System.out.println(newAppointment.getAdminId());
+        System.out.println(newAppointment.getAdminSurname());
+        System.out.println(newAppointment.getAdminName());
         return equipmentAppointmentRepository.save(newAppointment);
     }
 }

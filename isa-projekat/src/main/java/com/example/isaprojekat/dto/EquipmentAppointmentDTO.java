@@ -7,43 +7,33 @@ import java.util.Date;
 
 public class EquipmentAppointmentDTO {
     private Integer id;
-    private Integer equipmentId;
     private Integer adminId;
+    private Integer equipmentId;
     private String adminName;
     private String adminSurname;
-    private AppointmentStatus status;
     private Date appointmentDate;
     private String appointmentTime;
     private Integer appointmentDuration;
-    private Integer quantity;
-    private Integer userId;
-    private Boolean qrCodeSent;
     public EquipmentAppointmentDTO() {
     }
     public EquipmentAppointmentDTO(EquipmentAppointment equipmentAppointment) {
-        this(equipmentAppointment.getId(), equipmentAppointment.getEquipmentId(),
-                equipmentAppointment.getAdminId(), equipmentAppointment.getAdminName(),
-                equipmentAppointment.getAdminSurname(), equipmentAppointment.getStatus(),
+        this(equipmentAppointment.getId(), equipmentAppointment.getAdminId(),
+                equipmentAppointment.getEquipmentId(), equipmentAppointment.getAdminName(),
+                equipmentAppointment.getAdminSurname(),
                 equipmentAppointment.getAppointmentDate(), equipmentAppointment.getAppointmentTime(),
-                equipmentAppointment.getAppointmentDuration(), equipmentAppointment.getQuantity(),
-                equipmentAppointment.getUserId(), equipmentAppointment.getQrCodeSent());
+                equipmentAppointment.getAppointmentDuration());
     }
-    public EquipmentAppointmentDTO(Integer id, Integer equipmentId, Integer adminId, String adminName,
-                                   String adminSurname, AppointmentStatus status, Date appointmentDate,
-                                   String appointmentTime, Integer appointmentDuration, Integer quantity,
-                                   Integer userId, Boolean qrCodeSent) {
+    public EquipmentAppointmentDTO(Integer id, Integer adminId, Integer equipmentId, String adminName,
+                                   String adminSurname, Date appointmentDate,
+                                   String appointmentTime, Integer appointmentDuration) {
         this.id = id;
-        this.equipmentId = equipmentId;
         this.adminId = adminId;
+        this.equipmentId = equipmentId;
         this.adminName = adminName;
         this.adminSurname = adminSurname;
-        this.status = status;
         this.appointmentDate = appointmentDate;
         this.appointmentTime = appointmentTime;
         this.appointmentDuration = appointmentDuration;
-        this.quantity = quantity;
-        this.userId = userId;
-        this.qrCodeSent = qrCodeSent;
     }
 
     public Integer getId() {
@@ -68,10 +58,6 @@ public class EquipmentAppointmentDTO {
     }
 
 
-    public AppointmentStatus getStatus() {
-        return status;
-    }
-
     public Date getAppointmentDate() {
         return appointmentDate;
     }
@@ -84,8 +70,4 @@ public class EquipmentAppointmentDTO {
     public Integer getAppointmentDuration() {
         return appointmentDuration;
     }
-
-    public Integer getQuantity() { return quantity; }
-    public Integer getUserId() { return userId; }
-    public Boolean getQrCodeSent() { return qrCodeSent; }
 }

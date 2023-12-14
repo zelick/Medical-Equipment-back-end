@@ -51,4 +51,9 @@ public class CompanyService {
         return companyRepository.save(newCompany);
     }
 
+    public Company findByAdminId(Integer adminId) {
+        return companyRepository.findByAdminId(adminId)
+                .orElseThrow(() -> new EntityNotFoundException("Company not found for adminId: " + adminId));
+    }
+
 }

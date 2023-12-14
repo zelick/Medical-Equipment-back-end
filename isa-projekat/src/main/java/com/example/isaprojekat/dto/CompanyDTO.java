@@ -15,20 +15,22 @@ public class CompanyDTO {
     private String description;
     private double averageGrade;
 
+    private Integer adminId;
     public CompanyDTO() {
     }
     public CompanyDTO(Company company) {
         this(company.getId(), company.getName(),
                 company.getAddress(), company.getDescription(),
-                company.getAverageGrade());
+                company.getAverageGrade(), company.getAdminId());
     }
 
-    public CompanyDTO(Integer id, String name, String address, String description, double averageGrade) {
+    public CompanyDTO(Integer id, String name, String address, String description, double averageGrade, Integer adminId) {
         this.id = id;
         this.name = name;
         this.address = address;
         this.description = description;
         this.averageGrade = averageGrade;
+        this.adminId = adminId;
     }
 
     public Integer getId() {
@@ -50,4 +52,6 @@ public class CompanyDTO {
     public double getAverageGrade() {
         return averageGrade;
     }
+
+    public Integer getAdminId() { return adminId; }
 }
