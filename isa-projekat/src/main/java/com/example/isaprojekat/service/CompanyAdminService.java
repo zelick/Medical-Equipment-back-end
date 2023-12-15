@@ -76,6 +76,7 @@ public class CompanyAdminService {
             userDTO.setFirstName(user.getFirstName());
             userDTO.setLastName(user.getLastName());
             userDTO.setPenaltyPoints(user.getPenaltyPoints());
+            userDTO.setUserRole(user.getUserRole());
 
             foundUserDTOS.add(userDTO);
         }

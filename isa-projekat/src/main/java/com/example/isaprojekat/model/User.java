@@ -18,7 +18,7 @@ import java.util.List;
 @Entity
 @EqualsAndHashCode
 @Table(name = "users")
-public class User implements UserDetails {
+public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -38,11 +38,9 @@ public class User implements UserDetails {
     @Column(name = "isEnabled", nullable = false)
     private Boolean isEnabled = false;
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "user_role",
-            joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
-    private List<Role> roles;
+    @Column(name = "userRole", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private UserRole userRole;
 
     @Column(name = "penaltyPoints", nullable = false)
     private Double penaltyPoints = 0.0;
@@ -64,7 +62,7 @@ public class User implements UserDetails {
 
     public User(){super();}
 
-    /*public User(Integer id, String firstName, String lastName,
+    public User(Integer id, String firstName, String lastName,
                 String email, String password, boolean isLocked,
                 boolean isEnabled, UserRole userRole, Double penaltyPoints,
                 String city,
@@ -113,7 +111,7 @@ public class User implements UserDetails {
         this.phoneNumber = phoneNumber;
         this.occupation = occupation;
         this.companyInfo = companyInfo;
-    }*/
+    }
     public String getCity() {
         return city;
     }
@@ -159,7 +157,7 @@ public class User implements UserDetails {
     public void setUsername(String username){
         this.email=username;
     }
-    /*public User(String firstName,
+    public User(String firstName,
                 String lastName,
                 String email,
 
@@ -180,11 +178,12 @@ public class User implements UserDetails {
         this.phoneNumber = phoneNumber;
         this.occupation = occupation;
         this.companyInfo = companyInfo;
-    }*/
+    }
     public User(String firstName,
                 String lastName,
                 String email,
                 String password,
+                int role,
                 String city,
                 String country,
                 String phoneNumber,
@@ -194,16 +193,19 @@ public class User implements UserDetails {
         this.lastName = lastName;
         this.email = email;
         this.password = password;
+        this.userRole = UserRole.USER;
         this.city = city;
         this.country = country;
         this.phoneNumber = phoneNumber;
         this.occupation = occupation;
         this.companyInfo = companyInfo;
     }
+
     @JsonIgnore
-    @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return this.roles;
+        SimpleGrantedAuthority authority =
+                new SimpleGrantedAuthority(userRole.name());
+        return Collections.singletonList(authority);
     }
 
 
@@ -253,8 +255,8 @@ public class User implements UserDetails {
     public void setLocked(Boolean locked) {
         isLocked = locked;
     }
-    @Override
-    public boolean isEnabled() {
+
+    public boolean getEnabled() {
         return isEnabled;
     }
 
@@ -262,31 +264,28 @@ public class User implements UserDetails {
         isEnabled = enabled;
     }
 
-    public void setRoles(List<Role> roles) {
-        this.roles = roles;
-    }
-
-    public List<Role> getRoles() {
-        return roles;
-    }
 
     public Double getPenaltyPoints() { return penaltyPoints; }
     public void setPenaltyPoints(Double penalityPoints) { this.penaltyPoints = penalityPoints; }
-    @JsonIgnore
-    @Override
+
     public boolean isAccountNonExpired() {
         return true;
     }
 
-    @JsonIgnore
-    @Override
+
     public boolean isAccountNonLocked() {
         return true;
     }
 
     @JsonIgnore
-    @Override
     public boolean isCredentialsNonExpired() {
         return true;
+    }
+    public UserRole getUserRole() {
+        return userRole;
+    }
+
+    public void setUserRole(UserRole userRole) {
+        this.userRole = userRole;
     }
 }
