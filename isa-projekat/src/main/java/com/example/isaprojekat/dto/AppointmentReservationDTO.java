@@ -4,13 +4,14 @@ import com.example.isaprojekat.model.AppointmentReservation;
 import com.example.isaprojekat.model.Item;
 import com.example.isaprojekat.model.User;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 public class AppointmentReservationDTO {
     private Integer id;
-    private Date appointmentDate;
+    private LocalDateTime appointmentDate;
     private String appointmentTime;
     private Integer appointmentDuration;
     private User user;
@@ -32,7 +33,7 @@ public class AppointmentReservationDTO {
         return id;
     }
 
-    public Date getAppointmentDate() {
+    public LocalDateTime getAppointmentDate() {
         return appointmentDate;
     }
 

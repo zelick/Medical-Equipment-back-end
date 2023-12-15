@@ -20,4 +20,7 @@ public class ItemService {
         newItem.setReservation(itemDto.getReservation());
         return itemRepository.save(newItem);
     }
+    public Item save(Item item){
+        return itemRepository.save(item);
+    }
 }

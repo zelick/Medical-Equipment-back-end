@@ -27,7 +27,7 @@ public class AppointmentReservationController {
             AppointmentReservation createdReservation = reservationService.createReservation(reservationDTO);
             return new ResponseEntity<>(new AppointmentReservationDTO(createdReservation), HttpStatus.CREATED);
         } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+           return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
 

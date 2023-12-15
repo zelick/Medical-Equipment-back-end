@@ -1,6 +1,7 @@
 package com.example.isaprojekat.model;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -11,7 +12,7 @@ public class AppointmentReservation {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     @Column(name = "appointmentDate", nullable = false)
-    private Date appointmentDate;
+    private LocalDateTime appointmentDate;
     @Column(name = "appointmentTime", nullable = false)
     private String appointmentTime;
     @Column(name = "appointmentDuration", nullable = false)
@@ -21,19 +22,18 @@ public class AppointmentReservation {
     @JoinColumn(name = "userId", nullable = false)
     private User user;
 
-    @OneToMany(mappedBy = "reservation", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "reservation", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     private List<Item> items = new ArrayList<Item>();
 
     public AppointmentReservation() {
         this.items = new ArrayList<>();
     }
 
-    public AppointmentReservation(Date appointmentDate, String appointmentTime, Integer appointmentDuration, User user, ArrayList<Item> items) {
+    public AppointmentReservation(LocalDateTime appointmentDate, String appointmentTime, Integer appointmentDuration, User user) {
         this.appointmentDate = appointmentDate;
         this.appointmentTime = appointmentTime;
         this.appointmentDuration = appointmentDuration;
         this.user = user;
-        this.items = items;
     }
 
     public String getAppointmentTime() {
@@ -59,7 +59,15 @@ public class AppointmentReservation {
     public void setUser(User user) {
         this.user = user;
     }
+    public void addItem(Item item) {
+        items.add(item);
+        item.setReservation(this);
+    }
 
+    public void removeItem(Item item) {
+        items.remove(item);
+        item.setReservation(null);
+    }
     public List<Item> getItems() {
         return items;
     }
@@ -76,9 +84,9 @@ public class AppointmentReservation {
         this.id = id;
     }
 
-    public Date getAppointmentDate() {
+    public LocalDateTime getAppointmentDate() {
         return appointmentDate;
     }
 
-    public void setAppointmentDate(Date appointmentDate) { this.appointmentDate = appointmentDate; }
+    public void setAppointmentDate(LocalDateTime appointmentDate) { this.appointmentDate = appointmentDate; }
 }
