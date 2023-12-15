@@ -17,19 +17,12 @@ public class Company {
     private String description;
     @Column(name = "averageGrade", nullable = true)
     private double averageGrade;
-
     @Column(name = "adminId", nullable = true)
     private Integer adminId;
     //slobodni termini za preuzimanje opreme - dodati
 
-    @ManyToMany
-    @JoinTable(
-            name = "company_equipment",
-            joinColumns = @JoinColumn(name = "company_id"),
-            inverseJoinColumns = @JoinColumn(name = "equipment_id")
-    )
+    @OneToMany(mappedBy = "company", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Equipment> equipments = new HashSet<>();
-
     public Company() {
     }
     public Company(String name, String address, String description, double averageGrade, Integer adminId) {
@@ -90,12 +83,12 @@ public class Company {
 
     public void addEquipment(Equipment equipment) {
         this.equipments.add(equipment);
-        equipment.getCompanies().add(this);
+        equipment.setCompany(this);
     }
 
     public void removeEquipment(Equipment equipment) {
         this.equipments.remove(equipment);
-        equipment.getCompanies().remove(this);
+        equipment.setCompany(null);
     }
 
     public Integer getAdminId() {

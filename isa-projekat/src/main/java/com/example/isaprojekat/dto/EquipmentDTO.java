@@ -1,12 +1,6 @@
 package com.example.isaprojekat.dto;
 
-import com.example.isaprojekat.model.Company;
 import com.example.isaprojekat.model.Equipment;
-
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
 public class EquipmentDTO {
     private Integer id;
@@ -16,26 +10,9 @@ public class EquipmentDTO {
     private double grade;
     private String type;
 
-    private List<CompanyDTO> companies = new ArrayList<>();
     public EquipmentDTO() {
     }
 
-    /*public EquipmentDTO(Equipment equipment) {
-        this(equipment.getId(), equipment.getName(),
-                equipment.getDescription(), equipment.getPrice(),
-                equipment.getGrade(), equipment.getType());
-    }
-
-    public EquipmentDTO(Integer id, String name, String description, double price, double grade, String type) {
-        this.id = id;
-        this.name = name;
-        this.description = description;
-        this.price = price;
-        this.grade = grade;
-        this.type = type;
-        //this.companies = convertCompaniesToDTOs(companiesSet);
-        this.companies = new ArrayList<>();
-    }*/
     public EquipmentDTO(Equipment equipment) {
         this.id = equipment.getId();
         this.name = equipment.getName();
@@ -43,16 +20,9 @@ public class EquipmentDTO {
         this.price = equipment.getPrice();
         this.grade = equipment.getGrade();
         this.type = equipment.getType();
-        this.companies = convertCompaniesToDTOs(equipment.getCompaniesSet());
     }
 
-    private List<CompanyDTO> convertCompaniesToDTOs(Set<Company> companies) {
-        List<CompanyDTO> companyDTOs = new ArrayList<>();
-        for (Company company : companies) {
-            companyDTOs.add(new CompanyDTO(company));
-        }
-        return companyDTOs;
-    }
+    // Getters and setters
 
     public Integer getId() {
         return id;
@@ -78,10 +48,4 @@ public class EquipmentDTO {
         return type;
     }
 
-    public void setCompanies(List<CompanyDTO> companies) {
-        this.companies = companies;
-    }
-    public List<CompanyDTO> getCompanies() {
-        return companies;
-    }
 }

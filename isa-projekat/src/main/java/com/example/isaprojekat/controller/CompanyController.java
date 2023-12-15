@@ -78,18 +78,19 @@ public class CompanyController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
     @GetMapping(value = "/getForAdmin/{id}")
     @CrossOrigin(origins = "http://localhost:4200")
     public ResponseEntity<CompanyDTO> getCompanyByAdminId(@PathVariable Integer id){
+        System.out.println("USAO JE U KONTROLER KOMPANIJE");
         try {
             Company company = companyService.findByAdminId(id);
-            CompanyDTO companyDTO = new CompanyDTO();
-            return new ResponseEntity<>(new CompanyDTO(company), HttpStatus.OK);
+            CompanyDTO companyDTO = new CompanyDTO(company);
+            return new ResponseEntity<>(companyDTO, HttpStatus.OK);
         } catch (Exception e) {
             return ResponseEntity.notFound().build();
         }
     }
+
 
     @GetMapping(value = "/search")
     @CrossOrigin(origins = "http://localhost:4200")

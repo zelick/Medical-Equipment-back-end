@@ -1,5 +1,6 @@
 package com.example.isaprojekat.controller;
 
+import com.example.isaprojekat.dto.CompanyDTO;
 import com.example.isaprojekat.dto.UserDTO;
 import com.example.isaprojekat.service.CompanyAdminService;
 import com.example.isaprojekat.service.CompanyService;
@@ -17,6 +18,17 @@ import java.util.List;
 public class CompanyAdminController {
     @Autowired
     private CompanyAdminService companyAdminService;
+
+    @GetMapping("/getCompanyForAdmin/{id}")
+    @CrossOrigin(origins = "http://localhost:4200")
+    public ResponseEntity<CompanyDTO> getCompanyForAdmin(@PathVariable Integer id){
+        try{
+            CompanyDTO company = companyAdminService.getCompanyForAdmin(id);
+            return new ResponseEntity<>(company, HttpStatus.OK);
+        } catch (Exception e){
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 
     @PostMapping(value = "/createAdmins/{companyId}")
     @CrossOrigin(origins = "http://localhost:4200")

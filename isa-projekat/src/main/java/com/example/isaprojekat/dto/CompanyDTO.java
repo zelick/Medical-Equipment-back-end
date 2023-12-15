@@ -1,12 +1,11 @@
 package com.example.isaprojekat.dto;
 
 import com.example.isaprojekat.model.Company;
-import com.example.isaprojekat.model.CompanyAdmin;
-import com.example.isaprojekat.model.User;
+import com.example.isaprojekat.model.Equipment;
 
-import javax.persistence.*;
-import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class CompanyDTO {
     private Integer id;
@@ -14,23 +13,26 @@ public class CompanyDTO {
     private String address;
     private String description;
     private double averageGrade;
-
     private Integer adminId;
+
+    private List<EquipmentDTO> equipments;
+
     public CompanyDTO() {
     }
-    public CompanyDTO(Company company) {
-        this(company.getId(), company.getName(),
-                company.getAddress(), company.getDescription(),
-                company.getAverageGrade(), company.getAdminId());
-    }
 
-    public CompanyDTO(Integer id, String name, String address, String description, double averageGrade, Integer adminId) {
-        this.id = id;
-        this.name = name;
-        this.address = address;
-        this.description = description;
-        this.averageGrade = averageGrade;
-        this.adminId = adminId;
+    public CompanyDTO(Company company) {
+        this.id = company.getId();
+        this.name = company.getName();
+        this.address = company.getAddress();
+        this.description = company.getDescription();
+        this.averageGrade = company.getAverageGrade();
+        this.adminId = company.getAdminId();
+
+        // Mapiraj opremu u DTO format
+        this.equipments = company.getEquipments()
+                .stream()
+                .map(EquipmentDTO::new)
+                .collect(Collectors.toList());
     }
 
     public Integer getId() {
@@ -53,5 +55,15 @@ public class CompanyDTO {
         return averageGrade;
     }
 
-    public Integer getAdminId() { return adminId; }
+    public Integer getAdminId() {
+        return adminId;
+    }
+
+    public List<EquipmentDTO> getEquipments() {
+        return equipments;
+    }
+
+    public void setEquipments(List<EquipmentDTO> equipments) {
+        this.equipments = equipments;
+    }
 }

@@ -36,6 +36,7 @@ public class CompanyService {
         existingCompany.setAddress(companyDTO.getAddress());
         existingCompany.setDescription(companyDTO.getDescription());
         existingCompany.setAverageGrade(companyDTO.getAverageGrade());
+       // existingCompany.setEquipments(companyDTO.getEquipments());
 
         return companyRepository.save(existingCompany);
     }
@@ -52,6 +53,7 @@ public class CompanyService {
     }
 
     public Company findByAdminId(Integer adminId) {
+        System.out.println("usao je u servis kompanije");
         return companyRepository.findByAdminId(adminId)
                 .orElseThrow(() -> new EntityNotFoundException("Company not found for adminId: " + adminId));
     }

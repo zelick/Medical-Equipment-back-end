@@ -1,10 +1,13 @@
 package com.example.isaprojekat.service;
 
 import com.example.isaprojekat.dto.CompanyAdminDTO;
+import com.example.isaprojekat.dto.CompanyDTO;
 import com.example.isaprojekat.dto.UserDTO;
+import com.example.isaprojekat.model.Company;
 import com.example.isaprojekat.model.CompanyAdmin;
 import com.example.isaprojekat.model.User;
 import com.example.isaprojekat.repository.CompanyAdminRepository;
+import com.example.isaprojekat.repository.CompanyRepository;
 import com.example.isaprojekat.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -19,6 +23,7 @@ public class CompanyAdminService {
     @Autowired
     private CompanyAdminRepository companyAdminRepository;
     private UserRepository userRepository;
+    private CompanyRepository companyRepository;
     public List<CompanyAdmin> findAll() {
         return companyAdminRepository.findAll();
     }
@@ -30,6 +35,25 @@ public class CompanyAdminService {
         newCompanyAdmin.setCompany_id(companyAdminDto.getCompanyId());
         newCompanyAdmin.setUser_id(companyAdminDto.getUserId());
         return companyAdminRepository.save(newCompanyAdmin);
+    }
+
+    public CompanyDTO getCompanyForAdmin(Integer adminId) {
+        Integer companyId = companyAdminRepository.findCompanyIdByUserId(adminId);
+
+        // Provera da li je companyId null ili ne
+        if (companyId != null) {
+            Optional<Company> companyOptional = companyRepository.findById(companyId);
+
+            // Provera da li postoji kompanija sa datim ID-em
+            if (companyOptional.isPresent()) {
+                Company company = companyOptional.get();
+                return new CompanyDTO(company);
+            }else {
+                return null;
+            }
+        }else{
+            return null;
+        }
     }
 
     //ne treba
