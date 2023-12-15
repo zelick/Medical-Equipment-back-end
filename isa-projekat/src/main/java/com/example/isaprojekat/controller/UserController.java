@@ -24,7 +24,7 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    /*@GetMapping(value = "/all")
+    @GetMapping(value = "/all")
     public ResponseEntity<List<UserDTO>> getAllUsers() {
 
         List<User> users = userService.findAll();
@@ -36,7 +36,7 @@ public class UserController {
         }
 
         return new ResponseEntity<>(usersDTO, HttpStatus.OK);
-    }*/
+    }
     @GetMapping("/profile")
     @CrossOrigin(origins = "http://localhost:4200")
     public Object secured(Authentication authentication)
@@ -53,7 +53,7 @@ public class UserController {
         User user = userService.findOneByEmail(name);
         return user;
     }
-    /*
+
     @GetMapping
     public ResponseEntity<List<UserDTO>> getUsersPage(Pageable page) {
 
@@ -68,7 +68,7 @@ public class UserController {
         }
 
         return new ResponseEntity<>(usersDTO, HttpStatus.OK);
-    }*/
+    }
 
     @GetMapping(value = "/{id}")
     public ResponseEntity<UserDTO> getUser(@PathVariable Integer id) {
@@ -102,17 +102,16 @@ public class UserController {
         if (exactUser == null) {
             return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
         }
-        UserDTO exactUser1 = new UserDTO(exactUser);
-        exactUser1.setFirstName(updatedUser.getFirstName());
-        exactUser1.setLastName(updatedUser.getLastName());
-        exactUser1.setCity(updatedUser.getCity());
-        exactUser1.setCountry(updatedUser.getCountry());
-        exactUser1.setPhoneNumber(updatedUser.getPhoneNumber());
-        exactUser1.setOccupation(updatedUser.getOccupation());
+        exactUser.setFirstName(updatedUser.getFirstName());
+        exactUser.setLastName(updatedUser.getLastName());
+        exactUser.setCity(updatedUser.getCity());
+        exactUser.setCountry(updatedUser.getCountry());
+        exactUser.setPhoneNumber(updatedUser.getPhoneNumber());
+        exactUser.setOccupation(updatedUser.getOccupation());
 
-        userService.save(exactUser1);
+        userService.save(exactUser);
 
-        return new ResponseEntity<>(exactUser1, HttpStatus.OK);
+        return new ResponseEntity<>(new UserDTO(exactUser), HttpStatus.OK);
     }
 
     /*
@@ -135,8 +134,7 @@ public class UserController {
         User user = new User();
         user.setFirstName(usersDTO.getFirstName());
         user.setLastName(usersDTO.getLastName());
-        UserDTO u = new UserDTO(user);
-        user = userService.save(u);
+        user = userService.save(user);
         return new ResponseEntity<>(new UserDTO(user), HttpStatus.CREATED);
     }
 
@@ -152,8 +150,7 @@ public class UserController {
 
         user.setFirstName(userDTO.getFirstName());
         user.setLastName(userDTO.getLastName());
-        UserDTO u = new UserDTO(user);
-        user = userService.save(u);
+        user = userService.save(user);
         return new ResponseEntity<>(new UserDTO(user), HttpStatus.OK);
     }
 
