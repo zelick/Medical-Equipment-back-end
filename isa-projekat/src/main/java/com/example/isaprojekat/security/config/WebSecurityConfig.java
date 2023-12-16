@@ -60,6 +60,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/appointments/all").permitAll()
                 .antMatchers("/api/appointments/create").permitAll()
                 .antMatchers("/api/companies/getForAdmin/**").permitAll()
+                .antMatchers("/api/companies/removeFrom/**/**").permitAll()
+                .antMatchers("/api/companies/addTo/**/**").permitAll()
                 .antMatchers("/api/companyAdmins/getCompanyForAdmin/**").permitAll() // copanyAdmin
                 .anyRequest().authenticated()
                 .and()

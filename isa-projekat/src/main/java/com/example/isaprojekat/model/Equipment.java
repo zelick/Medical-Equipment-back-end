@@ -1,5 +1,6 @@
 package com.example.isaprojekat.model;
 
+import com.example.isaprojekat.dto.EquipmentDTO;
 import com.example.isaprojekat.model.Company;
 
 import javax.persistence.*;
@@ -40,6 +41,15 @@ public class Equipment {
         this.price = price;
         this.grade = grade;
         this.type = type;
+    }
+
+    public Equipment(EquipmentDTO equipmentDTO) {
+        this.id = equipmentDTO.getId();
+        this.name = equipmentDTO.getName();
+        this.description = equipmentDTO.getDescription();
+        this.price = equipmentDTO.getPrice();
+        this.grade = equipmentDTO.getGrade();
+        this.type = equipmentDTO.getType();
     }
 
     // Getters and setters

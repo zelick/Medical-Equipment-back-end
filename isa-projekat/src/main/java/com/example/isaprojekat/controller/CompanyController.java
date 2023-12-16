@@ -40,6 +40,38 @@ public class CompanyController {
         return new ResponseEntity<>(new CompanyDTO(company), HttpStatus.OK);
     }
 
+    @GetMapping(value = "removeFrom/{companyId}/{equipmentId}")
+    @CrossOrigin(origins = "http://localhost:4200")
+    public ResponseEntity<CompanyDTO> removeEqFromCom(@PathVariable Integer companyId,
+                                                      @PathVariable Integer equipmentId) {
+
+        Company company = companyService.removeEquipmentFromCompany(companyId, equipmentId);
+        System.out.println("Kompanija:");
+        System.out.println(company);
+
+        if (company == null) {
+            //return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        return new ResponseEntity<>(new CompanyDTO(company), HttpStatus.OK);
+    }
+
+    @GetMapping(value = "addTo/{companyId}/{equipmentId}")
+    @CrossOrigin(origins = "http://localhost:4200")
+    public ResponseEntity<CompanyDTO> addEqToCom(@PathVariable Integer companyId,
+                                                      @PathVariable Integer equipmentId) {
+
+        Company company = companyService.addEquipmentToCompany(companyId, equipmentId);
+        System.out.println("Kompanija:");
+        System.out.println(company);
+
+        if (company == null) {
+            //return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        return new ResponseEntity<>(new CompanyDTO(company), HttpStatus.OK);
+    }
+
     @GetMapping(value = "/all")
     @CrossOrigin(origins = "http://localhost:4200")
     public ResponseEntity<List<CompanyDTO>> getAllCompanies() {

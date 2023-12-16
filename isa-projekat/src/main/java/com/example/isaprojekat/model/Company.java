@@ -84,11 +84,13 @@ public class Company {
     public void addEquipment(Equipment equipment) {
         this.equipments.add(equipment);
         equipment.setCompany(this);
+        recalculateAverageGrade();
     }
 
     public void removeEquipment(Equipment equipment) {
         this.equipments.remove(equipment);
         equipment.setCompany(null);
+        recalculateAverageGrade();
     }
 
     public Integer getAdminId() {
@@ -97,5 +99,17 @@ public class Company {
 
     public void setAdminId(Integer adminId) {
         this.adminId = adminId;
+    }
+
+    private void recalculateAverageGrade() {
+        if (equipments.isEmpty()) {
+            this.averageGrade = 0;
+        } else {
+            double totalGrade = 0;
+            for (Equipment equipment : equipments) {
+                totalGrade += equipment.getGrade();
+            }
+            this.averageGrade = totalGrade / equipments.size();
+        }
     }
 }
