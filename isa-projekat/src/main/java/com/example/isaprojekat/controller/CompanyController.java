@@ -3,10 +3,12 @@ package com.example.isaprojekat.controller;
 import com.example.isaprojekat.dto.CompanyDTO;
 import com.example.isaprojekat.dto.EquipmentDTO;
 import com.example.isaprojekat.dto.UserDTO;
+import com.example.isaprojekat.enums.UserRole;
 import com.example.isaprojekat.model.Company;
 import com.example.isaprojekat.model.Equipment;
 import com.example.isaprojekat.model.User;
 import com.example.isaprojekat.service.CompanyService;
+import com.example.isaprojekat.service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -24,6 +26,8 @@ import java.util.List;
 public class CompanyController {
     @Autowired
     private CompanyService companyService;
+    @Autowired
+    private UserService userService;
 
     @GetMapping(value = "getById/{id}")
     @CrossOrigin(origins = "http://localhost:4200")
@@ -57,7 +61,15 @@ public class CompanyController {
 
     @PutMapping(value = "/update/{id}")
     @CrossOrigin(origins = "http://localhost:4200")
-    public ResponseEntity<CompanyDTO> updateCompany(@PathVariable Integer id, @RequestBody CompanyDTO companyDTO) {
+    public ResponseEntity<CompanyDTO> updateCompany(@PathVariable Integer id, @RequestBody CompanyDTO companyDTO,@RequestParam(name = "id", required = false) Integer userId) {
+        User loggedInUser = userService.findOne(userId);
+
+        if(loggedInUser!=null){
+
+            if(loggedInUser.getUserRole()!= UserRole.COMPANY_ADMIN) {
+                return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+
+            }}
         try {
             Company updatedCompany = companyService.updateCompany(id, companyDTO);
             return new ResponseEntity<>(new CompanyDTO(updatedCompany), HttpStatus.OK);
@@ -69,7 +81,14 @@ public class CompanyController {
 
     @PostMapping(value = "/create")
     @CrossOrigin(origins = "http://localhost:4200")
-    public ResponseEntity<CompanyDTO> createCompany(@RequestBody CompanyDTO companyDTO) {
+    public ResponseEntity<CompanyDTO> createCompany(@RequestBody CompanyDTO companyDTO,@RequestParam(name = "id", required = false) Integer userId) {
+        User loggedInUser = userService.findOne(userId);
+
+        if(loggedInUser!=null){
+
+            if(loggedInUser.getUserRole()!= UserRole.SYSTEM_ADMIN){
+                return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+       }}
         try {
             Company createdCompany = companyService.createCompany(companyDTO);
             return new ResponseEntity<>(new CompanyDTO(createdCompany), HttpStatus.CREATED);

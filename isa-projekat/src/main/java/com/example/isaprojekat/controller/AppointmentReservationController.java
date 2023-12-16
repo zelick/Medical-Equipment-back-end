@@ -4,6 +4,7 @@ import com.example.isaprojekat.dto.AppointmentReservationDTO;
 import com.example.isaprojekat.dto.EquipmentAppointmentDTO;
 import com.example.isaprojekat.dto.ItemDTO;
 import com.example.isaprojekat.dto.UserDTO;
+import com.example.isaprojekat.enums.UserRole;
 import com.example.isaprojekat.model.AppointmentReservation;
 import com.example.isaprojekat.model.EquipmentAppointment;
 import com.example.isaprojekat.model.Item;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @RestController
 @RequestMapping(value = "api/reservations")
@@ -34,7 +36,14 @@ public class AppointmentReservationController {
 
     @PostMapping(value = "/create")
     @CrossOrigin(origins = "http://localhost:4200")
-    public ResponseEntity<AppointmentReservationDTO> createReservation(@RequestBody AppointmentReservationDTO reservationDTO) {
+    public ResponseEntity<AppointmentReservationDTO> createReservation(@RequestBody AppointmentReservationDTO reservationDTO,@RequestParam(name = "id", required = false) Integer userId) {
+        User loggedInUser = userService.findOne(userId);
+
+        if(loggedInUser!=null) {
+            if (loggedInUser.getUserRole() != UserRole.USER) {
+                return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+            }
+        }
         try {
             AppointmentReservation createdReservation = reservationService.createReservation(reservationDTO);
             return new ResponseEntity<>(new AppointmentReservationDTO(createdReservation), HttpStatus.CREATED);
@@ -57,9 +66,16 @@ public class AppointmentReservationController {
         return new ResponseEntity<>(reservationDTOS, HttpStatus.OK);
     }
     @GetMapping(value = "/byUser/{username}")
-    public ResponseEntity<List<AppointmentReservationDTO>> getByUser(@PathVariable String username) {
+    public ResponseEntity<List<AppointmentReservationDTO>> getByUser(@PathVariable String username,@RequestParam(name = "id", required = false) Integer userId) {
 
         User user = userService.findOneByEmail(username);
+        User loggedInUser = userService.findOne(userId);
+
+        if(loggedInUser!=null) {
+            if (loggedInUser.getUserRole() != UserRole.USER || !Objects.equals(loggedInUser.getEmail(), user.getEmail())) {
+                return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+            }
+        }
         List<AppointmentReservation> reservations = reservationService.GetAllReservationsForUser(user);
         List<AppointmentReservationDTO> reservationsDTO = new ArrayList<>();
         for (AppointmentReservation r: reservations
@@ -70,7 +86,14 @@ public class AppointmentReservationController {
         return new ResponseEntity<>(reservationsDTO, HttpStatus.OK);
     }
     @PutMapping(value = "/addReservationToItem/{itemId}/{reservationId}")
-    public ResponseEntity<String> addReservationToItem(@PathVariable Integer itemId, @PathVariable Integer reservationId) {
+    public ResponseEntity<String> addReservationToItem(@PathVariable Integer itemId, @PathVariable Integer reservationId,@RequestParam(name = "id", required = false) Integer userId) {
+        User loggedInUser = userService.findOne(userId);
+
+        if(loggedInUser!=null) {
+            if (loggedInUser.getUserRole() != UserRole.USER) {
+                return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+            }
+        }
         try {
             Item item = itemService.getById(itemId);
             reservationService.AddReservationToItem(item, reservationId);
