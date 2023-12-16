@@ -1,9 +1,11 @@
 package com.example.isaprojekat.controller;
 
 import com.example.isaprojekat.dto.AppointmentReservationDTO;
+import com.example.isaprojekat.dto.EquipmentAppointmentDTO;
 import com.example.isaprojekat.dto.ItemDTO;
 import com.example.isaprojekat.dto.UserDTO;
 import com.example.isaprojekat.model.AppointmentReservation;
+import com.example.isaprojekat.model.EquipmentAppointment;
 import com.example.isaprojekat.model.Item;
 import com.example.isaprojekat.model.User;
 import com.example.isaprojekat.service.AppointmentReservationService;
@@ -27,6 +29,8 @@ public class AppointmentReservationController {
     private AppointmentReservationService reservationService;
     @Autowired
     private UserService userService;
+    @Autowired
+    private ItemService itemService;
 
     @PostMapping(value = "/create")
     @CrossOrigin(origins = "http://localhost:4200")
@@ -37,6 +41,20 @@ public class AppointmentReservationController {
         } catch (Exception e) {
            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
+    }
+    @GetMapping(value = "/all")
+    @CrossOrigin(origins = "http://localhost:4200")
+    public ResponseEntity<List<AppointmentReservationDTO>> getAllReservations() {
+
+        List<AppointmentReservation> reservations = reservationService.findAll();
+
+        // convert comapnies to DTOs
+        List<AppointmentReservationDTO> reservationDTOS = new ArrayList<>();
+        for (AppointmentReservation a : reservations) {
+            reservationDTOS.add(new AppointmentReservationDTO(a));
+        }
+
+        return new ResponseEntity<>(reservationDTOS, HttpStatus.OK);
     }
     @GetMapping(value = "/byUser/{username}")
     public ResponseEntity<List<AppointmentReservationDTO>> getByUser(@PathVariable String username) {
@@ -51,5 +69,30 @@ public class AppointmentReservationController {
         }
         return new ResponseEntity<>(reservationsDTO, HttpStatus.OK);
     }
+    @PutMapping(value = "/addReservationToItem/{itemId}/{reservationId}")
+    public ResponseEntity<String> addReservationToItem(@PathVariable Integer itemId, @PathVariable Integer reservationId) {
+        try {
+            Item item = itemService.getById(itemId);
+            reservationService.AddReservationToItem(item, reservationId);
+            return new ResponseEntity<>("Reservation added to item successfully.", HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>("Failed to add reservation to item.", HttpStatus.BAD_REQUEST);
+        }
+    }
+    //public void AddReservationToItem(Item item, Integer reservationId){
+    //public void sendReservationQRCodeByEmail(Integer reservationId, String recipientEmail)
+    @PostMapping("/sendQrCode/{reservationId}/{recipientEmail}")
+    public void sendReservationQRCode(@PathVariable Integer reservationId, @PathVariable String recipientEmail) {
+        try {
+            // Poziv metode sendReservationQRCodeByEmail unutar servisa
+            reservationService.sendReservationQRCodeByEmail(reservationId, recipientEmail);
+            // Dodatne akcije ili povratna vrednost po potrebi
+        } catch (Exception e) {
+            // Obrada izuzetaka
+            e.printStackTrace();
+            // Ili neki drugi način obrade greške
+        }
+    }
+
 
 }

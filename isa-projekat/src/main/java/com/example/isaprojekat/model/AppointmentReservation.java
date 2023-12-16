@@ -22,19 +22,16 @@ public class AppointmentReservation {
     @JoinColumn(name = "userId", nullable = false)
     private User user;
 
-    @OneToMany(mappedBy = "reservation", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
-    private List<Item> items = new ArrayList<Item>();
 
     public AppointmentReservation() {
-        this.items = new ArrayList<>();
+
     }
 
-    public AppointmentReservation(LocalDateTime appointmentDate, String appointmentTime, Integer appointmentDuration, User user, List<Item> items) {
+    public AppointmentReservation(LocalDateTime appointmentDate, String appointmentTime, Integer appointmentDuration, User user) {
         this.appointmentDate = appointmentDate;
         this.appointmentTime = appointmentTime;
         this.appointmentDuration = appointmentDuration;
         this.user = user;
-        this.items = items;
     }
 
     public String getAppointmentTime() {
@@ -60,22 +57,8 @@ public class AppointmentReservation {
     public void setUser(User user) {
         this.user = user;
     }
-    public void addItem(Item item) {
-        items.add(item);
-        item.setReservation(this);
-    }
 
-    public void removeItem(Item item) {
-        items.remove(item);
-        item.setReservation(null);
-    }
-    public List<Item> getItems() {
-        return items;
-    }
 
-    public void setItems(List<Item> items) {
-        this.items = items;
-    }
 
     public Integer getId() {
         return id;

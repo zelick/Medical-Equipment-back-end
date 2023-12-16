@@ -12,17 +12,16 @@ public class Item {
     private Integer equipmentId;
     @Column(name = "quantity", nullable = false)
     private Integer quantity;
-    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "reservationId")
-    private AppointmentReservation reservation;
+    private Integer reservationId;
 
     public Item() {
     }
-    public Item(Integer id, Integer equipmentId, Integer quantity, AppointmentReservation reservation) {
+    public Item(Integer id, Integer equipmentId, Integer quantity, Integer reservation) {
         this.id = id;
         this.equipmentId = equipmentId;
         this.quantity = quantity;
-        this.reservation = reservation;
+        this.reservationId = reservation;
     }
 
     public Integer getId() {
@@ -49,9 +48,9 @@ public class Item {
         this.quantity = quantity;
     }
 
-    public AppointmentReservation getReservation() { return reservation; }
-    public void setReservation(AppointmentReservation reservation) {
-        this.reservation = reservation;
+    public Integer getReservation() { return reservationId; }
+    public void setReservation(Integer reservation) {
+        this.reservationId = reservation;
     }
 
 

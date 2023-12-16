@@ -17,18 +17,17 @@ public class AppointmentReservationDTO {
     private String appointmentTime;
     private Integer appointmentDuration;
     private User user;
-    private List<Item> items;
 
     public AppointmentReservationDTO() {
-        this.items = new ArrayList<>();
+
     }
 
     public AppointmentReservationDTO(AppointmentReservation reservation) {
+        this.id =reservation.getId();
         this.appointmentDate = reservation.getAppointmentDate();
         this.appointmentTime = reservation.getAppointmentTime();
         this.appointmentDuration = reservation.getAppointmentDuration();
         this.user = reservation.getUser();
-        this.items = reservation.getItems();
     }
 
     public Integer getId() {
@@ -51,9 +50,7 @@ public class AppointmentReservationDTO {
         return user;
     }
 
-    public List<Item> getItems() {
-        return items;
-    }
+
 
     public void setId(Integer id) {
         this.id = id;
@@ -75,9 +72,7 @@ public class AppointmentReservationDTO {
         this.user = user;
     }
 
-    public void setItems(List<Item> items) {
-        this.items = items;
-    }
+
 
 
 }

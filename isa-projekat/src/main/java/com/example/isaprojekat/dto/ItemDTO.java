@@ -6,7 +6,7 @@ public class ItemDTO {
     private Integer id;
     private Integer equipmentId;
     private Integer quantity;
-    private AppointmentReservation reservation;
+    private Integer reservationId;
     public ItemDTO() {
     }
 
@@ -14,7 +14,7 @@ public class ItemDTO {
         this.id = item.getId();
         this.equipmentId = item.getEquipmentId();
         this.quantity = item.getQuantity();
-        this.reservation = item.getReservation();
+        this.reservationId = item.getReservation();
     }
 
     public Integer getId() {
@@ -29,5 +29,5 @@ public class ItemDTO {
         return quantity;
     }
 
-    public AppointmentReservation getReservation() { return reservation; }
+    public Integer getReservation() { return reservationId; }
 }

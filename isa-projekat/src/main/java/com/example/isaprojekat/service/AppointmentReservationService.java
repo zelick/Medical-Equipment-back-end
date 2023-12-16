@@ -35,6 +35,9 @@ public class AppointmentReservationService {
     public AppointmentReservation getById(Integer id){
         return reservationRepository.getById(id);
     }
+    public List<AppointmentReservation> findAll() {
+        return reservationRepository.findAll();
+    }
     public AppointmentReservation createReservation(AppointmentReservationDTO reservationDTO) throws ParseException {
 
         AppointmentReservation newReservation = new AppointmentReservation();
@@ -45,19 +48,14 @@ public class AppointmentReservationService {
 
         AppointmentReservation res = reservationRepository.save(newReservation);
 
-        for (Item i : reservationDTO.getItems()) {
-            i.setReservation(res);
-            itemService.save(i);
-        }
-        res.setItems(reservationDTO.getItems());
         //List<EquipmentAppointment> appointments = equipmentAppointmentService.findAvailableAppointments(res.getItems());
-        sendReservationQRCodeByEmail(res.getId(),"anjakovacevic9455@gmail.com");
-        return reservationRepository.save(res);
+        //sendReservationQRCodeByEmail(res.getId(),"anjakovacevic9455@gmail.com");
+        return res;
     }
     public String generateQrCodeString(AppointmentReservationDTO res){
         StringBuilder itemsString = new StringBuilder();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        for (Item item : res.getItems()) {
+        for (Item item : itemService.getItemsByReservationId(res.getId())) {
             itemsString.append("-");
             Equipment e =equipmentService.GetOne(item.getEquipmentId());
             itemsString.append("Quantity: ").append(item.getQuantity()).append(", Name: ").append(e.getName()).append("\n");
@@ -72,6 +70,10 @@ public class AppointmentReservationService {
                 "Items: "+ "\n" + itemsString + "\n" +
                 ' ';
     }
+    public void AddReservationToItem(Item item, Integer reservationId){
+        item.setReservation(reservationId);
+        itemService.save(item);
+    }
 
     public List<AppointmentReservation> GetAllReservationsForUser(User user){
         return reservationRepository.getAppointmentReservationsByUser(user);
@@ -82,7 +84,7 @@ public class AppointmentReservationService {
 
         // Additional information
         User user = reservation.getUser();
-        List<Item> items = reservation.getItems();
+        List<Item> items = itemService.getItemsByReservationId(reservation.getId());
         // Add any other information you want
 
         // Create a DTO (Data Transfer Object) to represent the reservation with additional information
@@ -92,7 +94,7 @@ public class AppointmentReservationService {
         reservationDto.setAppointmentTime(reservation.getAppointmentTime());
         reservationDto.setAppointmentDuration(reservation.getAppointmentDuration());
         //reservationDto.setUserName(user.getName()); // Assuming there's a getName() method in the User class
-        reservationDto.setItems(items); // Assuming there's a getter for items in the ReservationDto class
+        //reservationDto.setItems(items); // Assuming there's a getter for items in the ReservationDto class
 
         // Convert the reservation DTO to a string (you might want to customize this based on your needs)
         String reservationData = generateQrCodeString(reservationDto);
@@ -105,13 +107,13 @@ public class AppointmentReservationService {
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             ImageIO.write(qrCodeImage, "png", baos);
             byte[] qrCodeBytes = baos.toByteArray();
-            emailService.generateQrCodeAndSendEmail(
+            //emailService.generateQrCodeAndSendEmail(
 
-            );
+            //);
 
             // Send email with QR Code attached
             emailService.sendEmailWithAttachment(
-                    recipientEmail,
+                    user.getEmail(),
                     "Reservation QR Code",
                     "Please find your reservation QR Code attached.",
                     qrCodeBytes,
