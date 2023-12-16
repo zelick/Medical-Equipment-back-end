@@ -86,14 +86,8 @@ public class AppointmentReservationController {
         return new ResponseEntity<>(reservationsDTO, HttpStatus.OK);
     }
     @PutMapping(value = "/addReservationToItem/{itemId}/{reservationId}")
-    public ResponseEntity<String> addReservationToItem(@PathVariable Integer itemId, @PathVariable Integer reservationId,@RequestParam(name = "id", required = false) Integer userId) {
-        User loggedInUser = userService.findOne(userId);
+    public ResponseEntity<String> addReservationToItem(@PathVariable Integer itemId, @PathVariable Integer reservationId) {
 
-        if(loggedInUser!=null) {
-            if (loggedInUser.getUserRole() != UserRole.USER) {
-                return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-            }
-        }
         try {
             Item item = itemService.getById(itemId);
             reservationService.AddReservationToItem(item, reservationId);
