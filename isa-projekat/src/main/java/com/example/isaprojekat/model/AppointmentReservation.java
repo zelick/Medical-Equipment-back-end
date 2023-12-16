@@ -29,11 +29,12 @@ public class AppointmentReservation {
         this.items = new ArrayList<>();
     }
 
-    public AppointmentReservation(LocalDateTime appointmentDate, String appointmentTime, Integer appointmentDuration, User user) {
+    public AppointmentReservation(LocalDateTime appointmentDate, String appointmentTime, Integer appointmentDuration, User user, List<Item> items) {
         this.appointmentDate = appointmentDate;
         this.appointmentTime = appointmentTime;
         this.appointmentDuration = appointmentDuration;
         this.user = user;
+        this.items = items;
     }
 
     public String getAppointmentTime() {

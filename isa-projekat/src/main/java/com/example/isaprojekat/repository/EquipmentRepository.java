@@ -15,4 +15,6 @@ public interface EquipmentRepository extends JpaRepository<Equipment, Integer> {
     List<Equipment> findAllByCompanies_Id(Integer companyId);
     @Query("SELECT DISTINCT e FROM Equipment e JOIN FETCH e.companies")
     List<Equipment> findAllWithCompanies();
+
+    Equipment getById(Integer id);
 }

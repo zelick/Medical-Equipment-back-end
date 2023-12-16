@@ -15,6 +15,7 @@ public class EquipmentService {
     @Autowired
     private EquipmentRepository equipmentRepository;
 
+    public Equipment GetOne(Integer id){return equipmentRepository.getById(id);}
     public List<Equipment> findAllByCompanies_Id(Integer id){return equipmentRepository.findAllByCompanies_Id(id);}
     public List<Equipment> findAll() {
         return equipmentRepository.findAll();

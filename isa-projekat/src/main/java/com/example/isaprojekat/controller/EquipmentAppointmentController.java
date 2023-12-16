@@ -4,8 +4,12 @@ import com.example.isaprojekat.dto.CompanyDTO;
 import com.example.isaprojekat.dto.EquipmentAppointmentDTO;
 import com.example.isaprojekat.model.Company;
 import com.example.isaprojekat.model.EquipmentAppointment;
+import com.example.isaprojekat.model.Item;
 import com.example.isaprojekat.service.CompanyService;
 import com.example.isaprojekat.service.EquipmentAppointmentService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -41,6 +45,22 @@ public class EquipmentAppointmentController {
     public ResponseEntity<List<EquipmentAppointmentDTO>> getAllAppointments() {
 
         List<EquipmentAppointment> appointments = appointmentService.findAll();
+
+        // convert comapnies to DTOs
+        List<EquipmentAppointmentDTO> appointmentDTOS = new ArrayList<>();
+        for (EquipmentAppointment a : appointments) {
+            appointmentDTOS.add(new EquipmentAppointmentDTO(a));
+        }
+
+        return new ResponseEntity<>(appointmentDTOS, HttpStatus.OK);
+    }
+    @PostMapping(value = "/availableDates")
+    @CrossOrigin(origins = "http://localhost:4200")
+    public ResponseEntity<List<EquipmentAppointmentDTO>> GetAvailableAppointments(@RequestParam("items") String itemsJson) throws JsonProcessingException {
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        List<Item> items = objectMapper.readValue(itemsJson, new TypeReference<List<Item>>() {});
+        List<EquipmentAppointment> appointments = appointmentService.findAvailableAppointments(items);
 
         // convert comapnies to DTOs
         List<EquipmentAppointmentDTO> appointmentDTOS = new ArrayList<>();

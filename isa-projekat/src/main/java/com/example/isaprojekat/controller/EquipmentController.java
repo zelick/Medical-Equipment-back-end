@@ -1,7 +1,9 @@
 package com.example.isaprojekat.controller;
 
+import com.example.isaprojekat.dto.EquipmentAppointmentDTO;
 import com.example.isaprojekat.dto.EquipmentDTO;
 import com.example.isaprojekat.model.Equipment;
+import com.example.isaprojekat.model.EquipmentAppointment;
 import com.example.isaprojekat.service.EquipmentService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -79,5 +81,17 @@ public class EquipmentController {
             equipmentDTOs.add(new EquipmentDTO(equipment));
         }
         return equipmentDTOs;
+    }
+    @GetMapping(value = "getById/{id}")
+    @CrossOrigin(origins = "http://localhost:4200")
+    public ResponseEntity<EquipmentDTO> getCompany(@PathVariable Integer id) {
+
+        Equipment equipment = equipmentService.GetOne(id);
+
+        if (equipment == null) {
+            //return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        return new ResponseEntity<>(new EquipmentDTO(equipment), HttpStatus.OK);
     }
 }
