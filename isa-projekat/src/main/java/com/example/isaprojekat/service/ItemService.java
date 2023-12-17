@@ -15,6 +15,9 @@ public class ItemService {
     @Autowired
     private ItemRepository itemRepository;
 
+    public List<Item> findAll(){
+        return itemRepository.findAll();
+    }
     public Item createItem(ItemDTO itemDto) {
         Item newItem = new Item();
         newItem.setEquipmentId(itemDto.getEquipmentId());
