@@ -24,7 +24,7 @@ public class EquipmentService {
     }
 
     public Equipment GetOne(Integer id){return equipmentRepository.getById(id);}
-    public List<Equipment> findAllByCompanies_Id(Integer id){return equipmentRepository.findAllByCompanies_Id(id);}
+   // public List<Equipment> findAllByCompanies_Id(Integer id){return equipmentRepository.findAllByCompanies_Id(id);}
     //public List<Equipment> findAllByCompanies_Id(Integer id){return equipmentRepository.findAllByCompanyId(id);}
     public List<Equipment> findAll() {
         return equipmentRepository.findAll();

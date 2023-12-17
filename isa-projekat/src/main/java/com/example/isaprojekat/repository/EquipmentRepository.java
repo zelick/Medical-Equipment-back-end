@@ -13,9 +13,9 @@ import java.util.List;
 @Repository
 @Transactional(readOnly = true)
 public interface EquipmentRepository extends JpaRepository<Equipment, Integer> {
-    List<Equipment> findAllByCompanies_Id(Integer companyId);
-    @Query("SELECT DISTINCT e FROM Equipment e JOIN FETCH e.companies")
-    List<Equipment> findAllWithCompanies();
+    //List<Equipment> findAllByCompanies_Id(Integer companyId);
+    /*@Query("SELECT DISTINCT e FROM Equipment e JOIN FETCH e.companies")
+    List<Equipment> findAllWithCompanies();*/
 
     Equipment getById(Integer id);
     /*@Query("SELECT e FROM Equipment e WHERE e.company.id = :companyId")

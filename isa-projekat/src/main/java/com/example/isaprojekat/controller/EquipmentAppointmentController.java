@@ -83,7 +83,7 @@ public class EquipmentAppointmentController {
         }
     }
 
-    @GetMapping(value = "/adminsAppointments/{admin_id}")
+    /*@GetMapping(value = "/adminsAppointments/{admin_id}")
     @CrossOrigin(origins = "http://localhost:4200")
     public ResponseEntity<List<EquipmentAppointmentDTO>> getAdminsAppointments(@PathVariable Integer admin_id) {
 
@@ -96,5 +96,5 @@ public class EquipmentAppointmentController {
         }
 
         return new ResponseEntity<>(appointmentDTOS, HttpStatus.OK);
-    }
+    }*/
 }
