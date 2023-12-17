@@ -17,6 +17,7 @@ public class UserDTO {
     private String phoneNumber;
     private String occupation;
     private String companyInfo;
+    private Boolean isUserFirstLogged;
 
     public UserDTO() {
 
@@ -36,13 +37,14 @@ public class UserDTO {
                 user.getCompanyInfo(),
                 user.getPassword(),
                 user.getEnabled(),
-                user.getEmail()
+                user.getEmail(),
+                user.getUserFirstLogged()
         );
     }
-
+    
     public UserDTO(Integer id, String firstName, String lastName, Double penaltyPoints, UserRole userRole,
                    String city, String country, String phoneNumber, String occupation, String companyInfo,
-                   String password, boolean isEnabled, String email) {
+                   String password, boolean isEnabled, String email,boolean isUserFirstLogged) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -56,6 +58,7 @@ public class UserDTO {
         this.companyInfo = companyInfo;
         this.password= password;
         this.isEnabled=isEnabled;
+        this.isUserFirstLogged = isUserFirstLogged;
     }
 
     public String getEmail() {
@@ -162,5 +165,15 @@ public class UserDTO {
 
     public void setEnabled(boolean enabled) {
         isEnabled = enabled;
+    }
+
+    //change password
+
+    public Boolean getUserFirstLogged() {
+        return isUserFirstLogged;
+    }
+
+    public void setUserFirstLogged(Boolean userFirstLogged) {
+        isUserFirstLogged = userFirstLogged;
     }
 }

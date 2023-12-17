@@ -179,4 +179,21 @@ public class UserController {
         }
         return new ResponseEntity<>(usersDTO, HttpStatus.OK);
     }
+
+    //change password
+
+    @GetMapping(value= "/updateUsersPassword/{password}/{userId}")
+    @CrossOrigin(origins = "http://localhost:4200")
+    public ResponseEntity<UserDTO> updateUsersPassword (@PathVariable String password, @PathVariable int userId) {
+        User foundedUser = userService.findOne(userId);
+
+        if (foundedUser == null) {
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        }
+        foundedUser.setPassword(password);
+        foundedUser.setUserFirstLogged(true);
+        userService.save(foundedUser);
+
+        return new ResponseEntity<>(new UserDTO(foundedUser), HttpStatus.OK);
+    }
 }

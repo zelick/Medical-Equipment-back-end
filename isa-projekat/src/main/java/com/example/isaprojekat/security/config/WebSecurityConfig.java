@@ -52,6 +52,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/companies/create").permitAll()
                 .antMatchers("/api/users/getUserByUsername/**").permitAll()
                 .antMatchers("/api/users/updateUser/**").permitAll()
+                .antMatchers("/api/users/updateUsersPassword/**/**").permitAll() //Change password
                 .antMatchers("/api/registration/**").permitAll()
                 .antMatchers("/api/companies/search").permitAll()
                 .antMatchers("/api/companyAdmins/createAdmins/**").permitAll() // copanyAdmin

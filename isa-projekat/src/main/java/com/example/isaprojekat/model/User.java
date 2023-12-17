@@ -60,6 +60,9 @@ public class User {
     @Column(name = "companyInfo", nullable = false)
     private String companyInfo;
 
+    @Column(name = "is_user_first_logged", nullable = false)
+    private Boolean isUserFirstLogged;
+
     public User(){super();}
 
     public User(Integer id, String firstName, String lastName,
@@ -69,7 +72,7 @@ public class User {
                 String country,
                 String phoneNumber,
                 String occupation,
-                String companyInfo){
+                String companyInfo, boolean isUserFirstLogged){
         super();
         this.id=id;
         this.firstName=firstName;
@@ -85,6 +88,7 @@ public class User {
         this.phoneNumber = phoneNumber;
         this.occupation = occupation;
         this.companyInfo = companyInfo;
+        this.isUserFirstLogged = isUserFirstLogged;
     }
 
     public User(String firstName,
@@ -287,5 +291,13 @@ public class User {
 
     public void setUserRole(UserRole userRole) {
         this.userRole = userRole;
+    }
+
+    //changed password
+    public void setUserFirstLogged(Boolean userFirstLogged) {
+        isUserFirstLogged = userFirstLogged;
+    }
+    public Boolean getUserFirstLogged() {
+        return isUserFirstLogged;
     }
 }
