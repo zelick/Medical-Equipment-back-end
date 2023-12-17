@@ -59,6 +59,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/appointments/getById/**").permitAll()
                 .antMatchers("/api/appointments/all").permitAll()
                 .antMatchers("/api/appointments/create").permitAll()
+                .antMatchers("/api/adminsAppointments/**").permitAll() 
                 .antMatchers("/api/companies/getForAdmin/**").permitAll()
                 .antMatchers("/api/companies/removeFrom/**/**").permitAll()
                 .antMatchers("/api/companies/addTo/**/**").permitAll()

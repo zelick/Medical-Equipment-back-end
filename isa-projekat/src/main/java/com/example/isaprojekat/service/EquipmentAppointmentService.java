@@ -26,7 +26,9 @@ public class EquipmentAppointmentService {
     public List<EquipmentAppointment> findAll() {
         return equipmentAppointmentRepository.findAll();
     }
-
+    public List<EquipmentAppointment> findAllByAdminId(int admin_id){
+        return equipmentAppointmentRepository.findAllByAdmin_Id(admin_id);
+    }
     public EquipmentAppointment createAppointment(EquipmentAppointmentDTO equipmentAppointmentDTO) {
 
         EquipmentAppointment newAppointment = new EquipmentAppointment();

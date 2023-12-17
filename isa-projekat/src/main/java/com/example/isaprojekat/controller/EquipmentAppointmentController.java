@@ -62,4 +62,19 @@ public class EquipmentAppointmentController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    @GetMapping(value = "/adminsAppointments/{admin_id}")
+    @CrossOrigin(origins = "http://localhost:4200")
+    public ResponseEntity<List<EquipmentAppointmentDTO>> getAdminsAppointments(@PathVariable Integer admin_id) {
+
+        List<EquipmentAppointment> appointments = appointmentService.findAllByAdminId(admin_id);
+
+        // convert comapnies to DTOs
+        List<EquipmentAppointmentDTO> appointmentDTOS = new ArrayList<>();
+        for (EquipmentAppointment a : appointments) {
+            appointmentDTOS.add(new EquipmentAppointmentDTO(a));
+        }
+
+        return new ResponseEntity<>(appointmentDTOS, HttpStatus.OK);
+    }
 }
