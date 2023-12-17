@@ -23,6 +23,8 @@ public class Company {
 
     @OneToMany(mappedBy = "company", cascade = CascadeType.PERSIST, orphanRemoval = false)
     private Set<Equipment> equipments = new HashSet<>();
+
+    
     public Company() {
     }
     public Company(String name, String address, String description, double averageGrade, Integer adminId) {
