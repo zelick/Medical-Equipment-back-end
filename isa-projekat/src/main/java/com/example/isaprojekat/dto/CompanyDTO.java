@@ -17,6 +17,10 @@ public class CompanyDTO {
 
     private List<EquipmentDTO> equipments;
 
+    private String workTimeBegin;
+
+    private String workTimeEnd;
+
     public CompanyDTO() {
     }
 
@@ -33,6 +37,9 @@ public class CompanyDTO {
                 .stream()
                 .map(EquipmentDTO::new)
                 .collect(Collectors.toList());
+
+        this.workTimeBegin = company.getWorkTimeBegin();
+        this.workTimeEnd = company.getWorkTimeEnd();
     }
 
     public Integer getId() {
@@ -65,5 +72,21 @@ public class CompanyDTO {
 
     public void setEquipments(List<EquipmentDTO> equipments) {
         this.equipments = equipments;
+    }
+
+    public String getWorkTimeBegin() {
+        return workTimeBegin;
+    }
+
+    public void setWorkTimeBegin(String workTimeBegin) {
+        this.workTimeBegin = workTimeBegin;
+    }
+
+    public String getWorkTimeEnd() {
+        return workTimeEnd;
+    }
+
+    public void setWorkTimeEnd(String workTimeEnd) {
+        this.workTimeEnd = workTimeEnd;
     }
 }
