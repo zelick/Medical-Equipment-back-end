@@ -21,7 +21,7 @@ public class Company {
     private Integer adminId;
     //slobodni termini za preuzimanje opreme - dodati
 
-    @OneToMany(mappedBy = "company", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "company", cascade = CascadeType.PERSIST, orphanRemoval = false)
     private Set<Equipment> equipments = new HashSet<>();
     public Company() {
     }
