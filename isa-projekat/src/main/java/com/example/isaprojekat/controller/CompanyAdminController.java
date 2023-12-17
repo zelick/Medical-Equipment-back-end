@@ -1,5 +1,6 @@
 package com.example.isaprojekat.controller;
 
+import com.example.isaprojekat.dto.CompanyDTO;
 import com.example.isaprojekat.dto.UserDTO;
 import com.example.isaprojekat.enums.UserRole;
 import com.example.isaprojekat.model.User;
@@ -22,6 +23,17 @@ public class CompanyAdminController {
     private CompanyAdminService companyAdminService;
     @Autowired
     private UserService userService;
+
+    @GetMapping("/getCompanyForAdmin/{id}")
+    @CrossOrigin(origins = "http://localhost:4200")
+    public ResponseEntity<CompanyDTO> getCompanyForAdmin(@PathVariable Integer id){
+        try{
+            CompanyDTO company = companyAdminService.getCompanyForAdmin(id);
+            return new ResponseEntity<>(company, HttpStatus.OK);
+        } catch (Exception e){
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 
     @PostMapping(value = "/createAdmins/{companyId}")
     @CrossOrigin(origins = "http://localhost:4200")

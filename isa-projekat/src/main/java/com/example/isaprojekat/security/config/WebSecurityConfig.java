@@ -43,6 +43,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/companies/all").permitAll()
                 .antMatchers("/api/registration/").permitAll()
                 .antMatchers("/api/equipment/getEquipmentForCompany/**").permitAll()
+                .antMatchers("/api/equipment/getById/**").permitAll()
+                .antMatchers("/api/equipment/update/**").permitAll()
                 .antMatchers("/api/equipment/searchByName").permitAll() //search equipment controller
                 .antMatchers("/api/equipment/all").permitAll()          //all equipment
                 .antMatchers("/api/equipment/getAllEquipmentWithCompanies").permitAll()  //dodala
@@ -57,6 +59,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/appointments/getById/**").permitAll()
                 .antMatchers("/api/appointments/all").permitAll()
                 .antMatchers("/api/appointments/create").permitAll()
+                .antMatchers("/api/appointments/adminsAppointments/**").permitAll() 
                 .antMatchers("/api/companies/getForAdmin/**").permitAll()
                 .antMatchers("/api/item/create").permitAll()
                 .antMatchers("/api/reservations/create").permitAll()
@@ -65,6 +68,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/reservations/addReservationToItem/**").permitAll()
                 .antMatchers("/api/reservations/**").permitAll()
                 .antMatchers("/api/item/byReservation/**").permitAll()
+                .antMatchers("/api/companies/removeFrom/**/**").permitAll()
+                .antMatchers("/api/companies/addTo/**/**").permitAll()
+                .antMatchers("/api/companyAdmins/getCompanyForAdmin/**").permitAll() // copanyAdmin
                 .anyRequest().authenticated()
                 .and()
                 .cors()

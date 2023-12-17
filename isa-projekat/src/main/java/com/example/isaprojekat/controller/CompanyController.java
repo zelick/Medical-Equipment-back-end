@@ -44,6 +44,38 @@ public class CompanyController {
         return new ResponseEntity<>(new CompanyDTO(company), HttpStatus.OK);
     }
 
+    @GetMapping(value = "removeFrom/{companyId}/{equipmentId}")
+    @CrossOrigin(origins = "http://localhost:4200")
+    public ResponseEntity<CompanyDTO> removeEqFromCom(@PathVariable Integer companyId,
+                                                      @PathVariable Integer equipmentId) {
+
+        Company company = companyService.removeEquipmentFromCompany(companyId, equipmentId);
+        System.out.println("Kompanija:");
+        System.out.println(company);
+
+        if (company == null) {
+            //return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        return new ResponseEntity<>(new CompanyDTO(company), HttpStatus.OK);
+    }
+
+    @GetMapping(value = "addTo/{companyId}/{equipmentId}")
+    @CrossOrigin(origins = "http://localhost:4200")
+    public ResponseEntity<CompanyDTO> addEqToCom(@PathVariable Integer companyId,
+                                                      @PathVariable Integer equipmentId) {
+
+        Company company = companyService.addEquipmentToCompany(companyId, equipmentId);
+        System.out.println("Kompanija:");
+        System.out.println(company);
+
+        if (company == null) {
+            //return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        return new ResponseEntity<>(new CompanyDTO(company), HttpStatus.OK);
+    }
+
     @GetMapping(value = "/all")
     @CrossOrigin(origins = "http://localhost:4200")
     public ResponseEntity<List<CompanyDTO>> getAllCompanies() {
@@ -97,18 +129,19 @@ public class CompanyController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
     @GetMapping(value = "/getForAdmin/{id}")
     @CrossOrigin(origins = "http://localhost:4200")
     public ResponseEntity<CompanyDTO> getCompanyByAdminId(@PathVariable Integer id){
+        System.out.println("USAO JE U KONTROLER KOMPANIJE");
         try {
             Company company = companyService.findByAdminId(id);
-            CompanyDTO companyDTO = new CompanyDTO();
-            return new ResponseEntity<>(new CompanyDTO(company), HttpStatus.OK);
+            CompanyDTO companyDTO = new CompanyDTO(company);
+            return new ResponseEntity<>(companyDTO, HttpStatus.OK);
         } catch (Exception e) {
             return ResponseEntity.notFound().build();
         }
     }
+
 
     @GetMapping(value = "/search")
     @CrossOrigin(origins = "http://localhost:4200")

@@ -12,4 +12,5 @@ import java.util.List;
 @Transactional(readOnly = true)
 public interface EquipmentAppointmentRepository extends JpaRepository<EquipmentAppointment, Integer> {
     List<EquipmentAppointment> findEquipmentAppointmentByEquipmentId(Integer equipmentId);
+    List<EquipmentAppointment> findAllByAdmin_Id(int adminId);
 }

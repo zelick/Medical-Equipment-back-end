@@ -1,5 +1,6 @@
 package com.example.isaprojekat.model;
 
+import com.example.isaprojekat.dto.EquipmentDTO;
 import com.example.isaprojekat.model.Company;
 
 import javax.persistence.*;
@@ -27,13 +28,9 @@ public class Equipment {
     @Column(name = "type", nullable = false)
     private String type;
 
-    @ManyToMany
-    @JoinTable(
-            name = "company_equipment",
-            joinColumns = @JoinColumn(name = "equipment_id"),
-            inverseJoinColumns = @JoinColumn(name = "company_id")
-    )
-    private Set<Company> companies = new HashSet<>();
+    @ManyToOne
+    @JoinColumn(name = "company_id")
+    private Company company;
 
     public Equipment() {
     }
@@ -44,6 +41,15 @@ public class Equipment {
         this.price = price;
         this.grade = grade;
         this.type = type;
+    }
+
+    public Equipment(EquipmentDTO equipmentDTO) {
+        this.id = equipmentDTO.getId();
+        this.name = equipmentDTO.getName();
+        this.description = equipmentDTO.getDescription();
+        this.price = equipmentDTO.getPrice();
+        this.grade = equipmentDTO.getGrade();
+        this.type = equipmentDTO.getType();
     }
 
     // Getters and setters
@@ -96,24 +102,12 @@ public class Equipment {
         this.type = type;
     }
 
-    public Set<Company> getCompanies() {
-        return companies;
-    }
-    public Set<Company> getCompaniesSet(){ return  this.companies; }
-
-    public void setCompanies(Set<Company> companies) {
-        this.companies = companies;
+    public Company getCompany() {
+        return company;
     }
 
-
-    public void addCompany(Company company) {
-        this.companies.add(company);
-        company.getEquipments().add(this);
-    }
-
-    public void removeCompany(Company company) {
-        this.companies.remove(company);
-        company.getEquipments().remove(this);
+    public void setCompany(Company company) {
+        this.company = company;
     }
 
 }
