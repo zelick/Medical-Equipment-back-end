@@ -1,6 +1,7 @@
 package com.example.isaprojekat.service;
 
 import com.example.isaprojekat.dto.UserDTO;
+import com.example.isaprojekat.model.Company;
 import com.example.isaprojekat.model.ConfirmationToken;
 import com.example.isaprojekat.model.User;
 import com.example.isaprojekat.repository.UserRepository;

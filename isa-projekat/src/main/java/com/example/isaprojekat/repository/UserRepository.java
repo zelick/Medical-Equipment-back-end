@@ -23,6 +23,8 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     Optional<UserDetails> findByEmail(String email);
     public User findUserByEmail(String email);
 
+
+
     @Transactional
     @Modifying
     @Query("UPDATE User a " +

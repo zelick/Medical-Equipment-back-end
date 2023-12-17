@@ -23,14 +23,23 @@ public class Company {
 
     @OneToMany(mappedBy = "company", cascade = CascadeType.PERSIST, orphanRemoval = false)
     private Set<Equipment> equipments = new HashSet<>();
+
+    @Column(name= "workTimeBegin", nullable = true)
+    private String workTimeBegin;
+
+    @Column(name= "workTimeEnd", nullable = true)
+    private String workTimeEnd;
     public Company() {
     }
-    public Company(String name, String address, String description, double averageGrade, Integer adminId) {
+    public Company(String name, String address, String description, double averageGrade, Integer adminId,
+                   String workTimeBegin, String workTimeEnd) {
         this.name = name;
         this.address = address;
         this.description = description;
         this.averageGrade = averageGrade;
         this.adminId = adminId;
+        this.workTimeBegin = workTimeBegin;
+        this.workTimeEnd = workTimeEnd;
     }
 
     public Integer getId() {
@@ -111,5 +120,21 @@ public class Company {
             }
             this.averageGrade = totalGrade / equipments.size();
         }
+    }
+
+    public String getWorkTimeBegin() {
+        return workTimeBegin;
+    }
+
+    public void setWorkTimeBegin(String workTimeBegin) {
+        this.workTimeBegin = workTimeBegin;
+    }
+
+    public String getWorkTimeEnd() {
+        return workTimeEnd;
+    }
+
+    public void setWorkTimeEnd(String workTimeEnd) {
+        this.workTimeEnd = workTimeEnd;
     }
 }

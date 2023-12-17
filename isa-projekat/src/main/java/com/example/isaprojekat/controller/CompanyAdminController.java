@@ -62,4 +62,18 @@ public class CompanyAdminController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    @GetMapping(value = "/getAdminsForCompany/{companyId}")
+    @CrossOrigin(origins = "http://localhost:4200")
+    public ResponseEntity<List<UserDTO>> getAdminsFOrCompany(@PathVariable Integer companyId){
+        System.out.println("Usao je u kontroler proba");
+        System.out.println("Id kompanije:");
+        System.out.println(companyId);
+        try{
+            List<UserDTO> admins = companyAdminService.getAdminsForCompany(companyId);
+            return new ResponseEntity<>(admins, HttpStatus.OK);
+        } catch (Exception e){
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }

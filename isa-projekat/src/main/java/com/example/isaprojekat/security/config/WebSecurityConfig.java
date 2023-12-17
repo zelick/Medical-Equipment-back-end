@@ -39,6 +39,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http.csrf().disable()
                 .authorizeRequests()
                 .antMatchers("/api/users/getUserByUsername/").permitAll()
+                .antMatchers("/api/users/all").permitAll()
                 .antMatchers("/api/companies/getById/**").permitAll()
                 .antMatchers("/api/companies/all").permitAll()
                 .antMatchers("/api/registration/").permitAll()
@@ -72,6 +73,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/companies/removeFrom/**/**").permitAll()
                 .antMatchers("/api/companies/addTo/**/**").permitAll()
                 .antMatchers("/api/companyAdmins/getCompanyForAdmin/**").permitAll() // copanyAdmin
+                .antMatchers("/api/companyAdmins/getAdminsForCompany/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .cors()

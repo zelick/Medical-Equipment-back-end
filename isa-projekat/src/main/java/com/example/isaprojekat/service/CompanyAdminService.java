@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -24,6 +25,7 @@ public class CompanyAdminService {
     private CompanyAdminRepository companyAdminRepository;
     private UserRepository userRepository;
     private CompanyRepository companyRepository;
+    private UserService userService;
     public List<CompanyAdmin> findAll() {
         return companyAdminRepository.findAll();
     }
@@ -54,6 +56,49 @@ public class CompanyAdminService {
         }else{
             return null;
         }
+    }
+
+    public List<UserDTO> getAdminsForCompany(Integer companyId){
+        System.out.println("Usao je u servis");
+        System.out.println("Id kompanije:");
+        System.out.println(companyId);
+        List<CompanyAdmin> companyAdmins = companyAdminRepository.findByCompanyId(companyId);
+        System.out.println("Vel liste companyAdm:");
+        System.out.println(companyAdmins.size());
+
+        // Dobavi sve korisnike (admine) na osnovu user_id iz CompanyAdmin zapisa
+        List<Integer> adminUserIds = companyAdmins.stream()
+                .map(CompanyAdmin::getUser_id)
+                .collect(Collectors.toList());
+        System.out.println("Vel liste admin user idjevi:");
+        System.out.println(adminUserIds.size());
+        System.out.println("Admin user id - jevi:");
+        for( Integer userId : adminUserIds){
+            System.out.println(userId);
+        }
+
+        // Dobavi korisnike (admine) na osnovu njihovih ID-jeva
+        List<User> admins = new ArrayList<>();
+        for (Integer userId : adminUserIds) {
+            System.out.println("usao u metodu findone");
+            System.out.println("user id koji se salje metodi findone:");
+            System.out.println(userId);
+            User newUser = userService.findOne(userId);
+            admins.add(newUser);
+        }
+        System.out.println("Vel liste celi korisnici:");
+        System.out.println(admins.size());
+
+
+        // Mapiraj User entitete na DTO objekte
+        List<UserDTO> adminDTOs = new ArrayList<>();
+        for (User admin : admins) {
+            adminDTOs.add(new UserDTO(admin));
+        }
+        System.out.println("Vel liste celi korisnici DTO:");
+        System.out.println(adminDTOs.size());
+
+        return adminDTOs;
     }
 
     //ne treba
