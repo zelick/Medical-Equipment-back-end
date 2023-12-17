@@ -19,4 +19,5 @@ public class RegistrationRequest {
     private final String phoneNumber;
     private final String occupation;
     private final String companyInfo;
+
 }
