@@ -108,6 +108,7 @@ public class UserController {
         exactUser.setCountry(updatedUser.getCountry());
         exactUser.setPhoneNumber(updatedUser.getPhoneNumber());
         exactUser.setOccupation(updatedUser.getOccupation());
+        exactUser.setUserRole(updatedUser.getUserRole());
 
         userService.save(exactUser);
 
