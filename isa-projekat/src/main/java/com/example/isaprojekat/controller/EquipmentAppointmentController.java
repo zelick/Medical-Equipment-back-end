@@ -2,11 +2,14 @@ package com.example.isaprojekat.controller;
 
 import com.example.isaprojekat.dto.CompanyDTO;
 import com.example.isaprojekat.dto.EquipmentAppointmentDTO;
+import com.example.isaprojekat.enums.UserRole;
 import com.example.isaprojekat.model.Company;
 import com.example.isaprojekat.model.EquipmentAppointment;
 import com.example.isaprojekat.model.Item;
+import com.example.isaprojekat.model.User;
 import com.example.isaprojekat.service.CompanyService;
 import com.example.isaprojekat.service.EquipmentAppointmentService;
+import com.example.isaprojekat.service.UserService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -16,8 +19,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @RestController
 @RequestMapping(value = "api/appointments")
@@ -26,6 +31,8 @@ import java.util.List;
 public class EquipmentAppointmentController {
     @Autowired
     private EquipmentAppointmentService appointmentService;
+    @Autowired
+    private UserService userService;
 
     @GetMapping(value = "getById/{id}")
     @CrossOrigin(origins = "http://localhost:4200")
@@ -70,10 +77,29 @@ public class EquipmentAppointmentController {
 
         return new ResponseEntity<>(appointmentDTOS, HttpStatus.OK);
     }
+    @DeleteMapping(value = "/delete/{id}")
+    @CrossOrigin(origins = "http://localhost:4200")
+    public ResponseEntity<String> deleteAppointment(@PathVariable Integer id) {
+        try {
+            appointmentService.deleteById(id);
+            return new ResponseEntity<>("Appointment deleted successfully", HttpStatus.OK);
+        } catch (EntityNotFoundException e) {
+            return new ResponseEntity<>("Appointment not found", HttpStatus.NOT_FOUND);
+        } catch (Exception e) {
+            return new ResponseEntity<>("An error occurred while deleting the appointment", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 
     @PostMapping(value = "/create")
     @CrossOrigin(origins = "http://localhost:4200")
-    public ResponseEntity<EquipmentAppointmentDTO> createAppointment(@RequestBody EquipmentAppointmentDTO equipmentAppointmentDTO) {
+    public ResponseEntity<EquipmentAppointmentDTO> createAppointment(@RequestBody EquipmentAppointmentDTO equipmentAppointmentDTO,@RequestParam(name = "id", required = false) Integer userId) {
+        User loggedInUser = userService.findOne(userId);
+
+        if(loggedInUser!=null) {
+            if (loggedInUser.getUserRole() != UserRole.COMPANY_ADMIN) {
+                return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+            }
+        }
         try {
             EquipmentAppointment createdAppointment = appointmentService.createAppointment(equipmentAppointmentDTO);
             return new ResponseEntity<>(new EquipmentAppointmentDTO(createdAppointment), HttpStatus.CREATED);

@@ -6,6 +6,7 @@ import com.example.isaprojekat.dto.EquipmentDTO;
 import com.example.isaprojekat.model.Company;
 import com.example.isaprojekat.model.Equipment;
 import com.example.isaprojekat.model.EquipmentAppointment;
+import com.example.isaprojekat.service.CompanyService;
 import com.example.isaprojekat.service.EquipmentService;
 import lombok.AllArgsConstructor;
 import org.apache.coyote.Response;
@@ -24,12 +25,16 @@ import java.util.List;
 public class EquipmentController {
     @Autowired
     private EquipmentService equipmentService;
+    @Autowired
+    private CompanyService companyService;
 
-    /*@GetMapping(value = "/getEquipmentForCompany/{id}")
+    @GetMapping(value = "/getEquipmentForCompany/{id}")
     @CrossOrigin(origins = "http://localhost:4200")
     public ResponseEntity<List<EquipmentDTO>> getEquipmentForCompany(@PathVariable Integer id) {
 
-        List<Equipment> equipment = equipmentService.findAllByCompanies_Id(id);
+        Company company = companyService.findOne(id);
+        List<Equipment> eq = equipmentService.findAll();
+        List<Equipment> equipment = equipmentService.findAllByCompanyId(company);
 
         // convert students to DTOs
         List<EquipmentDTO> equipmentDTO = new ArrayList<>();
@@ -38,7 +43,7 @@ public class EquipmentController {
         }
 
         return new ResponseEntity<>(equipmentDTO, HttpStatus.OK);
-    }*/
+    }
 
     @GetMapping(value = "/getById/{id}")
     @CrossOrigin(origins = "http://localhost:4200")

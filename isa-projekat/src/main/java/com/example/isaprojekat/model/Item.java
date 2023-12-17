@@ -10,6 +10,8 @@ public class Item {
     private Integer id;
     @Column(name = "equipmentId", nullable = false)
     private Integer equipmentId;
+    @Column(name = "equipmentName", nullable = false)
+    private String equipmentName;
     @Column(name = "quantity", nullable = false)
     private Integer quantity;
     @JoinColumn(name = "reservationId")
@@ -17,11 +19,20 @@ public class Item {
 
     public Item() {
     }
-    public Item(Integer id, Integer equipmentId, Integer quantity, Integer reservation) {
+    public Item(Integer id, Integer equipmentId, String equipmentName, Integer quantity, Integer reservation) {
         this.id = id;
         this.equipmentId = equipmentId;
+        this.equipmentName=equipmentName;
         this.quantity = quantity;
         this.reservationId = reservation;
+    }
+
+    public String getEquipmentName() {
+        return equipmentName;
+    }
+
+    public void setEquipmentName(String equipmentName) {
+        this.equipmentName = equipmentName;
     }
 
     public Integer getId() {

@@ -31,6 +31,8 @@ public class EquipmentAppointmentService {
     /*public List<EquipmentAppointment> findAllByAdminId(int admin_id){
         return equipmentAppointmentRepository.findAllByAdmin_Id(admin_id);
     }*/
+
+    public void deleteById(Integer id){equipmentAppointmentRepository.deleteById(id);}
     public EquipmentAppointment createAppointment(EquipmentAppointmentDTO equipmentAppointmentDTO) {
 
         EquipmentAppointment newAppointment = new EquipmentAppointment();

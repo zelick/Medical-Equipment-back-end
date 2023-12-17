@@ -5,6 +5,7 @@ import com.example.isaprojekat.model.Item;
 public class ItemDTO {
     private Integer id;
     private Integer equipmentId;
+    private String equipmentName;
     private Integer quantity;
     private Integer reservationId;
     public ItemDTO() {
@@ -13,6 +14,7 @@ public class ItemDTO {
     public ItemDTO(Item item) {
         this.id = item.getId();
         this.equipmentId = item.getEquipmentId();
+        this.equipmentName=item.getEquipmentName();
         this.quantity = item.getQuantity();
         this.reservationId = item.getReservation();
     }
@@ -23,6 +25,10 @@ public class ItemDTO {
 
     public Integer getEquipmentId() {
         return equipmentId;
+    }
+
+    public String getEquipmentName() {
+        return equipmentName;
     }
 
     public Integer getQuantity() {

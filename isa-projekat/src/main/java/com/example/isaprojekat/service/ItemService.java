@@ -18,6 +18,7 @@ public class ItemService {
     public Item createItem(ItemDTO itemDto) {
         Item newItem = new Item();
         newItem.setEquipmentId(itemDto.getEquipmentId());
+        newItem.setEquipmentName(itemDto.getEquipmentName());
         newItem.setQuantity(itemDto.getQuantity());
         newItem.setReservation(itemDto.getReservation());
         return itemRepository.save(newItem);
