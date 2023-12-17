@@ -1,17 +1,9 @@
 package com.example.isaprojekat.controller;
 
-import com.example.isaprojekat.dto.AppointmentReservationDTO;
-import com.example.isaprojekat.dto.EquipmentAppointmentDTO;
-import com.example.isaprojekat.dto.ItemDTO;
-import com.example.isaprojekat.dto.UserDTO;
+import com.example.isaprojekat.dto.*;
 import com.example.isaprojekat.enums.UserRole;
-import com.example.isaprojekat.model.AppointmentReservation;
-import com.example.isaprojekat.model.EquipmentAppointment;
-import com.example.isaprojekat.model.Item;
-import com.example.isaprojekat.model.User;
-import com.example.isaprojekat.service.AppointmentReservationService;
-import com.example.isaprojekat.service.ItemService;
-import com.example.isaprojekat.service.UserService;
+import com.example.isaprojekat.model.*;
+import com.example.isaprojekat.service.*;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,6 +13,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
+import java.util.HashSet;
 
 @RestController
 @RequestMapping(value = "api/reservations")
@@ -33,6 +27,10 @@ public class AppointmentReservationController {
     private UserService userService;
     @Autowired
     private ItemService itemService;
+    @Autowired
+    private CompanyService companyService;
+    @Autowired
+    private CompanyAdminService companyAdminService;
 
     @PostMapping(value = "/create")
     @CrossOrigin(origins = "http://localhost:4200")
@@ -111,5 +109,28 @@ public class AppointmentReservationController {
         }
     }
 
-
+    //ovde fali autorizacija - ispaviti
+    @GetMapping(value = "/getAdminsAppointmentReservation/{admin_id}")
+    @CrossOrigin(origins = "http://localhost:4200")
+    public ResponseEntity<List<AppointmentReservationDTO>> getAdminsAppointmentReservation(@PathVariable int admin_id){
+        CompanyDTO companyDto = companyAdminService.getCompanyForAdmin(admin_id);
+        Company company = companyService.findOne(companyDto.getId());
+        List<AppointmentReservationDTO> reservationsDTO = new ArrayList<AppointmentReservationDTO>();
+        Set<Integer> uniqueReservationIds = new HashSet<>();
+        List<Item> allItems = itemService.findAll();
+        for (Equipment e : company.getEquipments()) {
+            for (Item i : allItems) {
+                if (e.getId().equals(i.getEquipmentId())) {
+                    int reservationId = i.getReservation();
+                    // Check if the reservationId is unique
+                    if (uniqueReservationIds.add(reservationId)) {
+                        AppointmentReservation reservation = reservationService.getById(reservationId);
+                        AppointmentReservationDTO dto = new AppointmentReservationDTO(reservation);
+                        reservationsDTO.add(dto);
+                    }
+                }
+            }
+        }
+        return new ResponseEntity<>(reservationsDTO, HttpStatus.OK);
+    }
 }
