@@ -60,7 +60,7 @@ public class User {
     @Column(name = "companyInfo", nullable = false)
     private String companyInfo;
 
-    @Column(name = "is_user_first_logged", nullable = false)
+    @Column(name = "is_user_first_logged", nullable = true)
     private Boolean isUserFirstLogged;
 
     public User(){super();}
@@ -171,7 +171,8 @@ public class User {
                 String country,
                 String phoneNumber,
                 String occupation,
-                String companyInfo) {
+                String companyInfo,
+                boolean isUserFirstLogged) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
@@ -182,6 +183,7 @@ public class User {
         this.phoneNumber = phoneNumber;
         this.occupation = occupation;
         this.companyInfo = companyInfo;
+        this.isUserFirstLogged = isUserFirstLogged;
     }
     public User(String firstName,
                 String lastName,

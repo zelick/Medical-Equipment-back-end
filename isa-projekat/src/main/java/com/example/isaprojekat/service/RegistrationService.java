@@ -43,7 +43,8 @@ public class RegistrationService {
                 request.getCountry(),
                 request.getPhoneNumber(),
                 request.getOccupation(),
-                request.getCompanyInfo())
+                request.getCompanyInfo(),
+                        false)
         );
         String link = "http://localhost:8080/api/registration/confirm?token=" + token;
         emailSender.send(request.getEmail(),buildEmail(request.getFirstName(),link ));
