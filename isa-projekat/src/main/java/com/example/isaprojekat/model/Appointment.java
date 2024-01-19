@@ -2,12 +2,9 @@ package com.example.isaprojekat.model;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 
 @Entity
-public class AppointmentReservation {
+public class Appointment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -23,11 +20,11 @@ public class AppointmentReservation {
     private User user;
 
 
-    public AppointmentReservation() {
+    public Appointment() {
 
     }
 
-    public AppointmentReservation(LocalDateTime appointmentDate, String appointmentTime, Integer appointmentDuration, User user) {
+    public Appointment(LocalDateTime appointmentDate, String appointmentTime, Integer appointmentDuration, User user) {
         this.appointmentDate = appointmentDate;
         this.appointmentTime = appointmentTime;
         this.appointmentDuration = appointmentDuration;

@@ -1,9 +1,7 @@
 package com.example.isaprojekat.controller;
 
-import com.example.isaprojekat.dto.AppointmentReservationDTO;
 import com.example.isaprojekat.dto.ItemDTO;
 import com.example.isaprojekat.enums.UserRole;
-import com.example.isaprojekat.model.AppointmentReservation;
 import com.example.isaprojekat.model.Item;
 import com.example.isaprojekat.model.User;
 import com.example.isaprojekat.service.ItemService;

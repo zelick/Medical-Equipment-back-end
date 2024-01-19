@@ -20,9 +20,9 @@ import java.util.HashSet;
 @RequestMapping(value = "api/reservations")
 @AllArgsConstructor
 @CrossOrigin(origins = "http://localhost:4200")
-public class AppointmentReservationController {
+public class AppointmentController {
     @Autowired
-    private AppointmentReservationService reservationService;
+    private AppointmentService reservationService;
     @Autowired
     private UserService userService;
     @Autowired
@@ -34,7 +34,7 @@ public class AppointmentReservationController {
 
     @PostMapping(value = "/create")
     @CrossOrigin(origins = "http://localhost:4200")
-    public ResponseEntity<AppointmentReservationDTO> createReservation(@RequestBody AppointmentReservationDTO reservationDTO,@RequestParam(name = "id", required = false) Integer userId) {
+    public ResponseEntity<AppointmentDTO> createReservation(@RequestBody AppointmentDTO reservationDTO, @RequestParam(name = "id", required = false) Integer userId) {
         User loggedInUser = userService.findOne(userId);
 
         if(loggedInUser!=null) {
@@ -43,28 +43,28 @@ public class AppointmentReservationController {
             }
         }
         try {
-            AppointmentReservation createdReservation = reservationService.createReservation(reservationDTO);
-            return new ResponseEntity<>(new AppointmentReservationDTO(createdReservation), HttpStatus.CREATED);
+            Appointment createdReservation = reservationService.createReservation(reservationDTO);
+            return new ResponseEntity<>(new AppointmentDTO(createdReservation), HttpStatus.CREATED);
         } catch (Exception e) {
            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
     @GetMapping(value = "/all")
     @CrossOrigin(origins = "http://localhost:4200")
-    public ResponseEntity<List<AppointmentReservationDTO>> getAllReservations() {
+    public ResponseEntity<List<AppointmentDTO>> getAllReservations() {
 
-        List<AppointmentReservation> reservations = reservationService.findAll();
+        List<Appointment> reservations = reservationService.findAll();
 
         // convert comapnies to DTOs
-        List<AppointmentReservationDTO> reservationDTOS = new ArrayList<>();
-        for (AppointmentReservation a : reservations) {
-            reservationDTOS.add(new AppointmentReservationDTO(a));
+        List<AppointmentDTO> reservationDTOS = new ArrayList<>();
+        for (Appointment a : reservations) {
+            reservationDTOS.add(new AppointmentDTO(a));
         }
 
         return new ResponseEntity<>(reservationDTOS, HttpStatus.OK);
     }
     @GetMapping(value = "/byUser/{username}")
-    public ResponseEntity<List<AppointmentReservationDTO>> getByUser(@PathVariable String username,@RequestParam(name = "id", required = false) Integer userId) {
+    public ResponseEntity<List<AppointmentDTO>> getByUser(@PathVariable String username, @RequestParam(name = "id", required = false) Integer userId) {
 
         User user = userService.findOneByEmail(username);
         User loggedInUser = userService.findOne(userId);
@@ -74,11 +74,11 @@ public class AppointmentReservationController {
                 return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
             }
         }
-        List<AppointmentReservation> reservations = reservationService.GetAllReservationsForUser(user);
-        List<AppointmentReservationDTO> reservationsDTO = new ArrayList<>();
-        for (AppointmentReservation r: reservations
+        List<Appointment> reservations = reservationService.GetAllReservationsForUser(user);
+        List<AppointmentDTO> reservationsDTO = new ArrayList<>();
+        for (Appointment r: reservations
              ) {
-            AppointmentReservationDTO reservationDTO = new AppointmentReservationDTO(r);
+            AppointmentDTO reservationDTO = new AppointmentDTO(r);
             reservationsDTO.add(reservationDTO);
         }
         return new ResponseEntity<>(reservationsDTO, HttpStatus.OK);
@@ -112,10 +112,10 @@ public class AppointmentReservationController {
     //ovde fali autorizacija - ispaviti
     @GetMapping(value = "/getAdminsAppointmentReservation/{admin_id}")
     @CrossOrigin(origins = "http://localhost:4200")
-    public ResponseEntity<List<AppointmentReservationDTO>> getAdminsAppointmentReservation(@PathVariable int admin_id){
+    public ResponseEntity<List<AppointmentDTO>> getAdminsAppointmentReservation(@PathVariable int admin_id){
         CompanyDTO companyDto = companyAdminService.getCompanyForAdmin(admin_id);
         Company company = companyService.findOne(companyDto.getId());
-        List<AppointmentReservationDTO> reservationsDTO = new ArrayList<AppointmentReservationDTO>();
+        List<AppointmentDTO> reservationsDTO = new ArrayList<AppointmentDTO>();
         Set<Integer> uniqueReservationIds = new HashSet<>();
         List<Item> allItems = itemService.findAll();
         for (Equipment e : company.getEquipments()) {
@@ -124,8 +124,8 @@ public class AppointmentReservationController {
                     int reservationId = i.getReservation();
                     // Check if the reservationId is unique
                     if (uniqueReservationIds.add(reservationId)) {
-                        AppointmentReservation reservation = reservationService.getById(reservationId);
-                        AppointmentReservationDTO dto = new AppointmentReservationDTO(reservation);
+                        Appointment reservation = reservationService.getById(reservationId);
+                        AppointmentDTO dto = new AppointmentDTO(reservation);
                         reservationsDTO.add(dto);
                     }
                 }

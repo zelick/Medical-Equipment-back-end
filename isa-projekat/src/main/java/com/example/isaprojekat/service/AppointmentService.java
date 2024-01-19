@@ -1,10 +1,8 @@
 package com.example.isaprojekat.service;
 
-import com.example.isaprojekat.dto.AppointmentReservationDTO;
-import com.example.isaprojekat.dto.ItemDTO;
+import com.example.isaprojekat.dto.AppointmentDTO;
 import com.example.isaprojekat.model.*;
-import com.example.isaprojekat.repository.AppointmentReservationRepository;
-import com.example.isaprojekat.repository.CompanyRepository;
+import com.example.isaprojekat.repository.AppointmentRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,16 +11,14 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
 import java.util.List;
 
 @Service
 @AllArgsConstructor
-public class AppointmentReservationService {
+public class AppointmentService {
     @Autowired
-    private AppointmentReservationRepository reservationRepository;
+    private AppointmentRepository reservationRepository;
     @Autowired ItemService itemService;
     @Autowired
     private QrCodeService qrCodeService;
@@ -32,27 +28,27 @@ public class AppointmentReservationService {
     private EmailService emailService;
     @Autowired
     private EquipmentService equipmentService;
-    public AppointmentReservation getById(Integer id){
+    public Appointment getById(Integer id){
         return reservationRepository.getById(id);
     }
-    public List<AppointmentReservation> findAll() {
+    public List<Appointment> findAll() {
         return reservationRepository.findAll();
     }
-    public AppointmentReservation createReservation(AppointmentReservationDTO reservationDTO) throws ParseException {
+    public Appointment createReservation(AppointmentDTO reservationDTO) throws ParseException {
 
-        AppointmentReservation newReservation = new AppointmentReservation();
+        Appointment newReservation = new Appointment();
         newReservation.setAppointmentDate(reservationDTO.getAppointmentDate());
         newReservation.setAppointmentTime(reservationDTO.getAppointmentTime());
         newReservation.setAppointmentDuration(reservationDTO.getAppointmentDuration());
         newReservation.setUser(reservationDTO.getUser());
 
-        AppointmentReservation res = reservationRepository.save(newReservation);
+        Appointment res = reservationRepository.save(newReservation);
 
         //List<EquipmentAppointment> appointments = equipmentAppointmentService.findAvailableAppointments(res.getItems());
         //sendReservationQRCodeByEmail(res.getId(),"anjakovacevic9455@gmail.com");
         return res;
     }
-    public String generateQrCodeString(AppointmentReservationDTO res){
+    public String generateQrCodeString(AppointmentDTO res){
         StringBuilder itemsString = new StringBuilder();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         for (Item item : itemService.getItemsByReservationId(res.getId())) {
@@ -75,12 +71,12 @@ public class AppointmentReservationService {
         itemService.save(item);
     }
 
-    public List<AppointmentReservation> GetAllReservationsForUser(User user){
+    public List<Appointment> GetAllReservationsForUser(User user){
         return reservationRepository.getAppointmentReservationsByUser(user);
     }
     public void sendReservationQRCodeByEmail(Integer reservationId, String recipientEmail) {
         // Fetch the reservation from the database
-        AppointmentReservation reservation = getById(reservationId);
+        Appointment reservation = getById(reservationId);
 
         // Additional information
         User user = reservation.getUser();
@@ -88,7 +84,7 @@ public class AppointmentReservationService {
         // Add any other information you want
 
         // Create a DTO (Data Transfer Object) to represent the reservation with additional information
-        AppointmentReservationDTO reservationDto = new AppointmentReservationDTO();
+        AppointmentDTO reservationDto = new AppointmentDTO();
         reservationDto.setId(reservation.getId());
         reservationDto.setAppointmentDate(reservation.getAppointmentDate());
         reservationDto.setAppointmentTime(reservation.getAppointmentTime());

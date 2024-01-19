@@ -1,16 +1,11 @@
 package com.example.isaprojekat.dto;
 
-import com.example.isaprojekat.model.AppointmentReservation;
-import com.example.isaprojekat.model.Item;
+import com.example.isaprojekat.model.Appointment;
 import com.example.isaprojekat.model.User;
-import com.fasterxml.jackson.annotation.JsonFormat;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 
-public class AppointmentReservationDTO {
+public class AppointmentDTO {
     private Integer id;
     //@JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX")
     private LocalDateTime appointmentDate;
@@ -18,11 +13,11 @@ public class AppointmentReservationDTO {
     private Integer appointmentDuration;
     private User user;
 
-    public AppointmentReservationDTO() {
+    public AppointmentDTO() {
 
     }
 
-    public AppointmentReservationDTO(AppointmentReservation reservation) {
+    public AppointmentDTO(Appointment reservation) {
         this.id =reservation.getId();
         this.appointmentDate = reservation.getAppointmentDate();
         this.appointmentTime = reservation.getAppointmentTime();

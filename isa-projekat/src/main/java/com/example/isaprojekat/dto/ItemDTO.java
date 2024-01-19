@@ -1,6 +1,5 @@
 package com.example.isaprojekat.dto;
 
-import com.example.isaprojekat.model.AppointmentReservation;
 import com.example.isaprojekat.model.Item;
 public class ItemDTO {
     private Integer id;
