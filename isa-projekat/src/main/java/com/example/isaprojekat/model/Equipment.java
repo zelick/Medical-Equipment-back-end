@@ -1,11 +1,8 @@
 package com.example.isaprojekat.model;
 
 import com.example.isaprojekat.dto.EquipmentDTO;
-import com.example.isaprojekat.model.Company;
 
 import javax.persistence.*;
-import java.util.HashSet;
-import java.util.Set;
 
 @Entity
 public class Equipment {
@@ -28,6 +25,9 @@ public class Equipment {
     @Column(name = "type", nullable = false)
     private String type;
 
+    @Column(name = "maxQunatity", nullable = false)
+    private Integer maxQuantity;
+
     @ManyToOne
     @JoinColumn(name = "company_id")
     private Company company;
@@ -35,12 +35,13 @@ public class Equipment {
     public Equipment() {
     }
 
-    public Equipment(String name, String description, double price, double grade, String type) {
+    public Equipment(String name, String description, double price, double grade, String type, Integer maxQuantity) {
         this.name = name;
         this.description = description;
         this.price = price;
         this.grade = grade;
         this.type = type;
+        this.maxQuantity = maxQuantity;
     }
 
     public Equipment(EquipmentDTO equipmentDTO) {
@@ -50,6 +51,7 @@ public class Equipment {
         this.price = equipmentDTO.getPrice();
         this.grade = equipmentDTO.getGrade();
         this.type = equipmentDTO.getType();
+        this.maxQuantity = equipmentDTO.getMaxQuantity();
     }
 
     // Getters and setters
@@ -110,4 +112,11 @@ public class Equipment {
         this.company = company;
     }
 
+    public Integer getMaxQuantity() {
+        return maxQuantity;
+    }
+
+    public void setMaxQuantity(Integer maxQuantity) {
+        this.maxQuantity = maxQuantity;
+    }
 }

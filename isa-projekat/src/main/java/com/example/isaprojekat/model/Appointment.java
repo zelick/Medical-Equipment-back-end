@@ -1,34 +1,56 @@
 package com.example.isaprojekat.model;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
+import java.util.Date;
 
 @Entity
 public class Appointment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+    @Column(name = "adminId", nullable = false)
+    private Integer adminId;
     @Column(name = "appointmentDate", nullable = false)
-    private LocalDateTime appointmentDate;
+    private Date appointmentDate;
     @Column(name = "appointmentTime", nullable = false)
     private String appointmentTime;
     @Column(name = "appointmentDuration", nullable = false)
     private Integer appointmentDuration;
-
-    @ManyToOne
-    @JoinColumn(name = "userId", nullable = false)
-    private User user;
-
-
     public Appointment() {
-
     }
-
-    public Appointment(LocalDateTime appointmentDate, String appointmentTime, Integer appointmentDuration, User user) {
+    public Appointment(Integer id, Integer adminId, Date appointmentDate,
+                       String appointmentTime, Integer appointmentDuration) {
+        this.id = id;
+        this.adminId = adminId;
         this.appointmentDate = appointmentDate;
         this.appointmentTime = appointmentTime;
         this.appointmentDuration = appointmentDuration;
-        this.user = user;
+    }
+
+    // Getteri i setteri za sva polja
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+
+    public Integer getAdminId() {
+        return adminId;
+    }
+
+    public void setAdminId(Integer adminId) {
+        this.adminId = adminId;
+    }
+
+    public Date getAppointmentDate() {
+        return appointmentDate;
+    }
+
+    public void setAppointmentDate(Date appointmentDate) {
+        this.appointmentDate = appointmentDate;
     }
 
     public String getAppointmentTime() {
@@ -46,28 +68,4 @@ public class Appointment {
     public void setAppointmentDuration(Integer appointmentDuration) {
         this.appointmentDuration = appointmentDuration;
     }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public LocalDateTime getAppointmentDate() {
-        return appointmentDate;
-    }
-
-    public void setAppointmentDate(LocalDateTime appointmentDate) { this.appointmentDate = appointmentDate; }
 }
