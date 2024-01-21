@@ -34,17 +34,19 @@ public class ReservationService {
     public List<Reservation> findAll() {
         return reservationRepository.findAll();
     }
-    public Reservation createReservation(ReservationDTO reservationDTO) throws ParseException {
-
+    public Reservation createReservation(ReservationDTO reservationDTO) {
         Reservation newReservation = new Reservation();
+
+        newReservation.setAppointment(reservationDTO.getAppointment());
+        //newReservation.setItems(reservationDTO.getItems());
         newReservation.setUser(reservationDTO.getUser());
 
-        Reservation res = reservationRepository.save(newReservation);
+        return reservationRepository.save(newReservation);
 
         //List<EquipmentAppointment> appointments = equipmentAppointmentService.findAvailableAppointments(res.getItems());
         //sendReservationQRCodeByEmail(res.getId(),"anjakovacevic9455@gmail.com");
-        return res;
     }
+
     /*
     public String generateQrCodeString(ReservationDTO res){
         StringBuilder itemsString = new StringBuilder();

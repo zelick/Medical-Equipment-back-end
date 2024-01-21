@@ -16,8 +16,8 @@ public class Item {
     @Column(name = "quantity", nullable = false)
     private Integer quantity;
 
-    @ManyToOne
-    @JoinColumn(name = "reservation_id")
+    @ManyToOne(optional = true)
+    @JoinColumn(name = "reservation_id", nullable = true)
     private Reservation reservation;
 
     public Item() {

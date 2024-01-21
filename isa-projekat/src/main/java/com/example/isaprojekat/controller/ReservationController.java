@@ -34,20 +34,27 @@ public class ReservationController {
 
     @PostMapping(value = "/create")
     @CrossOrigin(origins = "http://localhost:4200")
-    public ResponseEntity<ReservationDTO> createReservation(@RequestBody ReservationDTO reservationDTO, @RequestParam(name = "id", required = false) Integer userId) {
-        User loggedInUser = userService.findOne(userId);
+    //@RequestParam(name = "id", required = false) Integer userId
+    public ResponseEntity<ReservationDTO> createReservation(@RequestBody ReservationDTO reservationDTO) {
+        /*User loggedInUser = userService.findOne(userId);
 
         if(loggedInUser!=null) {
             if (loggedInUser.getUserRole() != UserRole.USER) {
                 return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
             }
         }
+         */
+        /*
         try {
             Reservation createdReservation = reservationService.createReservation(reservationDTO);
             return new ResponseEntity<>(new ReservationDTO(createdReservation), HttpStatus.CREATED);
         } catch (Exception e) {
            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
+
+         */
+        Reservation createdReservation = reservationService.createReservation(reservationDTO);
+        return new ResponseEntity<>(new ReservationDTO(createdReservation), HttpStatus.CREATED);
     }
     @GetMapping(value = "/all")
     @CrossOrigin(origins = "http://localhost:4200")
@@ -140,4 +147,6 @@ public class ReservationController {
     }
 
      */
+
+
 }

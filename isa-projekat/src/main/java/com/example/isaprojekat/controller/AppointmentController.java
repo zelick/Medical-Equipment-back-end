@@ -1,11 +1,12 @@
 package com.example.isaprojekat.controller;
 
 import com.example.isaprojekat.dto.AppointmentDTO;
+import com.example.isaprojekat.dto.CompanyDTO;
 import com.example.isaprojekat.enums.UserRole;
-import com.example.isaprojekat.model.Appointment;
-import com.example.isaprojekat.model.Item;
-import com.example.isaprojekat.model.User;
+import com.example.isaprojekat.model.*;
 import com.example.isaprojekat.service.AppointmentService;
+import com.example.isaprojekat.service.CompanyAdminService;
+import com.example.isaprojekat.service.CompanyService;
 import com.example.isaprojekat.service.UserService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -27,8 +28,28 @@ import java.util.List;
 public class AppointmentController {
     @Autowired
     private AppointmentService appointmentService;
-    @Autowired
     private UserService userService;
+    private CompanyAdminService companyAdminService;
+
+    @GetMapping(value = "companyAppointments/{companyId}")
+    @CrossOrigin(origins = "http://localhost:4200")
+    public ResponseEntity<List<AppointmentDTO>> findCompanyAppointments(@PathVariable Integer companyId) {
+        List<Appointment> foundAppointments = new ArrayList<>();
+        List<AppointmentDTO> foundAppointmentsDTO = new ArrayList<>();
+        List<Appointment> appointments = appointmentService.findAll();
+
+        for (Appointment a : appointments) {
+            if (companyId.equals(companyAdminService.getCompanyForAdmin(a.getAdminId()).getId())) {
+                foundAppointments.add(a);
+            }
+        }
+
+        for (Appointment a : foundAppointments) {
+            foundAppointmentsDTO.add(new AppointmentDTO(a));
+        }
+
+        return new ResponseEntity<>(foundAppointmentsDTO, HttpStatus.OK);
+    }
 
     @GetMapping(value = "getById/{id}")
     @CrossOrigin(origins = "http://localhost:4200")
