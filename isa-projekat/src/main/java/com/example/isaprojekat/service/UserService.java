@@ -80,4 +80,13 @@ public class UserService implements UserDetailsService {
     public int enableAppUser(String email) {
         return userRepository.enableAppUser(email);
     }
+    public User create(User user){
+        boolean userExists = userRepository.
+                findByEmail(user.getEmail())
+                .isPresent();
+        if(userExists) {
+            throw new IllegalStateException("email already exists");
+        }
+        return userRepository.save(user);
+    }
 }

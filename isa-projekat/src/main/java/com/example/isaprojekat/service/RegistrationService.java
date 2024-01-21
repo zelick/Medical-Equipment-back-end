@@ -1,5 +1,6 @@
 package com.example.isaprojekat.service;
 
+import com.example.isaprojekat.dto.UserDTO;
 import com.example.isaprojekat.enums.UserRole;
 import com.example.isaprojekat.model.ConfirmationToken;
 import com.example.isaprojekat.model.EmailSender;
@@ -139,5 +140,31 @@ public class RegistrationService {
                 "  </tbody></table><div class=\"yj6qo\"></div><div class=\"adL\">\n" +
                 "\n" +
                 "</div></div>";
+    }
+
+    public UserDTO registerSystemAdmin(RegistrationRequest request) {
+
+        if(request.getFirstName().isEmpty() || request.getLastName().isEmpty() || request.getEmail().isEmpty() || request.getPassword().isEmpty()
+                || request.getCity().isEmpty() ||   // Add new fields to the validation
+                request.getCountry().isEmpty() ||
+                request.getPhoneNumber().isEmpty() ||
+                request.getOccupation().isEmpty() ||
+                request.getCompanyInfo().isEmpty()){
+            throw new IllegalStateException("All fields must be filled in!");
+        }
+        User newUser = userService.create(
+                new User(request.getFirstName(),
+                        request.getLastName(),
+                        request.getEmail(),
+                        request.getPassword(),
+                        UserRole.SYSTEM_ADMIN,
+                        request.getCity(),
+                        request.getCountry(),
+                        request.getPhoneNumber(),
+                        request.getOccupation(),
+                        request.getCompanyInfo(),
+                        false)
+        );
+        return new UserDTO(newUser);
     }
 }

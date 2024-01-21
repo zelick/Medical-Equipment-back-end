@@ -1,5 +1,6 @@
 package com.example.isaprojekat.controller;
 
+import com.example.isaprojekat.dto.UserDTO;
 import com.example.isaprojekat.model.RegistrationRequest;
 import com.example.isaprojekat.service.RegistrationService;
 import lombok.AllArgsConstructor;
@@ -18,6 +19,12 @@ public class RegistrationController {
     @GetMapping(path = "confirm")
     public String confirm(@RequestParam("token") String token) {
         return registrationService.confirmToken(token);
+    }
+
+    @PostMapping(value = "/registerSystemAdmin")
+    @CrossOrigin(origins = "http://localhost:4200")
+    public UserDTO registerSystemAdmin(@RequestBody RegistrationRequest request) {
+        return registrationService.registerSystemAdmin(request);
     }
 
 }
