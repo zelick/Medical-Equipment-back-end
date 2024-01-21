@@ -1,5 +1,7 @@
 package com.example.isaprojekat.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.HashSet;
@@ -17,6 +19,7 @@ public class Reservation {
     @JoinColumn(name = "userId", nullable = false)
     private User user;
     @OneToMany(mappedBy = "reservation", cascade = CascadeType.PERSIST, orphanRemoval = false)
+    @JsonIgnore
     private Set<Item> items = new HashSet<>();
     public Reservation() {
 

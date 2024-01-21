@@ -43,4 +43,20 @@ public class ReservationDTO {
     public Set<Item> getItems() {
         return items;
     }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public void setAppointment(Appointment appointment) {
+        this.appointment = appointment;
+    }
+
+    public void setItems(Set<Item> items) {
+        this.items = items;
+    }
 }
