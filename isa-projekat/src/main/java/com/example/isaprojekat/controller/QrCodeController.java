@@ -2,17 +2,24 @@ package com.example.isaprojekat.controller;
 
 import com.example.isaprojekat.service.EmailService;
 import com.example.isaprojekat.service.QrCodeService;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+//dodala:
+import org.springframework.web.multipart.MultipartFile;
+import java.io.File;
+import java.io.IOException;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 
 @RestController
 @RequestMapping("/qr-code")
+@AllArgsConstructor
+@CrossOrigin(origins = "http://localhost:4200")
 public class QrCodeController {
     @Autowired
     private QrCodeService qrCodeService;
@@ -38,5 +45,30 @@ public class QrCodeController {
         } catch (Exception e) {
             return "Error sending email: " + e.getMessage();
         }
+    }
+
+    @PostMapping(value = "/readQrCodeImage")
+    @CrossOrigin(origins = "http://localhost:4200")
+    public ResponseEntity<String> handleFileUpload(@RequestParam("file") MultipartFile file) {
+        if (file.isEmpty()) {
+            return new ResponseEntity<>("No file received", HttpStatus.BAD_REQUEST);
+        }
+
+        try {
+            byte[] imageBytes = file.getBytes();
+
+            // Read QR Code
+            String qrCodeData = qrCodeService.readQRCode(imageBytes);
+
+            return new ResponseEntity<>("File uploaded successfully", HttpStatus.OK);
+        } catch (IOException e) {
+            return new ResponseEntity<>("Error handling file upload", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping(value = "/proba")
+    @CrossOrigin(origins = "http://localhost:4200")
+    public ResponseEntity<String> proba() {
+        return new ResponseEntity<>("File uploaded successfully", HttpStatus.OK);
     }
 }
