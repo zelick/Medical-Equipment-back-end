@@ -26,13 +26,5 @@ public class QrCodeController {
         else {
             return "Error while creating QR CODE";
         }
-
-        /*try {
-            qrCodeService.generateQRCodeSendMail(reservationId);
-            return ResponseEntity.ok().body("Uspesno poslat qr code");
-        } catch (Exception e) {
-            return ResponseEntity.status(500).body("Error sending email: " + e.getMessage());
-        }
-         */
     }
 }

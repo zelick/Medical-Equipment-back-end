@@ -19,15 +19,6 @@ import java.util.List;
 public class ReservationService {
     @Autowired
     private ReservationRepository reservationRepository;
-    @Autowired ItemService itemService;
-    @Autowired
-    private QrCodeService qrCodeService;
-    @Autowired
-    private AppointmentService equipmentAppointmentService;
-    @Autowired
-    private EmailService emailService;
-    @Autowired
-    private EquipmentService equipmentService;
     public Reservation getById(Integer id){
         return reservationRepository.getById(id);
     }
@@ -38,94 +29,12 @@ public class ReservationService {
         Reservation newReservation = new Reservation();
 
         newReservation.setAppointment(reservationDTO.getAppointment());
-        //newReservation.setItems(reservationDTO.getItems());
         newReservation.setUser(reservationDTO.getUser());
 
-        Reservation res = reservationRepository.save(newReservation);
-        sendReservationQRCodeByEmail(res.getId(),res.getUser().getEmail());
-        return res;
-
-        //List<EquipmentAppointment> appointments = equipmentAppointmentService.findAvailableAppointments(res.getItems());
-
+        return reservationRepository.save(newReservation);
     }
-
-
-    public String generateQrCodeString(ReservationDTO res){
-        StringBuilder itemsString = new StringBuilder();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        for (Item item : itemService.getItemsByReservationId(res.getId())) {
-            itemsString.append("-");
-            Equipment e =equipmentService.GetOne(item.getEquipment().getId());
-            itemsString.append("Quantity: ").append(item.getQuantity()).append(", Name: ").append(e.getName()).append("\n");
-        }
-        //if (!res.getItems().isEmpty()) {
-        //    itemsString.delete(itemsString.length() - 2, itemsString.length()); // Remove the last comma and space
-       // }
-        return "Your reservation informations:" + "\n"+
-                "AppointmentDate: " + res.getAppointment().getAppointmentDate() + "\n" +
-                "AppointmentTime=" + res.getAppointment().getAppointmentTime() + "\n" +
-                "AppointmentDuration=" + res.getAppointment().getAppointmentDuration() + "\n" +
-                "Items: "+ "\n" + itemsString + "\n" +
-                ' ';
-    }
-
-
-
-    /*
-    public void AddReservationToItem(Item item, Integer reservationId){
-        item.setReservation(reservationId);
-        itemService.save(item);
-    }
-     */
 
     public List<Reservation> GetAllReservationsForUser(User user){
         return reservationRepository.getAppointmentReservationsByUser(user);
     }
-
-    public void sendReservationQRCodeByEmail(Integer reservationId, String recipientEmail) {
-        // Fetch the reservation from the database
-        Reservation reservation = getById(reservationId);
-
-        // Additional information
-        User user = reservation.getUser();
-        List<Item> items = itemService.getItemsByReservationId(reservation.getId());
-        // Add any other information you want
-
-        // Create a DTO (Data Transfer Object) to represent the reservation with additional information
-        ReservationDTO reservationDto = new ReservationDTO();
-        reservationDto.setId(reservation.getId());
-        reservationDto.setAppointment(reservation.getAppointment());
-        //reservationDto.setUserName(user.getName()); // Assuming there's a getName() method in the User class
-        //reservationDto.setItems(items); // Assuming there's a getter for items in the ReservationDto class
-
-        // Convert the reservation DTO to a string (you might want to customize this based on your needs)
-        String reservationData = generateQrCodeString(reservationDto);
-
-        // Generate QR code
-        try {
-            BufferedImage qrCodeImage = qrCodeService.generateQRCode(reservationData);
-
-            // Convert BufferedImage to byte array
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            ImageIO.write(qrCodeImage, "png", baos);
-            byte[] qrCodeBytes = baos.toByteArray();
-            //emailService.generateQrCodeAndSendEmail(
-
-            //);
-
-            // Send email with QR Code attached
-            emailService.sendEmailWithAttachment(
-                    user.getEmail(),
-                    "Reservation QR Code",
-                    "Please find your reservation QR Code attached.",
-                    qrCodeBytes,
-                    "qrcode.png"
-            );
-        } catch (Exception e) {
-            // Handle exceptions appropriately
-            e.printStackTrace();
-        }
-    }
-
-
 }
