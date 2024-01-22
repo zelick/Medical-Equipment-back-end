@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -35,6 +36,7 @@ public class AppointmentController {
     @CrossOrigin(origins = "http://localhost:4200")
     public ResponseEntity<List<AppointmentDTO>> findCompanyAppointments(@PathVariable Integer companyId,@RequestParam(name = "id", required = false) Integer userId) {
         User loggedInUser = userService.findOne(userId);
+        Date currentDate = new Date();
         List<Appointment> foundAppointments = new ArrayList<>();
         List<AppointmentDTO> foundAppointmentsDTO = new ArrayList<>();
         List<Appointment> appointments = appointmentService.findAll();
@@ -56,6 +58,10 @@ public class AppointmentController {
                 if (a.getId().equals(r.getAppointment().getId()) && r.getStatus().equals(ReservationStatus.CANCELED) && r.getUser().getId().equals(userId)){
                     appointmentsToRemove.remove(a);
                 }
+                if(a.getAppointmentDate().before(currentDate)){
+                    appointmentsToRemove.remove(a);
+                }
+
             }
         }
 
