@@ -1,7 +1,10 @@
 package com.example.isaprojekat.controller;
 
+import com.example.isaprojekat.dto.CompanyDTO;
 import com.example.isaprojekat.dto.ItemDTO;
+import com.example.isaprojekat.dto.ReservationDTO;
 import com.example.isaprojekat.enums.UserRole;
+import com.example.isaprojekat.model.Company;
 import com.example.isaprojekat.model.Item;
 import com.example.isaprojekat.model.User;
 import com.example.isaprojekat.service.ItemService;
@@ -41,6 +44,23 @@ public class ItemController {
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    @PutMapping(value = "/update/{id}")
+    @CrossOrigin(origins = "http://localhost:4200")
+    public ResponseEntity<ItemDTO> updateItem(@PathVariable Integer id, @RequestBody ItemDTO itemDTO)
+    {
+        Item updatedItem = itemService.updateItem(id, itemDTO);
+        return new ResponseEntity<>(new ItemDTO(updatedItem), HttpStatus.OK);
+        /*
+        try {
+            Item updatedItem = itemService.updateItem(id, itemDTO);
+            return new ResponseEntity<>(new ItemDTO(updatedItem), HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+         */
     }
     @GetMapping(value = "/byReservation/{id}")
     public ResponseEntity<List<ItemDTO>> getByReservation(@PathVariable Integer id) {

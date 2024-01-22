@@ -1,15 +1,11 @@
 package com.example.isaprojekat.controller;
 
-import com.example.isaprojekat.dto.EquipmentAppointmentDTO;
-import com.example.isaprojekat.dto.CompanyDTO;
 import com.example.isaprojekat.dto.EquipmentDTO;
 import com.example.isaprojekat.model.Company;
 import com.example.isaprojekat.model.Equipment;
-import com.example.isaprojekat.model.EquipmentAppointment;
 import com.example.isaprojekat.service.CompanyService;
 import com.example.isaprojekat.service.EquipmentService;
 import lombok.AllArgsConstructor;
-import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

@@ -1,38 +1,37 @@
 package com.example.isaprojekat.dto;
 
+import com.example.isaprojekat.model.Equipment;
 import com.example.isaprojekat.model.Item;
+import com.example.isaprojekat.model.Reservation;
+
 public class ItemDTO {
     private Integer id;
-    private Integer equipmentId;
-    private String equipmentName;
+    private Equipment equipment;
     private Integer quantity;
-    private Integer reservationId;
+    private Reservation reservation;
     public ItemDTO() {
     }
 
     public ItemDTO(Item item) {
         this.id = item.getId();
-        this.equipmentId = item.getEquipmentId();
-        this.equipmentName=item.getEquipmentName();
         this.quantity = item.getQuantity();
-        this.reservationId = item.getReservation();
+        this.equipment = item.getEquipment();
+        this.reservation = item.getReservation();
     }
 
     public Integer getId() {
         return id;
     }
 
-    public Integer getEquipmentId() {
-        return equipmentId;
-    }
-
-    public String getEquipmentName() {
-        return equipmentName;
-    }
-
     public Integer getQuantity() {
         return quantity;
     }
 
-    public Integer getReservation() { return reservationId; }
+    public Equipment getEquipment() {
+        return equipment;
+    }
+
+    public Reservation getReservation() {
+        return reservation;
+    }
 }

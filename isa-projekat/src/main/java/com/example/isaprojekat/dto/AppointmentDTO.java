@@ -1,73 +1,45 @@
 package com.example.isaprojekat.dto;
 
 import com.example.isaprojekat.model.Appointment;
-import com.example.isaprojekat.model.User;
 
-import java.time.LocalDateTime;
+import java.util.Date;
 
 public class AppointmentDTO {
     private Integer id;
-    //@JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX")
-    private LocalDateTime appointmentDate;
+    private Integer adminId;
+    private Date appointmentDate;
     private String appointmentTime;
     private Integer appointmentDuration;
-    private User user;
-
     public AppointmentDTO() {
-
     }
-
-    public AppointmentDTO(Appointment reservation) {
-        this.id =reservation.getId();
-        this.appointmentDate = reservation.getAppointmentDate();
-        this.appointmentTime = reservation.getAppointmentTime();
-        this.appointmentDuration = reservation.getAppointmentDuration();
-        this.user = reservation.getUser();
+    public AppointmentDTO(Appointment appointment) {
+        this(appointment.getId(), appointment.getAdminId(),
+                appointment.getAppointmentDate(), appointment.getAppointmentTime(),
+                appointment.getAppointmentDuration());
+    }
+    public AppointmentDTO(Integer id, Integer adminId,
+                          Date appointmentDate,
+                          String appointmentTime, Integer appointmentDuration) {
+        this.id = id;
+        this.adminId = adminId;
+        this.appointmentDate = appointmentDate;
+        this.appointmentTime = appointmentTime;
+        this.appointmentDuration = appointmentDuration;
     }
 
     public Integer getId() {
         return id;
     }
-
-    public LocalDateTime getAppointmentDate() {
+    public Integer getAdminId() {
+        return adminId;
+    }
+    public Date getAppointmentDate() {
         return appointmentDate;
     }
-
     public String getAppointmentTime() {
         return appointmentTime;
     }
-
     public Integer getAppointmentDuration() {
         return appointmentDuration;
     }
-
-    public User getUser() {
-        return user;
-    }
-
-
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public void setAppointmentDate(LocalDateTime appointmentDate) {
-        this.appointmentDate = appointmentDate;
-    }
-
-    public void setAppointmentTime(String appointmentTime) {
-        this.appointmentTime = appointmentTime;
-    }
-
-    public void setAppointmentDuration(Integer appointmentDuration) {
-        this.appointmentDuration = appointmentDuration;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-
-
-
 }

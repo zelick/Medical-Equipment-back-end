@@ -9,6 +9,7 @@ public class EquipmentDTO {
     private double price;
     private double grade;
     private String type;
+    private Integer maxQuantity;
 
     public EquipmentDTO() {
     }
@@ -20,6 +21,7 @@ public class EquipmentDTO {
         this.price = equipment.getPrice();
         this.grade = equipment.getGrade();
         this.type = equipment.getType();
+        this.maxQuantity = equipment.getMaxQuantity();
     }
 
     // Getters and setters
@@ -48,4 +50,7 @@ public class EquipmentDTO {
         return type;
     }
 
+    public Integer getMaxQuantity() {
+        return maxQuantity;
+    }
 }

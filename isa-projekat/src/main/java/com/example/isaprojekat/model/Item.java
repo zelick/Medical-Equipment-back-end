@@ -8,31 +8,25 @@ public class Item {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    @Column(name = "equipmentId", nullable = false)
-    private Integer equipmentId;
-    @Column(name = "equipmentName", nullable = false)
-    private String equipmentName;
+
+    @ManyToOne
+    @JoinColumn(name = "equipment_id")
+    private Equipment equipment;
+
     @Column(name = "quantity", nullable = false)
     private Integer quantity;
-    @JoinColumn(name = "reservationId")
-    private Integer reservationId;
+
+    @ManyToOne(optional = true)
+    @JoinColumn(name = "reservation_id", nullable = true)
+    private Reservation reservation;
 
     public Item() {
     }
-    public Item(Integer id, Integer equipmentId, String equipmentName, Integer quantity, Integer reservation) {
+    public Item(Integer id, Equipment equipment, Integer quantity, Reservation reservation) {
         this.id = id;
-        this.equipmentId = equipmentId;
-        this.equipmentName=equipmentName;
+        this.equipment = equipment;
         this.quantity = quantity;
-        this.reservationId = reservation;
-    }
-
-    public String getEquipmentName() {
-        return equipmentName;
-    }
-
-    public void setEquipmentName(String equipmentName) {
-        this.equipmentName = equipmentName;
+        this.reservation = reservation;
     }
 
     public Integer getId() {
@@ -43,14 +37,6 @@ public class Item {
         this.id = id;
     }
 
-    public Integer getEquipmentId() {
-        return equipmentId;
-    }
-
-    public void setEquipmentId(Integer equipmentId) {
-        this.equipmentId = equipmentId;
-    }
-
     public Integer getQuantity() {
         return quantity;
     }
@@ -59,11 +45,19 @@ public class Item {
         this.quantity = quantity;
     }
 
-    public Integer getReservation() { return reservationId; }
-    public void setReservation(Integer reservation) {
-        this.reservationId = reservation;
+    public Equipment getEquipment() {
+        return equipment;
     }
 
+    public void setEquipment(Equipment equipment) {
+        this.equipment = equipment;
+    }
 
+    public Reservation getReservation() {
+        return reservation;
+    }
 
+    public void setReservation(Reservation reservation) {
+        this.reservation = reservation;
+    }
 }

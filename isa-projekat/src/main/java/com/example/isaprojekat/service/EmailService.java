@@ -27,8 +27,6 @@ public class EmailService implements EmailSender {
     private final static Logger LOGGER = LoggerFactory
             .getLogger(EmailService.class);
     private final JavaMailSender mailSender;
-    @Autowired
-    protected QrCodeService qrCodeService;
     @Override
     @Async
     public void send(String to, String email) {
@@ -62,25 +60,6 @@ public class EmailService implements EmailSender {
         } catch (MessagingException e) {
             // Handle exceptions appropriately
             e.printStackTrace();
-        }
-    }
-    @GetMapping("/generate-and-send-email")
-    public String generateQrCodeAndSendEmail() {
-        try {
-            // Generate QR Code
-            BufferedImage qrCodeImage = qrCodeService.generateQRCode("Your Data Here");
-
-            // Convert BufferedImage to byte array
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            ImageIO.write(qrCodeImage, "png", baos);
-            byte[] qrCodeBytes = baos.toByteArray();
-
-            // Send email with QR Code attached
-            this.sendEmailWithAttachment("anjakovacevic9455@gmail.com", "QR Code Email Subject", "See attached QR Code.", qrCodeBytes, "qrcode.png");
-
-            return "Email sent successfully!";
-        } catch (Exception e) {
-            return "Error sending email: " + e.getMessage();
         }
     }
 }

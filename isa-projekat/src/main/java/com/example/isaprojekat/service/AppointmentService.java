@@ -1,124 +1,178 @@
 package com.example.isaprojekat.service;
 
 import com.example.isaprojekat.dto.AppointmentDTO;
-import com.example.isaprojekat.model.*;
+import com.example.isaprojekat.model.Appointment;
+import com.example.isaprojekat.model.CompanyAdmin;
+import com.example.isaprojekat.model.Item;
+import com.example.isaprojekat.model.Reservation;
 import com.example.isaprojekat.repository.AppointmentRepository;
+import com.example.isaprojekat.repository.CompanyAdminRepository;
+import com.example.isaprojekat.repository.CompanyRepository;
+import com.example.isaprojekat.repository.ReservationRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayOutputStream;
-import java.text.ParseException;
-import java.time.format.DateTimeFormatter;
+import javax.lang.model.type.ArrayType;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
 @AllArgsConstructor
 public class AppointmentService {
     @Autowired
-    private AppointmentRepository reservationRepository;
-    @Autowired ItemService itemService;
-    @Autowired
-    private QrCodeService qrCodeService;
-    @Autowired
-    private EquipmentAppointmentService equipmentAppointmentService;
-    @Autowired
-    private EmailService emailService;
-    @Autowired
-    private EquipmentService equipmentService;
-    public Appointment getById(Integer id){
-        return reservationRepository.getById(id);
+    private AppointmentRepository appointmentRepository;
+    private ReservationRepository reservationRepository;
+    private CompanyAdminRepository companyAdminRepository;
+
+    public Appointment findOne(Integer id) {
+        return appointmentRepository.findById(id).orElseGet(null);
     }
     public List<Appointment> findAll() {
-        return reservationRepository.findAll();
+        return appointmentRepository.findAll();
     }
-    public Appointment createReservation(AppointmentDTO reservationDTO) throws ParseException {
+    /*public List<EquipmentAppointment> findAllByAdminId(int admin_id){
+        return equipmentAppointmentRepository.findAllByAdmin_Id(admin_id);
+    }*/
 
-        Appointment newReservation = new Appointment();
-        newReservation.setAppointmentDate(reservationDTO.getAppointmentDate());
-        newReservation.setAppointmentTime(reservationDTO.getAppointmentTime());
-        newReservation.setAppointmentDuration(reservationDTO.getAppointmentDuration());
-        newReservation.setUser(reservationDTO.getUser());
+    public void deleteById(Integer id){appointmentRepository.deleteById(id);}
+    public Appointment createAppointment(AppointmentDTO equipmentAppointmentDTO) {
 
-        Appointment res = reservationRepository.save(newReservation);
-
-        //List<EquipmentAppointment> appointments = equipmentAppointmentService.findAvailableAppointments(res.getItems());
-        //sendReservationQRCodeByEmail(res.getId(),"anjakovacevic9455@gmail.com");
-        return res;
+        Appointment newAppointment = new Appointment();
+        newAppointment.setAppointmentDate(equipmentAppointmentDTO.getAppointmentDate());
+        newAppointment.setAppointmentDuration(equipmentAppointmentDTO.getAppointmentDuration());
+        newAppointment.setAppointmentTime(equipmentAppointmentDTO.getAppointmentTime());
+        newAppointment.setAdminId(equipmentAppointmentDTO.getAdminId());
+        System.out.println("Novi termin za preuzimanje:");
+        System.out.println(newAppointment.getAppointmentTime());
+        System.out.println(newAppointment.getAdminId());
+        return appointmentRepository.save(newAppointment);
     }
-    public String generateQrCodeString(AppointmentDTO res){
-        StringBuilder itemsString = new StringBuilder();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        for (Item item : itemService.getItemsByReservationId(res.getId())) {
-            itemsString.append("-");
-            Equipment e =equipmentService.GetOne(item.getEquipmentId());
-            itemsString.append("Quantity: ").append(item.getQuantity()).append(", Name: ").append(e.getName()).append("\n");
+    /*
+    public List<Appointment> findAvailableAppointments(List<Item> items) {
+        List<Appointment> commonAvailableAppointments = new ArrayList<>();
+
+        // Find available appointments for the first item
+        List<Appointment> availableAppointments = findAvailableAppointmentsForItem(items.get(0));
+
+        // Check for common available appointments among all items
+        for (Appointment appointment : availableAppointments) {
+            if (isCommonAvailableAppointment(appointment, items)) {
+                commonAvailableAppointments.add(appointment);
+            }
         }
-        //if (!res.getItems().isEmpty()) {
-        //    itemsString.delete(itemsString.length() - 2, itemsString.length()); // Remove the last comma and space
-       // }
-        return "Your reservation informations:" + "\n"+
-                "AppointmentDate: " + res.getAppointmentDate().format(formatter) + "\n" +
-                "AppointmentTime=" + res.getAppointmentTime() + "\n" +
-                "AppointmentDuration=" + res.getAppointmentDuration() + "\n" +
-                "Items: "+ "\n" + itemsString + "\n" +
-                ' ';
+
+        return commonAvailableAppointments;
     }
-    public void AddReservationToItem(Item item, Integer reservationId){
-        item.setReservation(reservationId);
-        itemService.save(item);
+    */
+
+    /*
+    private List<Appointment> findAvailableAppointmentsForItem(Item item) {
+        // Implement logic to find available appointments for a given item
+        // You can use the equipmentId and other criteria to query the database
+
+        // For demonstration purposes, let's assume a method findAvailableAppointmentsByEquipmentId
+        //return equipmentAppointmentRepository.findEquipmentAppointmentByEquipmentId(item.getEquipmentId());
     }
+    */
 
-    public List<Appointment> GetAllReservationsForUser(User user){
-        return reservationRepository.getAppointmentReservationsByUser(user);
-    }
-    public void sendReservationQRCodeByEmail(Integer reservationId, String recipientEmail) {
-        // Fetch the reservation from the database
-        Appointment reservation = getById(reservationId);
-
-        // Additional information
-        User user = reservation.getUser();
-        List<Item> items = itemService.getItemsByReservationId(reservation.getId());
-        // Add any other information you want
-
-        // Create a DTO (Data Transfer Object) to represent the reservation with additional information
-        AppointmentDTO reservationDto = new AppointmentDTO();
-        reservationDto.setId(reservation.getId());
-        reservationDto.setAppointmentDate(reservation.getAppointmentDate());
-        reservationDto.setAppointmentTime(reservation.getAppointmentTime());
-        reservationDto.setAppointmentDuration(reservation.getAppointmentDuration());
-        //reservationDto.setUserName(user.getName()); // Assuming there's a getName() method in the User class
-        //reservationDto.setItems(items); // Assuming there's a getter for items in the ReservationDto class
-
-        // Convert the reservation DTO to a string (you might want to customize this based on your needs)
-        String reservationData = generateQrCodeString(reservationDto);
-
-        // Generate QR code
-        try {
-            BufferedImage qrCodeImage = qrCodeService.generateQRCode(reservationData);
-
-            // Convert BufferedImage to byte array
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            ImageIO.write(qrCodeImage, "png", baos);
-            byte[] qrCodeBytes = baos.toByteArray();
-            //emailService.generateQrCodeAndSendEmail(
-
-            //);
-
-            // Send email with QR Code attached
-            emailService.sendEmailWithAttachment(
-                    user.getEmail(),
-                    "Reservation QR Code",
-                    "Please find your reservation QR Code attached.",
-                    qrCodeBytes,
-                    "qrcode.png"
-            );
-        } catch (Exception e) {
-            // Handle exceptions appropriately
-            e.printStackTrace();
+    /*
+    private boolean isCommonAvailableAppointment(Appointment appointment, List<Item> items) {
+        // Check if the appointment time is available for all items
+        for (Item item : items) {
+            List<Appointment> availableAppointments = findAvailableAppointmentsForItem(item);
+            if (!isAppointmentAvailable(appointment, availableAppointments)) {
+                return false;
+            }
         }
+        return true;
+    }
+    */
+    private boolean isAppointmentAvailable(Appointment appointment, List<Appointment> availableAppointments) {
+        // Check if the appointment time is available for a specific item
+        for (Appointment availableAppointment : availableAppointments) {
+            if (isTimeSlotOverlap(appointment, availableAppointment)) {
+                return true;
+            }
+        }
+        return false;
+    }
+    private boolean isTimeSlotOverlap(Appointment appointment1, Appointment appointment2) {
+        // Implement logic to check if two appointments have a time slot overlap
+        // You can compare appointment start and end times to determine overlap
+
+        // For demonstration purposes, let's assume a method isTimeSlotOverlap
+        return appointment1.getAppointmentDate().equals(appointment2.getAppointmentDate())
+                && appointment1.getAppointmentTime().equals(appointment2.getAppointmentTime());
     }
 
+    public Appointment addAdminToAppointment(AppointmentDTO appointmentDTO, Integer companyId) {
+        Appointment appointment = new Appointment();
+        appointment.setAppointmentDate(appointmentDTO.getAppointmentDate());
+        appointment.setAdminId(appointmentDTO.getAdminId());
+        appointment.setAppointmentTime(appointmentDTO.getAppointmentTime());
+        appointment.setAppointmentDuration(appointmentDTO.getAppointmentDuration());
+
+        if (findAvailableAdmin(appointment, companyId).equals(-1)) {
+            return appointment;
+        }
+
+        appointment.setAdminId(findAvailableAdmin(appointment, companyId));
+
+        return appointmentRepository.save(appointment);
+    }
+
+    private Integer findAvailableAdmin(Appointment appointment, Integer companyId) {
+        List<Reservation> reservations = reservationRepository.findAll();
+        List<CompanyAdmin> allCompanyAdmins = companyAdminRepository.findAll();
+        List<Integer> companyAdmins = new ArrayList<>();
+        List<Integer> unavailableInDates = new ArrayList<>();
+        List<Integer> unavailableInTimes = new ArrayList<>();
+        List<Integer> companyAdminsCopy = new ArrayList<>();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+
+
+        for (CompanyAdmin ca : allCompanyAdmins) {
+            if (ca.getCompany_id().equals(companyId)) {
+                companyAdmins.add(ca.getUser_id());
+                companyAdminsCopy.add(ca.getUser_id());
+            }
+        }
+        String appointmentDateStr = dateFormat.format(appointment.getAppointmentDate());
+        for (Reservation r : reservations) {
+            String reservationDateStr = dateFormat.format(r.getAppointment().getAppointmentDate());
+            if (appointmentDateStr.equals(reservationDateStr)) {
+                unavailableInDates.add(r.getAppointment().getAdminId());
+            }
+        }
+
+        if (!unavailableInDates.isEmpty()) {
+            companyAdmins.removeAll(unavailableInDates);
+        }
+
+        if (companyAdmins.isEmpty()) {
+            for (Reservation r : reservations) {
+                int existingAppointmentTime = Integer.parseInt(r.getAppointment().getAppointmentTime());
+                int existingAppointmentDuration = r.getAppointment().getAppointmentDuration();
+                int newAppointmentTime = Integer.parseInt(appointment.getAppointmentTime());
+                if (existingAppointmentTime <= newAppointmentTime + appointment.getAppointmentDuration() &&
+                        newAppointmentTime <= existingAppointmentTime + existingAppointmentDuration) {
+                    unavailableInTimes.add(r.getAppointment().getAdminId());
+                }
+            }
+        }
+
+        companyAdmins.addAll(companyAdminsCopy);
+
+        if (!unavailableInTimes.isEmpty()) {
+            companyAdmins.removeAll(unavailableInTimes);
+        }
+
+        if (companyAdmins.isEmpty()) {
+            return -1;
+        }
+
+        return companyAdmins.get(0);
+    }
 }

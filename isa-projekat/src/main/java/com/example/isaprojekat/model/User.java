@@ -207,12 +207,14 @@ public class User {
         this.companyInfo = companyInfo;
     }
 
+    /*
     @JsonIgnore
     public Collection<? extends GrantedAuthority> getAuthorities() {
         SimpleGrantedAuthority authority =
                 new SimpleGrantedAuthority(userRole.name());
         return Collections.singletonList(authority);
     }
+     */
 
 
     public Integer getId() {
@@ -274,19 +276,6 @@ public class User {
     public Double getPenaltyPoints() { return penaltyPoints; }
     public void setPenaltyPoints(Double penalityPoints) { this.penaltyPoints = penalityPoints; }
 
-    public boolean isAccountNonExpired() {
-        return true;
-    }
-
-
-    public boolean isAccountNonLocked() {
-        return true;
-    }
-
-    @JsonIgnore
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
     public UserRole getUserRole() {
         return userRole;
     }
