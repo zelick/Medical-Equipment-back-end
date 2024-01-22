@@ -5,10 +5,7 @@ import com.example.isaprojekat.dto.CompanyDTO;
 import com.example.isaprojekat.dto.ItemDTO;
 import com.example.isaprojekat.enums.UserRole;
 import com.example.isaprojekat.model.*;
-import com.example.isaprojekat.service.AppointmentService;
-import com.example.isaprojekat.service.CompanyAdminService;
-import com.example.isaprojekat.service.CompanyService;
-import com.example.isaprojekat.service.UserService;
+import com.example.isaprojekat.service.*;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -31,6 +28,7 @@ public class AppointmentController {
     private AppointmentService appointmentService;
     private UserService userService;
     private CompanyAdminService companyAdminService;
+    private ReservationService reservationService;
 
     @GetMapping(value = "companyAppointments/{companyId}")
     @CrossOrigin(origins = "http://localhost:4200")
@@ -38,6 +36,7 @@ public class AppointmentController {
         List<Appointment> foundAppointments = new ArrayList<>();
         List<AppointmentDTO> foundAppointmentsDTO = new ArrayList<>();
         List<Appointment> appointments = appointmentService.findAll();
+        List<Reservation> reservations = reservationService.findAll();
 
         for (Appointment a : appointments) {
             if (companyId.equals(companyAdminService.getCompanyForAdmin(a.getAdminId()).getId())) {
@@ -45,7 +44,17 @@ public class AppointmentController {
             }
         }
 
-        for (Appointment a : foundAppointments) {
+        List<Appointment> appointmentsToRemove = new ArrayList<>(foundAppointments);
+
+        for (Reservation r : reservations) {
+            for (Appointment a : foundAppointments) {
+                if (a.getId().equals(r.getAppointment().getId())) {
+                    appointmentsToRemove.remove(a);
+                }
+            }
+        }
+
+        for (Appointment a : appointmentsToRemove) {
             foundAppointmentsDTO.add(new AppointmentDTO(a));
         }
 
