@@ -33,8 +33,10 @@ public class User {
     private String email;
     @Column(name = "password", nullable = false)
     private String password;
+
     @Column(name = "isLocked", nullable = false)
     private Boolean isLocked =false;
+
     @Column(name = "isEnabled", nullable = false)
     private Boolean isEnabled = false;
 
@@ -260,8 +262,8 @@ public class User {
         return isLocked;
     }
 
-    public void setLocked(Boolean locked) {
-        isLocked = locked;
+    public void setLocked(Boolean isLocked) {
+        this.isLocked = isLocked;
     }
 
     public boolean getEnabled() {

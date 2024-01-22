@@ -70,6 +70,16 @@ public class ReservationController {
 
         return new ResponseEntity<>(reservationDTOS, HttpStatus.OK);
     }
+    @PutMapping(value = "/cancel")
+    @CrossOrigin(origins = "http://localhost:4200")
+    public String cancelReservation(@RequestBody ReservationDTO reservationDTO) {
+        try {
+            reservationService.cancelReservation(reservationDTO);
+            return "Reservation canceled successfully.";
+        } catch (Exception e) {
+            return "Failed to cancel reservation.";
+        }
+    }
     @GetMapping(value = "/byUser/{username}")
     public ResponseEntity<List<ReservationDTO>> getByUser(@PathVariable String username, @RequestParam(name = "id", required = false) Integer userId) {
 
@@ -81,7 +91,7 @@ public class ReservationController {
                 return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
             }
         }
-        List<Reservation> reservations = reservationService.GetAllReservationsForUser(user);
+        List<Reservation> reservations = reservationService.GetAllNotCancelledReservationsForUser(user);
         List<ReservationDTO> reservationsDTO = new ArrayList<>();
         for (Reservation r: reservations
              ) {

@@ -1,5 +1,6 @@
 package com.example.isaprojekat.dto;
 
+import com.example.isaprojekat.enums.ReservationStatus;
 import com.example.isaprojekat.model.Appointment;
 import com.example.isaprojekat.model.Item;
 import com.example.isaprojekat.model.Reservation;
@@ -16,6 +17,7 @@ public class ReservationDTO {
     private Appointment appointment;
 
     private Set<Item> items;
+    private ReservationStatus status;
 
     public ReservationDTO() {
 
@@ -26,6 +28,15 @@ public class ReservationDTO {
         this.user = reservation.getUser();
         this.appointment = reservation.getAppointment();
         this.items = reservation.getItems();
+        this.status = reservation.getStatus();
+    }
+
+    public ReservationStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(ReservationStatus status) {
+        this.status = status;
     }
 
     public Integer getId() {

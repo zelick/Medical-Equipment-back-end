@@ -69,6 +69,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/appointments/availableDates").permitAll()
                 .antMatchers("/api/reservations/byUser/**").permitAll()
                 .antMatchers("/api/reservations/addReservationToItem/**").permitAll()
+                .antMatchers("/api/reservations/cancel").permitAll()
                 .antMatchers("/api/reservations/**").permitAll()
                 .antMatchers("/api/reservations/getAdminsAppointmentReservation/**").permitAll() //DODALA
                 .antMatchers("/api/item/byReservation/**").permitAll()
