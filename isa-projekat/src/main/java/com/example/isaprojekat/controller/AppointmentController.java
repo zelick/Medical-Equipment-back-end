@@ -2,6 +2,7 @@ package com.example.isaprojekat.controller;
 
 import com.example.isaprojekat.dto.AppointmentDTO;
 import com.example.isaprojekat.dto.CompanyDTO;
+import com.example.isaprojekat.dto.ItemDTO;
 import com.example.isaprojekat.enums.UserRole;
 import com.example.isaprojekat.model.*;
 import com.example.isaprojekat.service.AppointmentService;
@@ -50,6 +51,20 @@ public class AppointmentController {
 
         return new ResponseEntity<>(foundAppointmentsDTO, HttpStatus.OK);
     }
+
+    @PostMapping(value = "/addAdminToAppointment/{companyId}")
+    @CrossOrigin(origins = "http://localhost:4200")
+    public ResponseEntity<AppointmentDTO> addAdminToAppointment(@PathVariable Integer companyId, @RequestBody AppointmentDTO appointmentDTO)
+    {
+        try {
+            Appointment updatedAppointment = appointmentService.addAdminToAppointment(appointmentDTO, companyId);
+            return new ResponseEntity<>(new AppointmentDTO(updatedAppointment), HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
 
     @GetMapping(value = "getById/{id}")
     @CrossOrigin(origins = "http://localhost:4200")

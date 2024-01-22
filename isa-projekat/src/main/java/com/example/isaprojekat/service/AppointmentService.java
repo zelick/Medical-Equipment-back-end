@@ -2,12 +2,19 @@ package com.example.isaprojekat.service;
 
 import com.example.isaprojekat.dto.AppointmentDTO;
 import com.example.isaprojekat.model.Appointment;
+import com.example.isaprojekat.model.CompanyAdmin;
 import com.example.isaprojekat.model.Item;
+import com.example.isaprojekat.model.Reservation;
 import com.example.isaprojekat.repository.AppointmentRepository;
+import com.example.isaprojekat.repository.CompanyAdminRepository;
+import com.example.isaprojekat.repository.CompanyRepository;
+import com.example.isaprojekat.repository.ReservationRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.lang.model.type.ArrayType;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,19 +22,21 @@ import java.util.List;
 @AllArgsConstructor
 public class AppointmentService {
     @Autowired
-    private AppointmentRepository equipmentAppointmentRepository;
+    private AppointmentRepository appointmentRepository;
+    private ReservationRepository reservationRepository;
+    private CompanyAdminRepository companyAdminRepository;
 
     public Appointment findOne(Integer id) {
-        return equipmentAppointmentRepository.findById(id).orElseGet(null);
+        return appointmentRepository.findById(id).orElseGet(null);
     }
     public List<Appointment> findAll() {
-        return equipmentAppointmentRepository.findAll();
+        return appointmentRepository.findAll();
     }
     /*public List<EquipmentAppointment> findAllByAdminId(int admin_id){
         return equipmentAppointmentRepository.findAllByAdmin_Id(admin_id);
     }*/
 
-    public void deleteById(Integer id){equipmentAppointmentRepository.deleteById(id);}
+    public void deleteById(Integer id){appointmentRepository.deleteById(id);}
     public Appointment createAppointment(AppointmentDTO equipmentAppointmentDTO) {
 
         Appointment newAppointment = new Appointment();
@@ -38,7 +47,7 @@ public class AppointmentService {
         System.out.println("Novi termin za preuzimanje:");
         System.out.println(newAppointment.getAppointmentTime());
         System.out.println(newAppointment.getAdminId());
-        return equipmentAppointmentRepository.save(newAppointment);
+        return appointmentRepository.save(newAppointment);
     }
     /*
     public List<Appointment> findAvailableAppointments(List<Item> items) {
@@ -96,5 +105,74 @@ public class AppointmentService {
         // For demonstration purposes, let's assume a method isTimeSlotOverlap
         return appointment1.getAppointmentDate().equals(appointment2.getAppointmentDate())
                 && appointment1.getAppointmentTime().equals(appointment2.getAppointmentTime());
+    }
+
+    public Appointment addAdminToAppointment(AppointmentDTO appointmentDTO, Integer companyId) {
+        Appointment appointment = new Appointment();
+        appointment.setAppointmentDate(appointmentDTO.getAppointmentDate());
+        appointment.setAdminId(appointmentDTO.getAdminId());
+        appointment.setAppointmentTime(appointmentDTO.getAppointmentTime());
+        appointment.setAppointmentDuration(appointmentDTO.getAppointmentDuration());
+
+        if (findAvailableAdmin(appointment, companyId).equals(-1)) {
+            return appointment;
+        }
+
+        appointment.setAdminId(findAvailableAdmin(appointment, companyId));
+
+        return appointmentRepository.save(appointment);
+    }
+
+    private Integer findAvailableAdmin(Appointment appointment, Integer companyId) {
+        List<Reservation> reservations = reservationRepository.findAll();
+        List<CompanyAdmin> allCompanyAdmins = companyAdminRepository.findAll();
+        List<Integer> companyAdmins = new ArrayList<>();
+        List<Integer> unavailableInDates = new ArrayList<>();
+        List<Integer> unavailableInTimes = new ArrayList<>();
+        List<Integer> companyAdminsCopy = new ArrayList<>();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+
+
+        for (CompanyAdmin ca : allCompanyAdmins) {
+            if (ca.getCompany_id().equals(companyId)) {
+                companyAdmins.add(ca.getUser_id());
+                companyAdminsCopy.add(ca.getUser_id());
+            }
+        }
+        String appointmentDateStr = dateFormat.format(appointment.getAppointmentDate());
+        for (Reservation r : reservations) {
+            String reservationDateStr = dateFormat.format(r.getAppointment().getAppointmentDate());
+            if (appointmentDateStr.equals(reservationDateStr)) {
+                unavailableInDates.add(r.getAppointment().getAdminId());
+            }
+        }
+
+        if (!unavailableInDates.isEmpty()) {
+            companyAdmins.removeAll(unavailableInDates);
+        }
+
+        if (companyAdmins.isEmpty()) {
+            for (Reservation r : reservations) {
+                int existingAppointmentTime = Integer.parseInt(r.getAppointment().getAppointmentTime());
+                int existingAppointmentDuration = r.getAppointment().getAppointmentDuration();
+                int newAppointmentTime = Integer.parseInt(appointment.getAppointmentTime());
+                if (existingAppointmentTime <= newAppointmentTime + appointment.getAppointmentDuration() &&
+                        newAppointmentTime <= existingAppointmentTime + existingAppointmentDuration) {
+                    unavailableInTimes.add(r.getAppointment().getAdminId());
+                }
+            }
+        }
+
+        companyAdmins.addAll(companyAdminsCopy);
+
+        if (!unavailableInTimes.isEmpty()) {
+            companyAdmins.removeAll(unavailableInTimes);
+        }
+
+        if (companyAdmins.isEmpty()) {
+            return -1;
+        }
+
+        return companyAdmins.get(0);
     }
 }

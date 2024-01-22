@@ -79,6 +79,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/appointments/companyAppointments/**").permitAll()
                 .antMatchers("/api/item/update/**").permitAll()
                 .antMatchers("/api/reservations/all").permitAll()
+                .antMatchers("/api/appointments/addAdminToAppointment/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .cors()
