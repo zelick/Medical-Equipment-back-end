@@ -29,6 +29,33 @@ public class CompanyService {
         return companyRepository.findAll();
     }
 
+    public void updateAverageGrade(Integer companyId) {
+        Company existingCompany = findOne(companyId);
+
+        if (existingCompany == null) {
+            throw new EntityNotFoundException("Company not found with ID: " + companyId);
+        }
+
+        Set<Equipment> equipments = existingCompany.getEquipments();
+
+        if (equipments.isEmpty()) {
+            existingCompany.setAverageGrade(0);
+        } else {
+            double totalGrade = 0;
+
+            for (Equipment equipment : equipments) {
+                totalGrade += equipment.getGrade();
+            }
+
+            double newAverageGrade = totalGrade / equipments.size();
+
+            existingCompany.setAverageGrade(newAverageGrade);
+        }
+
+        companyRepository.save(existingCompany);
+    }
+
+
     public Company updateCompany(Integer id, CompanyDTO companyDTO) {
         Company existingCompany = findOne(id);
 
