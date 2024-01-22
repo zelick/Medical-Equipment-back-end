@@ -1,5 +1,7 @@
 package com.example.isaprojekat.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
@@ -22,6 +24,7 @@ public class Company {
     //slobodni termini za preuzimanje opreme - dodati
 
     @OneToMany(mappedBy = "company", cascade = CascadeType.PERSIST, orphanRemoval = false)
+    @JsonIgnore
     private Set<Equipment> equipments = new HashSet<>();
 
     @Column(name= "workTimeBegin", nullable = true)

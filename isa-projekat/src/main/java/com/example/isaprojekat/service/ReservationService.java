@@ -41,33 +41,35 @@ public class ReservationService {
         //newReservation.setItems(reservationDTO.getItems());
         newReservation.setUser(reservationDTO.getUser());
 
-        return reservationRepository.save(newReservation);
+        Reservation res = reservationRepository.save(newReservation);
+        sendReservationQRCodeByEmail(res.getId(),res.getUser().getEmail());
+        return res;
 
         //List<EquipmentAppointment> appointments = equipmentAppointmentService.findAvailableAppointments(res.getItems());
-        //sendReservationQRCodeByEmail(res.getId(),"anjakovacevic9455@gmail.com");
+
     }
 
-    /*
+
     public String generateQrCodeString(ReservationDTO res){
         StringBuilder itemsString = new StringBuilder();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         for (Item item : itemService.getItemsByReservationId(res.getId())) {
             itemsString.append("-");
-            Equipment e =equipmentService.GetOne(item.getEquipmentId());
+            Equipment e =equipmentService.GetOne(item.getEquipment().getId());
             itemsString.append("Quantity: ").append(item.getQuantity()).append(", Name: ").append(e.getName()).append("\n");
         }
         //if (!res.getItems().isEmpty()) {
         //    itemsString.delete(itemsString.length() - 2, itemsString.length()); // Remove the last comma and space
        // }
         return "Your reservation informations:" + "\n"+
-                "AppointmentDate: " + res.getAppointmentDate().format(formatter) + "\n" +
-                "AppointmentTime=" + res.getAppointmentTime() + "\n" +
-                "AppointmentDuration=" + res.getAppointmentDuration() + "\n" +
+                "AppointmentDate: " + res.getAppointment().getAppointmentDate() + "\n" +
+                "AppointmentTime=" + res.getAppointment().getAppointmentTime() + "\n" +
+                "AppointmentDuration=" + res.getAppointment().getAppointmentDuration() + "\n" +
                 "Items: "+ "\n" + itemsString + "\n" +
                 ' ';
     }
 
-     */
+
 
     /*
     public void AddReservationToItem(Item item, Integer reservationId){
@@ -79,7 +81,7 @@ public class ReservationService {
     public List<Reservation> GetAllReservationsForUser(User user){
         return reservationRepository.getAppointmentReservationsByUser(user);
     }
-    /*
+
     public void sendReservationQRCodeByEmail(Integer reservationId, String recipientEmail) {
         // Fetch the reservation from the database
         Reservation reservation = getById(reservationId);
@@ -92,9 +94,7 @@ public class ReservationService {
         // Create a DTO (Data Transfer Object) to represent the reservation with additional information
         ReservationDTO reservationDto = new ReservationDTO();
         reservationDto.setId(reservation.getId());
-        reservationDto.setAppointmentDate(reservation.getAppointmentDate());
-        reservationDto.setAppointmentTime(reservation.getAppointmentTime());
-        reservationDto.setAppointmentDuration(reservation.getAppointmentDuration());
+        reservationDto.setAppointment(reservation.getAppointment());
         //reservationDto.setUserName(user.getName()); // Assuming there's a getName() method in the User class
         //reservationDto.setItems(items); // Assuming there's a getter for items in the ReservationDto class
 
@@ -126,6 +126,6 @@ public class ReservationService {
             e.printStackTrace();
         }
     }
-     */
+
 
 }
