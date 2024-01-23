@@ -170,6 +170,7 @@ public class ReservationController {
         reservations = reservationService.findAll();
         appointments = appointmentService.findAll();
         List<Appointment> foundAppointments = new ArrayList<Appointment>();
+        Date currentDate = new Date();
 
         for (Appointment a : appointments) {
             int foundCompanyIdForAdmin = companyAdminService.getCompanyForAdmin(a.getAdminId()).getId();
@@ -182,7 +183,9 @@ public class ReservationController {
         for (Reservation r : reservations) {
             for (Appointment a : foundAppointments) {
                 if (a.getId().equals(r.getAppointment().getId()) && r.getStatus().equals(ReservationStatus.PENDING)) {
-                    foundReservations.add(r);
+                    if(a.getAppointmentDate().after(currentDate) || a.getAppointmentDate().equals(currentDate)){
+                        foundReservations.add(r);
+                    }
                 }
             }
         }

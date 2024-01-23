@@ -164,18 +164,40 @@ public class AppointmentController {
         }
     }
 
-    /*@GetMapping(value = "/adminsAppointments/{admin_id}")
+    @GetMapping(value = "/companyAvailableAppointments/{admin_id}")
     @CrossOrigin(origins = "http://localhost:4200")
-    public ResponseEntity<List<EquipmentAppointmentDTO>> getAdminsAppointments(@PathVariable Integer admin_id) {
+    public List<AppointmentDTO> getCompanyAvailableAppointments(@PathVariable Integer admin_id) {
+        CompanyDTO companyDto = companyAdminService.getCompanyForAdmin(admin_id);
+        //Company company = companyService.findOne(companyDto.getId());
+        Date currentDate = new Date();
+        List<Appointment> foundAppointments = new ArrayList<>();
+        List<AppointmentDTO> foundAppointmentsDTO = new ArrayList<>();
+        List<Appointment> appointments = appointmentService.findAll();
+        List<Reservation> reservations = reservationService.findAll();
 
-        List<EquipmentAppointment> appointments = appointmentService.findAllByAdminId(admin_id);
-
-        // convert comapnies to DTOs
-        List<EquipmentAppointmentDTO> appointmentDTOS = new ArrayList<>();
-        for (EquipmentAppointment a : appointments) {
-            appointmentDTOS.add(new EquipmentAppointmentDTO(a));
+        for (Appointment a : appointments) {
+            if (companyDto.getId().equals(companyAdminService.getCompanyForAdmin(a.getAdminId()).getId())) {
+                foundAppointments.add(a);
+            }
         }
 
-        return new ResponseEntity<>(appointmentDTOS, HttpStatus.OK);
-    }*/
+        List<Appointment> appointmentsToRemove = new ArrayList<>(foundAppointments);
+
+        for (Reservation r : reservations) {
+            for (Appointment a : foundAppointments) {
+                if (a.getId().equals(r.getAppointment().getId())) {
+                    appointmentsToRemove.remove(a);
+                }
+                if(a.getAppointmentDate().before(currentDate)){
+                    appointmentsToRemove.remove(a);
+                }
+            }
+        }
+
+        for (Appointment a : appointmentsToRemove) {
+            foundAppointmentsDTO.add(new AppointmentDTO(a));
+        }
+
+        return foundAppointmentsDTO;
+    }
 }
