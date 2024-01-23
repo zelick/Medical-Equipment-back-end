@@ -3,6 +3,7 @@ package com.example.isaprojekat.controller;
 import com.example.isaprojekat.dto.AppointmentDTO;
 import com.example.isaprojekat.dto.CompanyDTO;
 import com.example.isaprojekat.dto.ItemDTO;
+import com.example.isaprojekat.enums.ReservationStatus;
 import com.example.isaprojekat.enums.UserRole;
 import com.example.isaprojekat.model.*;
 import com.example.isaprojekat.service.*;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -32,7 +34,9 @@ public class AppointmentController {
 
     @GetMapping(value = "companyAppointments/{companyId}")
     @CrossOrigin(origins = "http://localhost:4200")
-    public ResponseEntity<List<AppointmentDTO>> findCompanyAppointments(@PathVariable Integer companyId) {
+    public ResponseEntity<List<AppointmentDTO>> findCompanyAppointments(@PathVariable Integer companyId,@RequestParam(name = "id", required = false) Integer userId) {
+        User loggedInUser = userService.findOne(userId);
+        Date currentDate = new Date();
         List<Appointment> foundAppointments = new ArrayList<>();
         List<AppointmentDTO> foundAppointmentsDTO = new ArrayList<>();
         List<Appointment> appointments = appointmentService.findAll();
@@ -48,9 +52,16 @@ public class AppointmentController {
 
         for (Reservation r : reservations) {
             for (Appointment a : foundAppointments) {
-                if (a.getId().equals(r.getAppointment().getId())) {
+                if (a.getId().equals(r.getAppointment().getId()) && r.getStatus().equals(ReservationStatus.PENDING)) {
                     appointmentsToRemove.remove(a);
                 }
+                if (a.getId().equals(r.getAppointment().getId()) && r.getStatus().equals(ReservationStatus.CANCELED) && r.getUser().getId().equals(userId)){
+                    appointmentsToRemove.remove(a);
+                }
+                if(a.getAppointmentDate().before(currentDate)){
+                    appointmentsToRemove.remove(a);
+                }
+
             }
         }
 

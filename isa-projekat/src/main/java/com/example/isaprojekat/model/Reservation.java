@@ -1,9 +1,9 @@
 package com.example.isaprojekat.model;
 
+import com.example.isaprojekat.enums.ReservationStatus;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -21,14 +21,27 @@ public class Reservation {
     @OneToMany(mappedBy = "reservation", cascade = CascadeType.PERSIST, orphanRemoval = false)
     @JsonIgnore
     private Set<Item> items = new HashSet<>();
+
+    @Column(name = "status", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private ReservationStatus status;
     public Reservation() {
 
     }
 
-    public Reservation(Appointment appointment, User user, Set<Item> items) {
+    public Reservation(Appointment appointment, User user, Set<Item> items, ReservationStatus status) {
         this.appointment = appointment;
         this.user = user;
         this.items = items;
+        this.status = status;
+    }
+
+    public ReservationStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(ReservationStatus status) {
+        this.status = status;
     }
 
     public User getUser() {
