@@ -80,4 +80,19 @@ public class ReservationService {
     public Reservation getReservationById(int id){
         return reservationRepository.findById(id);
     }
+    public Reservation expireReservation(Reservation reservation){
+        reservation.setStatus(ReservationStatus.EXPIRED);
+        reservation.getUser().setPenaltyPoints(2.0);
+        return reservationRepository.save(reservation);
+    }
+    public Reservation takeOverReservation(Reservation reservation){
+        for(Item item : reservation.getItems()){
+            int itemQuantity = item.getQuantity();
+            int itemMaxQuantity = item.getEquipment().getMaxQuantity();
+            int newMaxQuantity = Math.max(itemMaxQuantity - itemQuantity, 0);
+            item.getEquipment().setMaxQuantity(newMaxQuantity);
+        }
+        reservation.setStatus(ReservationStatus.TAKEN_OVER);
+        return reservationRepository.save(reservation);
+    }
 }

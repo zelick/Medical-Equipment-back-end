@@ -27,6 +27,8 @@ public class ReservationController {
     private CompanyService companyService;
     @Autowired
     private CompanyAdminService companyAdminService;
+    @Autowired
+    private EmailService emailService;
 
     @PostMapping(value = "/create")
     @CrossOrigin(origins = "http://localhost:4200")
@@ -158,5 +160,30 @@ public class ReservationController {
         Reservation foundReservation = reservationService.getReservationById(id);
         return new ReservationDTO(foundReservation);
     }
+
+    @PutMapping(value = "/expired")
+    @CrossOrigin(origins = "http://localhost:4200")
+    public ReservationDTO expireReservation(@RequestBody ReservationDTO reservationDTO) {
+        try {
+            Reservation foundReservation = reservationService.getReservationById(reservationDTO.getId());
+            Reservation expiredReservation = reservationService.expireReservation(foundReservation);
+            return new ReservationDTO(expiredReservation);
+        } catch (Exception e) {
+            return null;
+        }
+    }
+    @PutMapping(value = "/takeOver")
+    @CrossOrigin(origins = "http://localhost:4200")
+    public ReservationDTO takeOverReservation(@RequestBody ReservationDTO reservationDTO) {
+        try {
+            Reservation foundReservation = reservationService.getReservationById(reservationDTO.getId());
+            Reservation takenOverReservation = reservationService.takeOverReservation(foundReservation);
+            emailService.sendConfirmationReservationEmail(foundReservation); //izmena
+            return new ReservationDTO(takenOverReservation);
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
 
 }

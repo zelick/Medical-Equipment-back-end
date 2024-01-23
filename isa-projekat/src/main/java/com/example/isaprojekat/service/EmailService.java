@@ -1,6 +1,9 @@
 package com.example.isaprojekat.service;
 
 import com.example.isaprojekat.model.EmailSender;
+import com.example.isaprojekat.model.Equipment;
+import com.example.isaprojekat.model.Item;
+import com.example.isaprojekat.model.Reservation;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -62,4 +65,41 @@ public class EmailService implements EmailSender {
             e.printStackTrace();
         }
     }
+
+    public void sendConfirmationReservationEmail(Reservation reservation) {
+        String to = reservation.getUser().getEmail(); // Adresa korisnika
+        String subject = "Confirmation of Reservation Pickup";
+
+        // Tekst poruke
+        String text = "Dear " + reservation.getUser().getFirstName() + ",\n\n" +
+                "We are pleased to inform you that your reservation with Reservation Number " +
+                reservation.getId() + " has been successfully picked up. Below are the details:\n\n";
+
+        // Dodajte detalje za svaki item u rezervaciji
+        for (Item item : reservation.getItems()) {
+            Equipment equipment = item.getEquipment();
+            if (equipment != null) {
+                text += "Item: " + equipment.getName() + "\n" +
+                        "Quantity: " + item.getQuantity() + "\n\n";
+            }
+        }
+
+        // Dodajte završne poruke
+        text += "Thank you! Hope to see you soon!\n";
+
+        try {
+            MimeMessage message = mailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message, true);
+
+            helper.setTo(to);
+            helper.setSubject(subject);
+            helper.setText(text);
+
+            mailSender.send(message);
+        } catch (MessagingException e) {
+            // Obradite izuzetak kako vam odgovara
+            e.printStackTrace();
+        }
+    }
+
 }
