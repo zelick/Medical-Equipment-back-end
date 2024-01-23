@@ -74,6 +74,8 @@ public class CompanyService {
             newEquipments.add(equipment);
         }
         existingCompany.setEquipments(newEquipments);
+        existingCompany.setWorkTimeBegin(companyDTO.getWorkTimeBegin());
+        existingCompany.setWorkTimeEnd(companyDTO.getWorkTimeEnd());
 
         return companyRepository.save(existingCompany);
     }
