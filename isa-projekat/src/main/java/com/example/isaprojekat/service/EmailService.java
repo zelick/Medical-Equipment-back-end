@@ -83,7 +83,6 @@ public class EmailService implements EmailSender {
                         "Quantity: " + item.getQuantity() + "\n\n";
             }
         }
-
         // Dodajte završne poruke
         text += "Thank you! Hope to see you soon!\n";
 

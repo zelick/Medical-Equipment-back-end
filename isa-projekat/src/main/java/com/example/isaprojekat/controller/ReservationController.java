@@ -1,6 +1,7 @@
 package com.example.isaprojekat.controller;
 
 import com.example.isaprojekat.dto.*;
+import com.example.isaprojekat.enums.ReservationStatus;
 import com.example.isaprojekat.enums.UserRole;
 import com.example.isaprojekat.model.*;
 import com.example.isaprojekat.service.*;
@@ -29,6 +30,8 @@ public class ReservationController {
     private CompanyAdminService companyAdminService;
     @Autowired
     private EmailService emailService;
+    @Autowired
+    private AppointmentService appointmentService;
 
     @PostMapping(value = "/create")
     @CrossOrigin(origins = "http://localhost:4200")
@@ -127,34 +130,6 @@ public class ReservationController {
         }
     }
      */
-
-    /*
-    //ovde fali autorizacija - ispaviti
-    @GetMapping(value = "/getAdminsAppointmentReservation/{admin_id}")
-    @CrossOrigin(origins = "http://localhost:4200")
-    public ResponseEntity<List<ReservationDTO>> getAdminsAppointmentReservation(@PathVariable int admin_id){
-        CompanyDTO companyDto = companyAdminService.getCompanyForAdmin(admin_id);
-        Company company = companyService.findOne(companyDto.getId());
-        List<ReservationDTO> reservationsDTO = new ArrayList<ReservationDTO>();
-        Set<Integer> uniqueReservationIds = new HashSet<>();
-        List<Item> allItems = itemService.findAll();
-        for (Equipment e : company.getEquipments()) {
-            for (Item i : allItems) {
-                if (e.getId().equals(i.getEquipmentId())) {
-                    int reservationId = i.getReservation();
-                    // Check if the reservationId is unique
-                    if (uniqueReservationIds.add(reservationId)) {
-                        Reservation reservation = reservationService.getById(reservationId);
-                        ReservationDTO dto = new ReservationDTO(reservation);
-                        reservationsDTO.add(dto);
-                    }
-                }
-            }
-        }
-        return new ResponseEntity<>(reservationsDTO, HttpStatus.OK);
-    }
-
-     */
     @GetMapping(path = "findReservationById/{id}")
     public ReservationDTO findReservationById(@PathVariable int id) {
         Reservation foundReservation = reservationService.getReservationById(id);
@@ -178,12 +153,43 @@ public class ReservationController {
         try {
             Reservation foundReservation = reservationService.getReservationById(reservationDTO.getId());
             Reservation takenOverReservation = reservationService.takeOverReservation(foundReservation);
-            emailService.sendConfirmationReservationEmail(foundReservation); //izmena
+            emailService.sendConfirmationReservationEmail(foundReservation);
             return new ReservationDTO(takenOverReservation);
         } catch (Exception e) {
             return null;
         }
     }
 
+    @GetMapping(value = "/getAdminsAppointmentReservation/{admin_id}")
+    @CrossOrigin(origins = "http://localhost:4200")
+    public ResponseEntity<List<ReservationDTO>> getAdminsAppointmentReservation(@PathVariable int admin_id){
+        CompanyDTO companyDto = companyAdminService.getCompanyForAdmin(admin_id);
+        Company company = companyService.findOne(companyDto.getId());
+        List<Reservation> reservations = new ArrayList<Reservation>();
+        List<Appointment> appointments = new ArrayList<Appointment>();
+        reservations = reservationService.findAll();
+        appointments = appointmentService.findAll();
+        List<Appointment> foundAppointments = new ArrayList<Appointment>();
 
+        for (Appointment a : appointments) {
+            int foundCompanyIdForAdmin = companyAdminService.getCompanyForAdmin(a.getAdminId()).getId();
+            if (company.getId().equals(foundCompanyIdForAdmin)) {
+                foundAppointments.add(a);
+            }
+        }
+
+        List<Reservation> foundReservations = new ArrayList<Reservation>();
+        for (Reservation r : reservations) {
+            for (Appointment a : foundAppointments) {
+                if (a.getId().equals(r.getAppointment().getId()) && r.getStatus().equals(ReservationStatus.PENDING)) {
+                    foundReservations.add(r);
+                }
+            }
+        }
+        List<ReservationDTO> reservationsDTO = new ArrayList<ReservationDTO>();
+        for (Reservation r : foundReservations) {
+            reservationsDTO.add(new ReservationDTO(r));
+        }
+        return new ResponseEntity<>(reservationsDTO, HttpStatus.OK);
+    }
 }

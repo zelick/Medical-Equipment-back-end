@@ -36,6 +36,7 @@ public class QrCodeController {
         }
     }
 
+    //ovo ne radi, zbog putanje - Prebaceno u RegistrationController - ne znam gde je greska
     @PostMapping(value = "/readQrCodeImage")
     @CrossOrigin(origins = "http://localhost:4200")
     public ResponseEntity<String> handleFileUpload(@RequestParam("file") MultipartFile file) {
