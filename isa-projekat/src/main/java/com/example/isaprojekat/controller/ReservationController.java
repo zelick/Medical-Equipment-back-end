@@ -10,11 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
-import java.util.HashSet;
+import java.util.*;
 
 @RestController
 @RequestMapping(value = "api/reservations")
@@ -147,6 +143,10 @@ public class ReservationController {
     }
 
      */
-
+    @GetMapping(path = "findReservationById/{id}")
+    public ReservationDTO findReservationById(@PathVariable int id) {
+        Reservation foundReservation = reservationService.getReservationById(id);
+        return new ReservationDTO(foundReservation);
+    }
 
 }

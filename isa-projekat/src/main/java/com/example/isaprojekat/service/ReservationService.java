@@ -7,12 +7,8 @@ import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayOutputStream;
-import java.text.ParseException;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -36,5 +32,8 @@ public class ReservationService {
 
     public List<Reservation> GetAllReservationsForUser(User user){
         return reservationRepository.getAppointmentReservationsByUser(user);
+    }
+    public Reservation getReservationById(int id){
+        return reservationRepository.findById(id);
     }
 }

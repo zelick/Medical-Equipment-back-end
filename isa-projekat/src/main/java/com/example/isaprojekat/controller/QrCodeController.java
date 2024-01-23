@@ -1,6 +1,7 @@
 package com.example.isaprojekat.controller;
 
 import com.example.isaprojekat.dto.CompanyDTO;
+import com.example.isaprojekat.dto.ReservationDTO;
 import com.example.isaprojekat.service.EmailService;
 import com.example.isaprojekat.service.QrCodeService;
 import lombok.AllArgsConstructor;
@@ -48,15 +49,10 @@ public class QrCodeController {
             // Read QR Code
             String qrCodeData = qrCodeService.readQRCode(imageBytes);
 
-            return new ResponseEntity<>("File uploaded successfully", HttpStatus.OK);
+            // Vratite string kao odgovor
+            return new ResponseEntity<>(qrCodeData, HttpStatus.OK);
         } catch (IOException e) {
             return new ResponseEntity<>("Error handling file upload", HttpStatus.INTERNAL_SERVER_ERROR);
         }
-    }
-
-    @GetMapping(value = "/proba")
-    @CrossOrigin(origins = "http://localhost:4200")
-    public ResponseEntity<String> proba() {
-        return new ResponseEntity<>("File uploaded successfully", HttpStatus.OK);
     }
 }

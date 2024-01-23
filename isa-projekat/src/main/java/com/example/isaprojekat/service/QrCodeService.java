@@ -23,9 +23,6 @@ import java.io.IOException;
 import com.example.isaprojekat.model.User;
 import com.example.isaprojekat.model.Item;
 import com.example.isaprojekat.model.Equipment;
-
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -76,11 +73,11 @@ public class QrCodeService {
             Equipment e = equipmentRepository.getById(item.getEquipment().getId());
             itemsString.append("Quantity: ").append(item.getQuantity()).append(", Name: ").append(e.getName()).append("\n");
         }
-
         return "Your reservation informations:" + "\n"+
+                "Reservation number: " + reservation.getId() + "\n" +
                 "AppointmentDate: " + reservation.getAppointment().getAppointmentDate() + "\n" +
-                "AppointmentTime=" + reservation.getAppointment().getAppointmentTime() + "\n" +
-                "AppointmentDuration=" + reservation.getAppointment().getAppointmentDuration() + "\n" +
+                "AppointmentTime: " + reservation.getAppointment().getAppointmentTime() + "\n" +
+                "AppointmentDuration: " + reservation.getAppointment().getAppointmentDuration() + "\n" +
                 "Items: "+ "\n" + itemsString + "\n" +
                 ' ';
     }
