@@ -80,4 +80,18 @@ public class ReservationService {
     public List<Reservation> GetAllUsersReservations(User user){
         return reservationRepository.getAppointmentReservationsByUser(user);
     }
+
+    public List<Reservation> getAllTakenUsersReservations(User user){
+        List<Reservation> foundReservations = new ArrayList<>();
+        List<Reservation> allUsersReservations = reservationRepository.getAppointmentReservationsByUser(user);
+
+        for (Reservation r : allUsersReservations) {
+            if (r.getStatus().equals(ReservationStatus.TAKEN)){
+                foundReservations.add(r);
+            }
+        }
+
+        return foundReservations;
+
+    }
 }
