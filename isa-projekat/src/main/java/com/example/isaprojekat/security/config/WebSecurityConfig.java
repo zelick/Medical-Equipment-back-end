@@ -84,6 +84,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/qr-code/generateQrCodeSendMail").permitAll()
                 .antMatchers("/api/qr-code/getQRCodeData/**").permitAll()
                 .antMatchers("/api/users/resetPenaltyPoints").permitAll()
+                .antMatchers("/api/reservations/getAllUsersReservations/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .cors()

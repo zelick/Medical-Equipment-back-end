@@ -76,4 +76,8 @@ public class ReservationService {
         }
         return notCancelledReservations;
     }
+
+    public List<Reservation> GetAllUsersReservations(User user){
+        return reservationRepository.getAppointmentReservationsByUser(user);
+    }
 }

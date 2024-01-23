@@ -100,6 +100,27 @@ public class ReservationController {
         }
         return new ResponseEntity<>(reservationsDTO, HttpStatus.OK);
     }
+
+    @GetMapping(value = "/getAllUsersReservations/{username}")
+    public ResponseEntity<List<ReservationDTO>> getAllUsersReservations(@PathVariable String username, @RequestParam(name = "id", required = false) Integer userId) {
+
+        User user = userService.findOneByEmail(username);
+        User loggedInUser = userService.findOne(userId);
+
+        if(loggedInUser!=null) {
+            if (loggedInUser.getUserRole() != UserRole.USER || !Objects.equals(loggedInUser.getEmail(), user.getEmail())) {
+                return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+            }
+        }
+        List<Reservation> reservations = reservationService.GetAllUsersReservations(user);
+        List<ReservationDTO> reservationsDTO = new ArrayList<>();
+        for (Reservation r: reservations
+        ) {
+            ReservationDTO reservationDTO = new ReservationDTO(r);
+            reservationsDTO.add(reservationDTO);
+        }
+        return new ResponseEntity<>(reservationsDTO, HttpStatus.OK);
+    }
     /*
     @PutMapping(value = "/addReservationToItem/{itemId}/{reservationId}")
     public ResponseEntity<String> addReservationToItem(@PathVariable Integer itemId, @PathVariable Integer reservationId) {
