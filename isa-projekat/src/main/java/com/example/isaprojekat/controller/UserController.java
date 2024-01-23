@@ -14,6 +14,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -83,16 +84,39 @@ public class UserController {
         return new ResponseEntity<>(new UserDTO(user), HttpStatus.OK);
     }
 
+    public boolean isFirstDayOfMonth() {
+        LocalDate currentDate = LocalDate.now();
+        return currentDate.getDayOfMonth() == 1;
+    }
+
     @GetMapping(value = "/getUserByUsername/{username}")
     public ResponseEntity<UserDTO> getUserByUsername(@PathVariable String username) {
-
         User user = userService.findOneByEmail(username);
+
+        if (isFirstDayOfMonth()) {
+            resetPenaltyPoints(user);
+        }
 
         if (user == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
         return new ResponseEntity<>(new UserDTO(user), HttpStatus.OK);
+    }
+
+    @PutMapping(value= "/resetPenaltyPoints")
+    @CrossOrigin(origins = "http://localhost:4200")
+    public void resetPenaltyPoints (@RequestBody User user) {
+        User exactUser = userService.findOneByEmail(user.getEmail());
+
+        if (exactUser == null) {
+            //return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        }
+        exactUser.setPenaltyPoints(0.0);
+
+        userService.save(exactUser);
+
+        //return new ResponseEntity<>(new UserDTO(exactUser), HttpStatus.OK);
     }
 
     @PutMapping(value= "/updateUser/{username}")

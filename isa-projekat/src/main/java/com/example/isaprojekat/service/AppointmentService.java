@@ -153,9 +153,9 @@ public class AppointmentService {
 
         if (companyAdmins.isEmpty()) {
             for (Reservation r : reservations) {
-                int existingAppointmentTime = Integer.parseInt(r.getAppointment().getAppointmentTime());
+                int existingAppointmentTime = convertTimeToMinutes(r.getAppointment().getAppointmentTime());
                 int existingAppointmentDuration = r.getAppointment().getAppointmentDuration();
-                int newAppointmentTime = Integer.parseInt(appointment.getAppointmentTime());
+                int newAppointmentTime = convertTimeToMinutes(appointment.getAppointmentTime());
                 if (existingAppointmentTime <= newAppointmentTime + appointment.getAppointmentDuration() &&
                         newAppointmentTime <= existingAppointmentTime + existingAppointmentDuration) {
                     unavailableInTimes.add(r.getAppointment().getAdminId());
@@ -174,5 +174,12 @@ public class AppointmentService {
         }
 
         return companyAdmins.get(0);
+    }
+
+    int convertTimeToMinutes(String time) {
+        String[] parts = time.split(":");
+        int hours = Integer.parseInt(parts[0]);
+        int minutes = Integer.parseInt(parts[1]);
+        return hours * 60 + minutes;
     }
 }
