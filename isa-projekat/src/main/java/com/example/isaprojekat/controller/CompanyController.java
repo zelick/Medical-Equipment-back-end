@@ -50,6 +50,7 @@ public class CompanyController {
                                                       @PathVariable Integer equipmentId) {
 
         Company company = companyService.removeEquipmentFromCompany(companyId, equipmentId);
+        companyService.updateAverageGrade(companyId);
         System.out.println("Kompanija:");
         System.out.println(company);
 
@@ -66,6 +67,7 @@ public class CompanyController {
                                                       @PathVariable Integer equipmentId) {
 
         Company company = companyService.addEquipmentToCompany(companyId, equipmentId);
+        companyService.updateAverageGrade(companyId);
         System.out.println("Kompanija:");
         System.out.println(company);
 

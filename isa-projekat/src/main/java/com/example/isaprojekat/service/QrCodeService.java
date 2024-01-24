@@ -109,4 +109,23 @@ public class QrCodeService {
             return false;
         }
     }
+
+    public byte[] displayQRcode(Integer reservationId) {
+        try {
+            Reservation reservation = reservationRepository.getById(reservationId);
+            User user = reservation.getUser();
+            List<Item> items = itemRepository.getItemsByReservationId(reservation.getId());
+            String reservationData = generateQrCodeString(reservation);
+
+            // Primer:
+            BufferedImage qrCodeImage = generateQRCode(reservationData);
+
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            ImageIO.write(qrCodeImage, "png", baos);
+            return baos.toByteArray();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new byte[0];
+        }
+    }
 }

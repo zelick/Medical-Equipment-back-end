@@ -94,5 +94,22 @@ public class ReservationService {
         }
         reservation.setStatus(ReservationStatus.TAKEN_OVER);
         return reservationRepository.save(reservation);
+
+    public List<Reservation> GetAllUsersReservations(User user){
+        return reservationRepository.getAppointmentReservationsByUser(user);
+    }
+
+    public List<Reservation> getAllTakenUsersReservations(User user){
+        List<Reservation> foundReservations = new ArrayList<>();
+        List<Reservation> allUsersReservations = reservationRepository.getAppointmentReservationsByUser(user);
+
+        for (Reservation r : allUsersReservations) {
+            if (r.getStatus().equals(ReservationStatus.TAKEN_OVER)){
+                foundReservations.add(r);
+            }
+        }
+
+        return foundReservations;
+
     }
 }

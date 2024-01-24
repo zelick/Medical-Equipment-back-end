@@ -6,6 +6,9 @@ import com.example.isaprojekat.service.EmailService;
 import com.example.isaprojekat.service.QrCodeService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -36,7 +39,6 @@ public class QrCodeController {
         }
     }
 
-    //ovo ne radi, zbog putanje - Prebaceno u RegistrationController - ne znam gde je greska
     @PostMapping(value = "/readQrCodeImage")
     @CrossOrigin(origins = "http://localhost:4200")
     public ResponseEntity<String> handleFileUpload(@RequestParam("file") MultipartFile file) {
@@ -56,4 +58,17 @@ public class QrCodeController {
             return new ResponseEntity<>("Error handling file upload", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    @GetMapping("/getQRCodeData/{id}")
+    @CrossOrigin(origins = "http://localhost:4200")
+    public ResponseEntity<byte[]> getQRCodeImage(@PathVariable Integer id) {
+        try {
+            byte[] qrCodeBytes = qrCodeService.displayQRcode(id);
+            return ResponseEntity.ok().contentType(MediaType.IMAGE_PNG).body(qrCodeBytes);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
+    }
+
 }
