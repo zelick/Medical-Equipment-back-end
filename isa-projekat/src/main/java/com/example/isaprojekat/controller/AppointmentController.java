@@ -43,7 +43,9 @@ public class AppointmentController {
         List<Reservation> reservations = reservationService.findAll();
 
         for (Appointment a : appointments) {
-            if (companyId.equals(companyAdminService.getCompanyForAdmin(a.getAdminId()).getId())) {
+            Company company = companyAdminService.getCompanyForAdmin(a.getAdminId());
+
+            if (company != null && companyId.equals(company.getId())) {
                 foundAppointments.add(a);
             }
         }
@@ -167,8 +169,7 @@ public class AppointmentController {
     @GetMapping(value = "/companyAvailableAppointments/{admin_id}")
     @CrossOrigin(origins = "http://localhost:4200")
     public List<AppointmentDTO> getCompanyAvailableAppointments(@PathVariable Integer admin_id) {
-        CompanyDTO companyDto = companyAdminService.getCompanyForAdmin(admin_id);
-        //Company company = companyService.findOne(companyDto.getId());
+        Company company = companyAdminService.getCompanyForAdmin(admin_id);
         Date currentDate = new Date();
         List<Appointment> foundAppointments = new ArrayList<>();
         List<AppointmentDTO> foundAppointmentsDTO = new ArrayList<>();
@@ -176,7 +177,7 @@ public class AppointmentController {
         List<Reservation> reservations = reservationService.findAll();
 
         for (Appointment a : appointments) {
-            if (companyDto.getId().equals(companyAdminService.getCompanyForAdmin(a.getAdminId()).getId())) {
+            if (company.getId().equals(companyAdminService.getCompanyForAdmin(a.getAdminId()).getId())) {
                 foundAppointments.add(a);
             }
         }

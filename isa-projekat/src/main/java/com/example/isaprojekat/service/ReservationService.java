@@ -94,6 +94,7 @@ public class ReservationService {
         }
         reservation.setStatus(ReservationStatus.TAKEN_OVER);
         return reservationRepository.save(reservation);
+    }
 
     public List<Reservation> GetAllUsersReservations(User user){
         return reservationRepository.getAppointmentReservationsByUser(user);

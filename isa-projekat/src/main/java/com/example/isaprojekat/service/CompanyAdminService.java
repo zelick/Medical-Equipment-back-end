@@ -39,21 +39,18 @@ public class CompanyAdminService {
         return companyAdminRepository.save(newCompanyAdmin);
     }
 
-    public CompanyDTO getCompanyForAdmin(Integer adminId) {
+    public Company getCompanyForAdmin(Integer adminId) {
         Integer companyId = companyAdminRepository.findCompanyIdByUserId(adminId);
 
-        // Provera da li je companyId null ili ne
         if (companyId != null) {
             Optional<Company> companyOptional = companyRepository.findById(companyId);
 
-            // Provera da li postoji kompanija sa datim ID-em
             if (companyOptional.isPresent()) {
-                Company company = companyOptional.get();
-                return new CompanyDTO(company);
-            }else {
+                return companyOptional.get();
+            } else {
                 return null;
             }
-        }else{
+        } else {
             return null;
         }
     }

@@ -205,12 +205,9 @@ public class ReservationController {
     @GetMapping(value = "/getAdminsAppointmentReservation/{admin_id}")
     @CrossOrigin(origins = "http://localhost:4200")
     public ResponseEntity<List<ReservationDTO>> getAdminsAppointmentReservation(@PathVariable int admin_id){
-        CompanyDTO companyDto = companyAdminService.getCompanyForAdmin(admin_id);
-        Company company = companyService.findOne(companyDto.getId());
-        List<Reservation> reservations = new ArrayList<Reservation>();
-        List<Appointment> appointments = new ArrayList<Appointment>();
-        reservations = reservationService.findAll();
-        appointments = appointmentService.findAll();
+        Company company = companyAdminService.getCompanyForAdmin(admin_id);
+        List<Reservation> reservations = reservationService.findAll();
+        List<Appointment> appointments = appointmentService.findAll();
         List<Appointment> foundAppointments = new ArrayList<Appointment>();
         Date currentDate = new Date();
 

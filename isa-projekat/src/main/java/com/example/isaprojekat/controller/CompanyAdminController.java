@@ -3,6 +3,7 @@ package com.example.isaprojekat.controller;
 import com.example.isaprojekat.dto.CompanyDTO;
 import com.example.isaprojekat.dto.UserDTO;
 import com.example.isaprojekat.enums.UserRole;
+import com.example.isaprojekat.model.Company;
 import com.example.isaprojekat.model.User;
 import com.example.isaprojekat.service.CompanyAdminService;
 import com.example.isaprojekat.service.CompanyService;
@@ -28,8 +29,9 @@ public class CompanyAdminController {
     @CrossOrigin(origins = "http://localhost:4200")
     public ResponseEntity<CompanyDTO> getCompanyForAdmin(@PathVariable Integer id){
         try{
-            CompanyDTO company = companyAdminService.getCompanyForAdmin(id);
-            return new ResponseEntity<>(company, HttpStatus.OK);
+            Company company = companyAdminService.getCompanyForAdmin(id);
+            CompanyDTO companyDTO = new CompanyDTO(company);
+            return new ResponseEntity<>(companyDTO, HttpStatus.OK);
         } catch (Exception e){
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
