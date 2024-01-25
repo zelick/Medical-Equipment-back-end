@@ -1,13 +1,16 @@
 package com.example.isaprojekat.service;
 
 import com.example.isaprojekat.dto.ReservationDTO;
+import com.example.isaprojekat.enums.AppointmentStatus;
 import com.example.isaprojekat.enums.ReservationStatus;
 import com.example.isaprojekat.model.*;
+import com.example.isaprojekat.repository.AppointmentRepository;
 import com.example.isaprojekat.repository.ReservationRepository;
 import com.example.isaprojekat.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -26,19 +29,31 @@ public class ReservationService {
     private ReservationRepository reservationRepository;
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private AppointmentService appointmentService;
+
     public Reservation getById(Integer id){
         return reservationRepository.getById(id);
     }
     public List<Reservation> findAll() {
         return reservationRepository.findAll();
     }
+
+    @Transactional
     public Reservation createReservation(ReservationDTO reservationDTO) {
         Reservation newReservation = new Reservation();
         newReservation.setStatus(ReservationStatus.PENDING);
         newReservation.setAppointment(reservationDTO.getAppointment());
         newReservation.setUser(reservationDTO.getUser());
-
+        Appointment appointment = appointmentService.findOne(reservationDTO.getAppointment().getId());
+        Appointment updatedAppointment = appointmentService.update(appointment);
+        newReservation.setAppointment(updatedAppointment);
         return reservationRepository.save(newReservation);
+    }
+
+    public Reservation findOne(Integer id)
+    {
+        return reservationRepository.findById(id).orElseGet(null);
     }
 
     public void cancelReservation(ReservationDTO reservationDto){

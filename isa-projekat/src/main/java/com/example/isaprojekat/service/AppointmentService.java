@@ -224,4 +224,9 @@ public class AppointmentService {
         appointment.setStatus(AppointmentStatus.RESERVED);
         return appointmentRepository.save(appointment);
     }
+
+    public Appointment save(Appointment appointment)
+    {
+        return appointmentRepository.save(appointment);
+    }
 }

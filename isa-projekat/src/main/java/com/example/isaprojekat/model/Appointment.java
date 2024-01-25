@@ -22,6 +22,10 @@ public class Appointment {
     @Column(name = "status", nullable = false)
     @Enumerated(EnumType.STRING)
     private AppointmentStatus status;
+
+    // za optimisticko zakljucavanje transakcije
+    @Version
+    private Integer version;
     public Appointment() {
     }
     public Appointment(Integer id, Integer adminId, Date appointmentDate,
@@ -82,5 +86,13 @@ public class Appointment {
 
     public void setStatus(AppointmentStatus status) {
         this.status = status;
+    }
+
+    public Integer getVersion() {
+        return version;
+    }
+
+    public void setVersion(Integer version) {
+        this.version = version;
     }
 }

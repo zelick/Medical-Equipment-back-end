@@ -1,5 +1,9 @@
 package com.example.isaprojekat;
 
+import com.example.isaprojekat.dto.ReservationDTO;
+import com.example.isaprojekat.enums.AppointmentStatus;
+import com.example.isaprojekat.model.Appointment;
+import com.example.isaprojekat.model.Reservation;
 import com.example.isaprojekat.service.AppointmentService;
 import com.example.isaprojekat.service.ReservationService;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -19,8 +23,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class TxOptimisticApplicationTests {
-
-
     @Autowired
     private ReservationService reservationService;
     private AppointmentService appointmentService;
@@ -32,22 +34,21 @@ public class TxOptimisticApplicationTests {
         productService.save(new Product("P3","O3", 3L));
         productService.save(new Product("P4","O4", 1L));
         productService.save(new Product("P5","O4", 1L));
-    }
+    }*/
 
     @Test(expected = ObjectOptimisticLockingFailureException.class)
-    public void testOptimisticLockingScenario() throws Throwable {
+    public void testOptimisticLocking3() throws Throwable {
 
         ExecutorService executor = Executors.newFixedThreadPool(2);
         Future<?> future1 = executor.submit(new Runnable() {
-
             @Override
             public void run() {
                 System.out.println("Startovan Thread 1");
-                Product productToUpdate = productService.findById(1L);// ocitan objekat sa id 1
-                productToUpdate.setPrice(800L);// izmenjen ucitan objekat
-                try { Thread.sleep(3000); } catch (InterruptedException e) {}// thread uspavan na 3 sekunde da bi drugi thread mogao da izvrsi istu operaciju
-                productService.save(productToUpdate);// bacice ObjectOptimisticLockingFailureException
+                //Appointment appointmentToUpdate = appointmentService.findOne(1);// ocitan objekat sa id 1
+                //appointmentToUpdate.setStatus(AppointmentStatus.RESERVED);// izmenjen ucitan objekat
 
+                try { Thread.sleep(3000); } catch (InterruptedException e) {}// thread uspavan na 3 sekunde da bi drugi thread mogao da izvrsi istu operaciju
+               // appointmentService.save(appointmentToUpdate);// bacice ObjectOptimisticLockingFailureException
             }
         });
         executor.submit(new Runnable() {
@@ -55,8 +56,8 @@ public class TxOptimisticApplicationTests {
             @Override
             public void run() {
                 System.out.println("Startovan Thread 2");
-                Product productToUpdate = productService.findById(1L);// ocitan isti objekat sa id 1 kao i iz prvog threada
-                productToUpdate.setPrice(900L);// izmenjen ucitan objekat
+                Appointment appointmentToUpdate = appointmentService.findOne(1);// ocitan isti objekat sa id 1 kao i iz prvog threada
+                appointmentToUpdate.setStatus(AppointmentStatus.RESERVED);// izmenjen ucitan objekat
                 /*
                  * prvi ce izvrsiti izmenu i izvrsi upit:
                  * Hibernate:
@@ -73,9 +74,9 @@ public class TxOptimisticApplicationTests {
                  *
                  * Moze se primetiti da automatski dodaje na upit i proveru o verziji
                  */
-                //productService.save(productToUpdate);
+                appointmentService.save(appointmentToUpdate);
             }
-       /* });
+        });
         try {
             future1.get(); // podize ExecutionException za bilo koji izuzetak iz prvog child threada
         } catch (ExecutionException e) {
@@ -87,4 +88,4 @@ public class TxOptimisticApplicationTests {
         executor.shutdown();
 
     }
-*/
+}
