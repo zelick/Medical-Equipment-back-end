@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.lang.model.type.ArrayType;
+import javax.transaction.Transactional;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -21,6 +22,7 @@ import java.util.List;
 
 @Service
 @AllArgsConstructor
+@Transactional
 public class AppointmentService {
     @Autowired
     private AppointmentRepository appointmentRepository;
@@ -186,7 +188,7 @@ public class AppointmentService {
     }
 
     public List<Appointment> findCompanyAppointments(Integer companyId, Integer userId) {
-        Date currentDate = new Date();
+       /* Date currentDate = new Date();
         List<Appointment> foundAppointments = new ArrayList<>();
         List<Appointment> appointments = appointmentRepository.findAll();
         List<Reservation> reservations = reservationRepository.findAll();
@@ -216,8 +218,37 @@ public class AppointmentService {
             }
         }
 
+        return appointmentsToRemove;*/
+        Date currentDate = new Date();
+        List<Appointment> appointments = appointmentRepository.findAll();
+        List<Reservation> reservations = reservationRepository.findAll();
+        List<Appointment> foundAppointments = new ArrayList<>();
+        for (Appointment a : appointments) {
+            Company company = companyAdminService.getCompanyForAdmin(a.getAdminId());
+
+            if (company != null && companyId.equals(company.getId()) && a.getStatus() == AppointmentStatus.FREE) {
+                foundAppointments.add(a);
+            }
+        }
+        List<Appointment> appointmentsToRemove = new ArrayList<>(foundAppointments);
+        for (Reservation r : reservations) {
+            for (Appointment a : foundAppointments) {
+                if (a.getId().equals(r.getAppointment().getId()) && r.getStatus().equals(ReservationStatus.PENDING)) {
+                    appointmentsToRemove.remove(a);
+                }
+                if (a.getId().equals(r.getAppointment().getId()) && r.getStatus().equals(ReservationStatus.CANCELED) && r.getUser().getId().equals(userId)) {
+                    appointmentsToRemove.remove(a);
+                }
+                if (a.getAppointmentDate().before(currentDate)) {
+                    appointmentsToRemove.remove(a);
+                }
+
+            }
+
+        }
         return appointmentsToRemove;
     }
+
 
     public Appointment update(Appointment appointment)
     {

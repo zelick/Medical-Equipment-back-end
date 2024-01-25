@@ -24,31 +24,23 @@ import org.springframework.test.context.junit4.SpringRunner;
 @SpringBootTest
 public class TxOptimisticApplicationTests {
     @Autowired
-    private ReservationService reservationService;
+
     private AppointmentService appointmentService;
 
-    /*@Before
-    public void setUp() throws Exception {
-        productService.save(new Product("P1", "O1", 5L));
-        productService.save(new Product("P2","O2", 4L));
-        productService.save(new Product("P3","O3", 3L));
-        productService.save(new Product("P4","O4", 1L));
-        productService.save(new Product("P5","O4", 1L));
-    }*/
 
     @Test(expected = ObjectOptimisticLockingFailureException.class)
-    public void testOptimisticLocking3() throws Throwable {
+    public void testOptimisticLockingAppointmentUnavaiable() throws Throwable { //3
 
         ExecutorService executor = Executors.newFixedThreadPool(2);
         Future<?> future1 = executor.submit(new Runnable() {
             @Override
             public void run() {
                 System.out.println("Startovan Thread 1");
-                //Appointment appointmentToUpdate = appointmentService.findOne(1);// ocitan objekat sa id 1
-                //appointmentToUpdate.setStatus(AppointmentStatus.RESERVED);// izmenjen ucitan objekat
+                Appointment appointmentToUpdate = appointmentService.findOne(1);// ocitan objekat sa id 1
+                appointmentToUpdate.setStatus(AppointmentStatus.RESERVED);// izmenjen ucitan objekat
 
                 try { Thread.sleep(3000); } catch (InterruptedException e) {}// thread uspavan na 3 sekunde da bi drugi thread mogao da izvrsi istu operaciju
-               // appointmentService.save(appointmentToUpdate);// bacice ObjectOptimisticLockingFailureException
+                appointmentService.save(appointmentToUpdate);// bacice ObjectOptimisticLockingFailureException
             }
         });
         executor.submit(new Runnable() {
@@ -75,7 +67,7 @@ public class TxOptimisticApplicationTests {
                  * Moze se primetiti da automatski dodaje na upit i proveru o verziji
                  */
                 appointmentService.save(appointmentToUpdate);
-            }
+           }
         });
         try {
             future1.get(); // podize ExecutionException za bilo koji izuzetak iz prvog child threada

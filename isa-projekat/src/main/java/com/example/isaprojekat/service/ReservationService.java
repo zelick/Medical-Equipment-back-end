@@ -10,9 +10,9 @@ import com.example.isaprojekat.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.imageio.ImageIO;
+import javax.transaction.Transactional;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.text.ParseException;
@@ -24,6 +24,7 @@ import java.util.Optional;
 
 @Service
 @AllArgsConstructor
+@Transactional
 public class ReservationService {
     @Autowired
     private ReservationRepository reservationRepository;
@@ -39,7 +40,7 @@ public class ReservationService {
         return reservationRepository.findAll();
     }
 
-    @Transactional
+   // @Transactional
     public Reservation createReservation(ReservationDTO reservationDTO) {
         Reservation newReservation = new Reservation();
         newReservation.setStatus(ReservationStatus.PENDING);
