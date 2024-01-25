@@ -79,6 +79,7 @@ public class QrCodeService {
                 "AppointmentTime: " + reservation.getAppointment().getAppointmentTime() + "\n" +
                 "AppointmentDuration: " + reservation.getAppointment().getAppointmentDuration() + "\n" +
                 "Items: "+ "\n" + itemsString + "\n" +
+                "Price: " + reservation.getTotalPrice() + "\n" +
                 ' ';
     }
 
