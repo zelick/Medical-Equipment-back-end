@@ -3,6 +3,7 @@ package com.example.isaprojekat.controller;
 import com.example.isaprojekat.dto.AppointmentDTO;
 import com.example.isaprojekat.dto.CompanyDTO;
 import com.example.isaprojekat.dto.ItemDTO;
+import com.example.isaprojekat.dto.ReservationDTO;
 import com.example.isaprojekat.enums.ReservationStatus;
 import com.example.isaprojekat.enums.UserRole;
 import com.example.isaprojekat.model.*;
@@ -36,41 +37,11 @@ public class AppointmentController {
     @CrossOrigin(origins = "http://localhost:4200")
     public ResponseEntity<List<AppointmentDTO>> findCompanyAppointments(@PathVariable Integer companyId,@RequestParam(name = "id", required = false) Integer userId) {
         User loggedInUser = userService.findOne(userId);
-        Date currentDate = new Date();
-        List<Appointment> foundAppointments = new ArrayList<>();
         List<AppointmentDTO> foundAppointmentsDTO = new ArrayList<>();
-        List<Appointment> appointments = appointmentService.findAll();
-        List<Reservation> reservations = reservationService.findAll();
-
-        for (Appointment a : appointments) {
-            Company company = companyAdminService.getCompanyForAdmin(a.getAdminId());
-
-            if (company != null && companyId.equals(company.getId())) {
-                foundAppointments.add(a);
-            }
-        }
-
-        List<Appointment> appointmentsToRemove = new ArrayList<>(foundAppointments);
-
-        for (Reservation r : reservations) {
-            for (Appointment a : foundAppointments) {
-                if (a.getId().equals(r.getAppointment().getId()) && r.getStatus().equals(ReservationStatus.PENDING)) {
-                    appointmentsToRemove.remove(a);
-                }
-                if (a.getId().equals(r.getAppointment().getId()) && r.getStatus().equals(ReservationStatus.CANCELED) && r.getUser().getId().equals(userId)){
-                    appointmentsToRemove.remove(a);
-                }
-                if(a.getAppointmentDate().before(currentDate)){
-                    appointmentsToRemove.remove(a);
-                }
-
-            }
-        }
-
-        for (Appointment a : appointmentsToRemove) {
+        List<Appointment> foundAppointments = appointmentService.findCompanyAppointments(companyId, userId);
+        for (Appointment a : foundAppointments) {
             foundAppointmentsDTO.add(new AppointmentDTO(a));
         }
-
         return new ResponseEntity<>(foundAppointmentsDTO, HttpStatus.OK);
     }
 
@@ -200,5 +171,17 @@ public class AppointmentController {
         }
 
         return foundAppointmentsDTO;
+    }
+
+    @PutMapping(value = "/update")
+    @CrossOrigin(origins = "http://localhost:4200")
+    public AppointmentDTO expireReservation(@RequestBody AppointmentDTO appointmentDTO) {
+        try {
+            Appointment foundAppointment = appointmentService.findOne(appointmentDTO.getId());
+            Appointment updatedAppointment = appointmentService.update(foundAppointment);
+            return new AppointmentDTO(updatedAppointment);
+        } catch (Exception e) {
+            return null;
+        }
     }
 }

@@ -1,5 +1,7 @@
 package com.example.isaprojekat.model;
 
+import com.example.isaprojekat.enums.AppointmentStatus;
+
 import javax.persistence.*;
 import java.util.Date;
 
@@ -16,15 +18,20 @@ public class Appointment {
     private String appointmentTime;
     @Column(name = "appointmentDuration", nullable = false)
     private Integer appointmentDuration;
+
+    @Column(name = "status", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private AppointmentStatus status;
     public Appointment() {
     }
     public Appointment(Integer id, Integer adminId, Date appointmentDate,
-                       String appointmentTime, Integer appointmentDuration) {
+                       String appointmentTime, Integer appointmentDuration, AppointmentStatus status) {
         this.id = id;
         this.adminId = adminId;
         this.appointmentDate = appointmentDate;
         this.appointmentTime = appointmentTime;
         this.appointmentDuration = appointmentDuration;
+        this.status = status;
     }
 
     // Getteri i setteri za sva polja
@@ -67,5 +74,13 @@ public class Appointment {
 
     public void setAppointmentDuration(Integer appointmentDuration) {
         this.appointmentDuration = appointmentDuration;
+    }
+
+    public AppointmentStatus getStatus() {
+            return status;
+    }
+
+    public void setStatus(AppointmentStatus status) {
+        this.status = status;
     }
 }

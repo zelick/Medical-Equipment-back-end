@@ -1,21 +1,22 @@
 package com.example.isaprojekat.service;
 
 import com.example.isaprojekat.dto.AppointmentDTO;
-import com.example.isaprojekat.model.Appointment;
-import com.example.isaprojekat.model.CompanyAdmin;
-import com.example.isaprojekat.model.Item;
-import com.example.isaprojekat.model.Reservation;
-import com.example.isaprojekat.repository.AppointmentRepository;
-import com.example.isaprojekat.repository.CompanyAdminRepository;
-import com.example.isaprojekat.repository.CompanyRepository;
-import com.example.isaprojekat.repository.ReservationRepository;
+import com.example.isaprojekat.enums.AppointmentStatus;
+import com.example.isaprojekat.enums.ReservationStatus;
+import com.example.isaprojekat.model.*;
+import com.example.isaprojekat.repository.*;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.lang.model.type.ArrayType;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -25,6 +26,8 @@ public class AppointmentService {
     private AppointmentRepository appointmentRepository;
     private ReservationRepository reservationRepository;
     private CompanyAdminRepository companyAdminRepository;
+    private UserRepository userRepository;
+    private CompanyAdminService companyAdminService;
 
     public Appointment findOne(Integer id) {
         return appointmentRepository.findById(id).orElseGet(null);
@@ -44,9 +47,7 @@ public class AppointmentService {
         newAppointment.setAppointmentDuration(equipmentAppointmentDTO.getAppointmentDuration());
         newAppointment.setAppointmentTime(equipmentAppointmentDTO.getAppointmentTime());
         newAppointment.setAdminId(equipmentAppointmentDTO.getAdminId());
-        System.out.println("Novi termin za preuzimanje:");
-        System.out.println(newAppointment.getAppointmentTime());
-        System.out.println(newAppointment.getAdminId());
+        newAppointment.setStatus(equipmentAppointmentDTO.getStatus());
         return appointmentRepository.save(newAppointment);
     }
     /*
@@ -113,6 +114,7 @@ public class AppointmentService {
         appointment.setAdminId(appointmentDTO.getAdminId());
         appointment.setAppointmentTime(appointmentDTO.getAppointmentTime());
         appointment.setAppointmentDuration(appointmentDTO.getAppointmentDuration());
+        appointment.setStatus(appointmentDTO.getStatus());
 
         if (findAvailableAdmin(appointment, companyId).equals(-1)) {
             return appointment;
@@ -181,5 +183,45 @@ public class AppointmentService {
         int hours = Integer.parseInt(parts[0]);
         int minutes = Integer.parseInt(parts[1]);
         return hours * 60 + minutes;
+    }
+
+    public List<Appointment> findCompanyAppointments(Integer companyId, Integer userId) {
+        Date currentDate = new Date();
+        List<Appointment> foundAppointments = new ArrayList<>();
+        List<Appointment> appointments = appointmentRepository.findAll();
+        List<Reservation> reservations = reservationRepository.findAll();
+
+        for (Appointment a : appointments) {
+            Company company = companyAdminService.getCompanyForAdmin(a.getAdminId());
+
+            if (company != null && companyId.equals(company.getId())) {
+                foundAppointments.add(a);
+            }
+        }
+
+        List<Appointment> appointmentsToRemove = new ArrayList<>(foundAppointments);
+
+        for (Reservation r : reservations) {
+            for (Appointment a : foundAppointments) {
+                if (a.getId().equals(r.getAppointment().getId()) && r.getStatus().equals(ReservationStatus.PENDING)) {
+                    appointmentsToRemove.remove(a);
+                }
+                if (a.getId().equals(r.getAppointment().getId()) && r.getStatus().equals(ReservationStatus.CANCELED) && r.getUser().getId().equals(userId)){
+                    appointmentsToRemove.remove(a);
+                }
+                if(a.getAppointmentDate().before(currentDate)){
+                    appointmentsToRemove.remove(a);
+                }
+
+            }
+        }
+
+        return appointmentsToRemove;
+    }
+
+    public Appointment update(Appointment appointment)
+    {
+        appointment.setStatus(AppointmentStatus.RESERVED);
+        return appointmentRepository.save(appointment);
     }
 }
