@@ -19,6 +19,8 @@ public class ReservationDTO {
     private Set<Item> items;
     private ReservationStatus status;
 
+    private double totalPrice;
+
     public ReservationDTO() {
 
     }
@@ -29,6 +31,7 @@ public class ReservationDTO {
         this.appointment = reservation.getAppointment();
         this.items = reservation.getItems();
         this.status = reservation.getStatus();
+        this.totalPrice = reservation.getTotalPrice();
     }
 
     public ReservationStatus getStatus() {
@@ -69,5 +72,9 @@ public class ReservationDTO {
 
     public void setItems(Set<Item> items) {
         this.items = items;
+    }
+
+    public double getTotalPrice() {
+        return totalPrice;
     }
 }

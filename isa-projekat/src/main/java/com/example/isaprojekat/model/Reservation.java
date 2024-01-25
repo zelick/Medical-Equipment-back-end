@@ -25,15 +25,19 @@ public class Reservation {
     @Column(name = "status", nullable = false)
     @Enumerated(EnumType.STRING)
     private ReservationStatus status;
+
+    @Column(name = "totalPrice", nullable = false)
+    private double totalPrice;
     public Reservation() {
 
     }
 
-    public Reservation(Appointment appointment, User user, Set<Item> items, ReservationStatus status) {
+    public Reservation(Appointment appointment, User user, Set<Item> items, ReservationStatus status, double totalPrice) {
         this.appointment = appointment;
         this.user = user;
         this.items = items;
         this.status = status;
+        this.totalPrice = totalPrice;
     }
 
     public ReservationStatus getStatus() {
@@ -74,5 +78,13 @@ public class Reservation {
 
     public void setItems(Set<Item> items) {
         this.items = items;
+    }
+
+    public double getTotalPrice() {
+        return totalPrice;
+    }
+
+    public void setTotalPrice(double totalPrice) {
+        this.totalPrice = totalPrice;
     }
 }

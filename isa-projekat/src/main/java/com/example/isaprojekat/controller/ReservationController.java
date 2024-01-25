@@ -6,6 +6,7 @@ import com.example.isaprojekat.enums.UserRole;
 import com.example.isaprojekat.model.*;
 import com.example.isaprojekat.service.*;
 import lombok.AllArgsConstructor;
+import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -81,6 +82,19 @@ public class ReservationController {
             return "Failed to cancel reservation.";
         }
     }
+
+    @PutMapping(value = "/setPrice")
+    @CrossOrigin(origins = "http://localhost:4200")
+    public ReservationDTO setReservationPrice (@RequestBody Integer reservationId) {
+        try {
+            Reservation updatedReservation = reservationService.setReservationPrice(reservationId);
+
+            return new ReservationDTO(updatedReservation);
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
     @GetMapping(value = "/byUser/{username}")
     public ResponseEntity<List<ReservationDTO>> getByUser(@PathVariable String username, @RequestParam(name = "id", required = false) Integer userId) {
 

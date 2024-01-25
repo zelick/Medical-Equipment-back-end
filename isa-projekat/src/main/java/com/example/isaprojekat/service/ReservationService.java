@@ -3,6 +3,7 @@ package com.example.isaprojekat.service;
 import com.example.isaprojekat.dto.ReservationDTO;
 import com.example.isaprojekat.enums.ReservationStatus;
 import com.example.isaprojekat.model.*;
+import com.example.isaprojekat.repository.ItemRepository;
 import com.example.isaprojekat.repository.ReservationRepository;
 import com.example.isaprojekat.repository.UserRepository;
 import lombok.AllArgsConstructor;
@@ -26,6 +27,7 @@ public class ReservationService {
     private ReservationRepository reservationRepository;
     @Autowired
     private UserRepository userRepository;
+    private ItemRepository itemRepository;
     public Reservation getById(Integer id){
         return reservationRepository.getById(id);
     }
@@ -37,8 +39,20 @@ public class ReservationService {
         newReservation.setStatus(ReservationStatus.PENDING);
         newReservation.setAppointment(reservationDTO.getAppointment());
         newReservation.setUser(reservationDTO.getUser());
+        newReservation.setTotalPrice(0.0);
 
         return reservationRepository.save(newReservation);
+    }
+
+    public Reservation setReservationPrice(Integer reservationId) {
+        Reservation reservation = getReservationById(reservationId);
+        double totalPrice = 0;
+        for (Item i : reservation.getItems()) {
+            totalPrice += i.getEquipment().getPrice() * i.getQuantity();
+        }
+        reservation.setTotalPrice(totalPrice);
+
+        return reservationRepository.save(reservation);
     }
 
     public void cancelReservation(ReservationDTO reservationDto){
