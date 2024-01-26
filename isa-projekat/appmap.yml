@@ -1,0 +1,5 @@
+name: isa-projekat
+packages:
+  - path: com.example.isaprojekat
+language: java
+appmap_dir: tmp/appmap
