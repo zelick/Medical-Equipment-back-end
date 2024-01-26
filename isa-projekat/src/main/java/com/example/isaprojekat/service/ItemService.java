@@ -16,6 +16,7 @@ import java.util.Optional;
 public class ItemService {
     @Autowired
     private ItemRepository itemRepository;
+    private EquipmentService equipmentService;
 
     public List<Item> findAll(){
         return itemRepository.findAll();
@@ -52,6 +53,8 @@ public class ItemService {
         item.setQuantity(itemDTO.getQuantity());
         item.setEquipment(itemDTO.getEquipment());
         item.setReservation(itemDTO.getReservation());
+
+        equipmentService.reduceEquimentMaxQuantity(item.getEquipment(), item.getQuantity());
 
         return itemRepository.save(item);
     }

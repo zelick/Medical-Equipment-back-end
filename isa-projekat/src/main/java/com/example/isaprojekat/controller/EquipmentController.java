@@ -27,9 +27,7 @@ public class EquipmentController {
     @GetMapping(value = "/getEquipmentForCompany/{id}")
     @CrossOrigin(origins = "http://localhost:4200")
     public ResponseEntity<List<EquipmentDTO>> getEquipmentForCompany(@PathVariable Integer id) {
-
         Company company = companyService.findOne(id);
-        List<Equipment> eq = equipmentService.findAll();
         List<Equipment> equipment = equipmentService.findAllByCompanyId(company);
 
         // convert students to DTOs

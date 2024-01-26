@@ -32,16 +32,20 @@ public class Equipment {
     @JoinColumn(name = "company_id")
     private Company company;
 
+    @Version
+    private Integer version;
+
     public Equipment() {
     }
 
-    public Equipment(String name, String description, double price, double grade, String type, Integer maxQuantity) {
+    public Equipment(String name, String description, double price, double grade, String type, Integer maxQuantity, Company company) {
         this.name = name;
         this.description = description;
         this.price = price;
         this.grade = grade;
         this.type = type;
         this.maxQuantity = maxQuantity;
+        this.company = company;
     }
 
     public Equipment(EquipmentDTO equipmentDTO) {

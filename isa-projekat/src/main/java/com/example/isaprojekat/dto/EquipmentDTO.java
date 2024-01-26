@@ -1,5 +1,6 @@
 package com.example.isaprojekat.dto;
 
+import com.example.isaprojekat.model.Company;
 import com.example.isaprojekat.model.Equipment;
 
 public class EquipmentDTO {
@@ -10,6 +11,7 @@ public class EquipmentDTO {
     private double grade;
     private String type;
     private Integer maxQuantity;
+    private Company company;
 
     public EquipmentDTO() {
     }
@@ -22,6 +24,7 @@ public class EquipmentDTO {
         this.grade = equipment.getGrade();
         this.type = equipment.getType();
         this.maxQuantity = equipment.getMaxQuantity();
+        this.company = equipment.getCompany();
     }
 
     // Getters and setters
@@ -52,5 +55,9 @@ public class EquipmentDTO {
 
     public Integer getMaxQuantity() {
         return maxQuantity;
+    }
+
+    public Company getCompany() {
+        return company;
     }
 }

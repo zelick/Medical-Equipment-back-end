@@ -28,10 +28,9 @@ import java.util.Optional;
 public class ReservationService {
     @Autowired
     private ReservationRepository reservationRepository;
-    @Autowired
     private UserRepository userRepository;
-    @Autowired
     private AppointmentService appointmentService;
+    private EquipmentService equipmentService;
 
     public Reservation getById(Integer id){
         return reservationRepository.getById(id);
@@ -78,8 +77,8 @@ public class ReservationService {
 
         // Ažuriraj penale korisnika
         user.setPenaltyPoints(user.getPenaltyPoints()+penaltyCount);
+        equipmentService.increaseEquimentMaxQuantity(reservation.getItems());
         userRepository.save(user);
-
     }
 
     public List<Reservation> GetAllNotCancelledReservationsForUser(User user){
@@ -99,15 +98,19 @@ public class ReservationService {
     public Reservation expireReservation(Reservation reservation){
         reservation.setStatus(ReservationStatus.EXPIRED);
         reservation.getUser().setPenaltyPoints(2.0);
+        equipmentService.increaseEquimentMaxQuantity(reservation.getItems());
+
         return reservationRepository.save(reservation);
     }
     public Reservation takeOverReservation(Reservation reservation){
+        /*
         for(Item item : reservation.getItems()){
             int itemQuantity = item.getQuantity();
             int itemMaxQuantity = item.getEquipment().getMaxQuantity();
             int newMaxQuantity = Math.max(itemMaxQuantity - itemQuantity, 0);
             item.getEquipment().setMaxQuantity(newMaxQuantity);
         }
+         */
         reservation.setStatus(ReservationStatus.TAKEN_OVER);
         return reservationRepository.save(reservation);
     }
