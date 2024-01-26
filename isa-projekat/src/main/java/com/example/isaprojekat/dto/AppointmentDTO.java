@@ -30,6 +30,7 @@ public class AppointmentDTO {
         this.status = status;
     }
 
+
     public Integer getId() {
         return id;
     }

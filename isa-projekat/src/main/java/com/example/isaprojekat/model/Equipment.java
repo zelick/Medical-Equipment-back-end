@@ -32,6 +32,10 @@ public class Equipment {
     @JoinColumn(name = "company_id")
     private Company company;
 
+<<<<<<< Updated upstream
+=======
+    // za optimisticko zakljucavanje transakcije
+>>>>>>> Stashed changes
     @Version
     private Integer version;
 
@@ -123,4 +127,12 @@ public class Equipment {
     public void setMaxQuantity(Integer maxQuantity) {
         this.maxQuantity = maxQuantity;
     }
+    public Integer getVersion() {
+        return version;
+    }
+
+    public void setVersion(Integer version) {
+        this.version = version;
+    }
+
 }
