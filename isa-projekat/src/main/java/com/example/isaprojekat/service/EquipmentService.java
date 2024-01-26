@@ -14,7 +14,10 @@ import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
+<<<<<<< Updated upstream
 import java.util.ArrayList;
+=======
+>>>>>>> Stashed changes
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -72,6 +75,7 @@ public class EquipmentService {
         return equipmentRepository.findEqById(id);
     }
 
+<<<<<<< Updated upstream
     public void reduceEquimentMaxQuantity(Equipment equipment, Integer quantity) {
         equipment.setMaxQuantity(equipment.getMaxQuantity() - quantity);
         equipmentRepository.save(equipment);
@@ -83,5 +87,11 @@ public class EquipmentService {
             equipment.setMaxQuantity(equipment.getMaxQuantity() + i.getQuantity());
             equipmentRepository.save(equipment);
         }
+=======
+    @Transactional
+    public Equipment save(Equipment equipment)
+    {
+        return equipmentRepository.save(equipment);
+>>>>>>> Stashed changes
     }
 }
