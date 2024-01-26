@@ -32,10 +32,6 @@ public class Equipment {
     @JoinColumn(name = "company_id")
     private Company company;
 
-<<<<<<< Updated upstream
-=======
-    // za optimisticko zakljucavanje transakcije
->>>>>>> Stashed changes
     @Version
     private Integer version;
 

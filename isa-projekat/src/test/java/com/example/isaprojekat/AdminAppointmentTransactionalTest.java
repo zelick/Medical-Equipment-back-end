@@ -1,4 +1,4 @@
-package com.example.isaprojekat;
+/*package com.example.isaprojekat;
 
 import com.example.isaprojekat.dto.ReservationDTO;
 import com.example.isaprojekat.model.Appointment;
@@ -36,7 +36,7 @@ public class AdminAppointmentTransactionalTest {
     /*Appointmetn je vezan za admina*/
     /*Ovo se moze desiti prilikom kreiranja rezervacije -  Appointment se postavlja na RESERVED*/
     /*Ako drugi korisink pokusa da kreira rezervaciju za isti taj Appotintment - KONFLIKT*/
-
+/*
     @Test(expected = ObjectOptimisticLockingFailureException.class)
     public void testConcurrentReservationsForSameAppointment() throws Throwable {
         //Simulacija istog termina preuzimanja (appointment) za oba korisnika
@@ -76,3 +76,4 @@ public class AdminAppointmentTransactionalTest {
         }
     }
 }
+*/

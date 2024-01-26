@@ -95,7 +95,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/reservations/getAllUsersReservations/**").permitAll()
                 .antMatchers("/api/reservations/getAllTakenUsersReservations/**").permitAll()
                 .antMatchers("/custom-api-docs-path/**").permitAll()
-                .antMatchers("/swagger-ui.html", "/v2/api-docs", "/webjars/**", "/swagger-resources/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .cors()
