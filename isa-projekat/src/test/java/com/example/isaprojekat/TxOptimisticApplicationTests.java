@@ -4,8 +4,10 @@ import com.example.isaprojekat.dto.ReservationDTO;
 import com.example.isaprojekat.enums.AppointmentStatus;
 import com.example.isaprojekat.model.Appointment;
 import com.example.isaprojekat.model.Reservation;
+import com.example.isaprojekat.model.User;
 import com.example.isaprojekat.service.AppointmentService;
 import com.example.isaprojekat.service.ReservationService;
+import com.example.isaprojekat.service.UserService;
 import org.springframework.test.context.junit4.SpringRunner;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -20,12 +22,18 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class TxOptimisticApplicationTests {
-    @Autowired
 
+    @Autowired
     private AppointmentService appointmentService;
+    @Autowired
+    private ReservationService reservationService;
+    @Autowired
+    private UserService userService;
 
 
     @Test(expected = ObjectOptimisticLockingFailureException.class)
@@ -78,6 +86,5 @@ public class TxOptimisticApplicationTests {
             e.printStackTrace();
         }
         executor.shutdown();
-
     }
 }
