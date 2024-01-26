@@ -1,16 +1,9 @@
 package com.example.isaprojekat.controller;
 
 import com.example.isaprojekat.dto.AppointmentDTO;
-import com.example.isaprojekat.dto.CompanyDTO;
-import com.example.isaprojekat.dto.ItemDTO;
-import com.example.isaprojekat.dto.ReservationDTO;
-import com.example.isaprojekat.enums.ReservationStatus;
 import com.example.isaprojekat.enums.UserRole;
 import com.example.isaprojekat.model.*;
 import com.example.isaprojekat.service.*;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -36,7 +29,6 @@ public class AppointmentController {
     @GetMapping(value = "companyAppointments/{companyId}")
     @CrossOrigin(origins = "http://localhost:4200")
     public ResponseEntity<List<AppointmentDTO>> findCompanyAppointments(@PathVariable Integer companyId,@RequestParam(name = "id", required = false) Integer userId) {
-        User loggedInUser = userService.findOne(userId);
         List<AppointmentDTO> foundAppointmentsDTO = new ArrayList<>();
         List<Appointment> foundAppointments = appointmentService.findCompanyAppointments(companyId, userId);
         for (Appointment a : foundAppointments) {
@@ -62,13 +54,7 @@ public class AppointmentController {
     @GetMapping(value = "getById/{id}")
     @CrossOrigin(origins = "http://localhost:4200")
     public ResponseEntity<AppointmentDTO> getCompany(@PathVariable Integer id) {
-
         Appointment equipmentAppointment = appointmentService.findOne(id);
-
-        if (equipmentAppointment == null) {
-            //return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-
         return new ResponseEntity<>(new AppointmentDTO(equipmentAppointment), HttpStatus.OK);
     }
 
@@ -86,25 +72,6 @@ public class AppointmentController {
 
         return new ResponseEntity<>(appointmentDTOS, HttpStatus.OK);
     }
-
-    /*
-    @PostMapping(value = "/availableDates")
-    @CrossOrigin(origins = "http://localhost:4200")
-    public ResponseEntity<List<AppointmentDTO>> GetAvailableAppointments(@RequestParam("items") String itemsJson) throws JsonProcessingException {
-
-        ObjectMapper objectMapper = new ObjectMapper();
-        List<Item> items = objectMapper.readValue(itemsJson, new TypeReference<List<Item>>() {});
-        List<Appointment> appointments = appointmentService.findAvailableAppointments(items);
-
-        // convert comapnies to DTOs
-        List<AppointmentDTO> appointmentDTOS = new ArrayList<>();
-        for (Appointment a : appointments) {
-            appointmentDTOS.add(new AppointmentDTO(a));
-        }
-
-        return new ResponseEntity<>(appointmentDTOS, HttpStatus.OK);
-    }
-     */
     @DeleteMapping(value = "/delete/{id}")
     @CrossOrigin(origins = "http://localhost:4200")
     public ResponseEntity<String> deleteAppointment(@PathVariable Integer id) {

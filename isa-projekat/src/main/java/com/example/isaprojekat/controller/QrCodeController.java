@@ -30,12 +30,15 @@ public class QrCodeController {
 
     @PostMapping(value = "/generateQrCodeSendMail")
     @CrossOrigin(origins = "http://localhost:4200")
-    public String generateQrCodeAndSendEmail(@RequestBody Integer reservationId) {
-        if (qrCodeService.generateQRCodeSendMail(reservationId)) {
-            return "Succesfully created QR CODE";
-        }
-        else {
-            return "Error while creating QR CODE";
+    public ResponseEntity<String> generateQrCodeAndSendEmail(@RequestBody Integer reservationId) {
+        try {
+            if (qrCodeService.generateQRCodeSendMail(reservationId)) {
+                return ResponseEntity.ok("Successfully created QR CODE");
+            } else {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error while creating QR CODE");
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error occurred: " + e.getMessage());
         }
     }
 
