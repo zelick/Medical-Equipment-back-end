@@ -62,16 +62,6 @@ public class ReservationService {
         return reservationRepository.save(reservation);
     }
 
-    public void cancelReservation(ReservationDTO reservationDto){
-        Reservation reservation = reservationRepository.getById(reservationDto.getId());
-        reservation.setStatus(ReservationStatus.CANCELED);
-        reservationRepository.save(reservation);
-        Appointment appointment = appointmentService.findOne(reservationDTO.getAppointment().getId());
-        Appointment updatedAppointment = appointmentService.update(appointment);
-        newReservation.setAppointment(updatedAppointment);
-        return reservationRepository.save(newReservation);
-    }
-
     public Reservation findOne(Integer id)
     {
         return reservationRepository.findById(id).orElseGet(null);
