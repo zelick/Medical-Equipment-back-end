@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-@Transactional(readOnly = true)
 public interface ItemRepository extends JpaRepository<Item, Integer>{
     Optional<Item> findById(Integer id);
     Item getByReservationId(Integer id);

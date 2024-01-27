@@ -2,6 +2,7 @@ package com.example.isaprojekat.security.config;
 
 import com.example.isaprojekat.service.UserService;
 import lombok.AllArgsConstructor;
+import org.apache.catalina.filters.CorsFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
@@ -60,6 +61,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/companyAdmins/getUsersNotInCompanyAdmin").permitAll() //companyAdmin
                 .antMatchers("/api/appointments/getById/**").permitAll()
                 .antMatchers("/api/appointments/all").permitAll()
+                .antMatchers("/api/appointments/update").permitAll()
                 .antMatchers("/api/appointments/create").permitAll()
                 .antMatchers("/api/appointments/delete/**").permitAll()
                 .antMatchers("/api/appointments/adminsAppointments/**").permitAll() 
@@ -93,11 +95,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/reservations/getAllUsersReservations/**").permitAll()
                 .antMatchers("/api/reservations/getAllTakenUsersReservations/**").permitAll()
                 .antMatchers("/api/reservations/setPrice").permitAll()
+                .antMatchers("/custom-api-docs-path/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .cors()
                 .and()
                 .csrf().disable();
+
+
     }
 
     @Override

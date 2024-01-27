@@ -1,15 +1,9 @@
 package com.example.isaprojekat.controller;
 
 import com.example.isaprojekat.dto.AppointmentDTO;
-import com.example.isaprojekat.dto.CompanyDTO;
-import com.example.isaprojekat.dto.ItemDTO;
-import com.example.isaprojekat.enums.ReservationStatus;
 import com.example.isaprojekat.enums.UserRole;
 import com.example.isaprojekat.model.*;
 import com.example.isaprojekat.service.*;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -35,49 +29,24 @@ public class AppointmentController {
     @GetMapping(value = "companyAppointments/{companyId}")
     @CrossOrigin(origins = "http://localhost:4200")
     public ResponseEntity<List<AppointmentDTO>> findCompanyAppointments(@PathVariable Integer companyId,@RequestParam(name = "id", required = false) Integer userId) {
-        User loggedInUser = userService.findOne(userId);
-        Date currentDate = new Date();
-        List<Appointment> foundAppointments = new ArrayList<>();
+        if(!userService.isUser(userId)){
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
         List<AppointmentDTO> foundAppointmentsDTO = new ArrayList<>();
-        List<Appointment> appointments = appointmentService.findAll();
-        List<Reservation> reservations = reservationService.findAll();
-
-        for (Appointment a : appointments) {
-            Company company = companyAdminService.getCompanyForAdmin(a.getAdminId());
-
-            if (company != null && companyId.equals(company.getId())) {
-                foundAppointments.add(a);
-            }
-        }
-
-        List<Appointment> appointmentsToRemove = new ArrayList<>(foundAppointments);
-
-        for (Reservation r : reservations) {
-            for (Appointment a : foundAppointments) {
-                if (a.getId().equals(r.getAppointment().getId()) && r.getStatus().equals(ReservationStatus.PENDING)) {
-                    appointmentsToRemove.remove(a);
-                }
-                if (a.getId().equals(r.getAppointment().getId()) && r.getStatus().equals(ReservationStatus.CANCELED) && r.getUser().getId().equals(userId)){
-                    appointmentsToRemove.remove(a);
-                }
-                if(a.getAppointmentDate().before(currentDate)){
-                    appointmentsToRemove.remove(a);
-                }
-
-            }
-        }
-
-        for (Appointment a : appointmentsToRemove) {
+        List<Appointment> foundAppointments = appointmentService.findCompanyAppointments(companyId, userId);
+        for (Appointment a : foundAppointments) {
             foundAppointmentsDTO.add(new AppointmentDTO(a));
         }
-
         return new ResponseEntity<>(foundAppointmentsDTO, HttpStatus.OK);
     }
 
     @PostMapping(value = "/addAdminToAppointment/{companyId}")
     @CrossOrigin(origins = "http://localhost:4200")
-    public ResponseEntity<AppointmentDTO> addAdminToAppointment(@PathVariable Integer companyId, @RequestBody AppointmentDTO appointmentDTO)
+    public ResponseEntity<AppointmentDTO> addAdminToAppointment(@PathVariable Integer companyId, @RequestBody AppointmentDTO appointmentDTO, @RequestParam(name = "id", required = false) Integer userId)
     {
+        if(!userService.isUser(userId)){
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
         try {
             Appointment updatedAppointment = appointmentService.addAdminToAppointment(appointmentDTO, companyId);
             return new ResponseEntity<>(new AppointmentDTO(updatedAppointment), HttpStatus.OK);
@@ -91,13 +60,7 @@ public class AppointmentController {
     @GetMapping(value = "getById/{id}")
     @CrossOrigin(origins = "http://localhost:4200")
     public ResponseEntity<AppointmentDTO> getCompany(@PathVariable Integer id) {
-
         Appointment equipmentAppointment = appointmentService.findOne(id);
-
-        if (equipmentAppointment == null) {
-            //return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-
         return new ResponseEntity<>(new AppointmentDTO(equipmentAppointment), HttpStatus.OK);
     }
 
@@ -115,25 +78,6 @@ public class AppointmentController {
 
         return new ResponseEntity<>(appointmentDTOS, HttpStatus.OK);
     }
-
-    /*
-    @PostMapping(value = "/availableDates")
-    @CrossOrigin(origins = "http://localhost:4200")
-    public ResponseEntity<List<AppointmentDTO>> GetAvailableAppointments(@RequestParam("items") String itemsJson) throws JsonProcessingException {
-
-        ObjectMapper objectMapper = new ObjectMapper();
-        List<Item> items = objectMapper.readValue(itemsJson, new TypeReference<List<Item>>() {});
-        List<Appointment> appointments = appointmentService.findAvailableAppointments(items);
-
-        // convert comapnies to DTOs
-        List<AppointmentDTO> appointmentDTOS = new ArrayList<>();
-        for (Appointment a : appointments) {
-            appointmentDTOS.add(new AppointmentDTO(a));
-        }
-
-        return new ResponseEntity<>(appointmentDTOS, HttpStatus.OK);
-    }
-     */
     @DeleteMapping(value = "/delete/{id}")
     @CrossOrigin(origins = "http://localhost:4200")
     public ResponseEntity<String> deleteAppointment(@PathVariable Integer id) {
@@ -150,12 +94,8 @@ public class AppointmentController {
     @PostMapping(value = "/create")
     @CrossOrigin(origins = "http://localhost:4200")
     public ResponseEntity<AppointmentDTO> createAppointment(@RequestBody AppointmentDTO equipmentAppointmentDTO, @RequestParam(name = "id", required = false) Integer userId) {
-        User loggedInUser = userService.findOne(userId);
-
-        if(loggedInUser!=null) {
-            if (loggedInUser.getUserRole() != UserRole.COMPANY_ADMIN) {
-                return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-            }
+        if(!userService.isCompanyAdmin(userId)){
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
         try {
             Appointment createdAppointment = appointmentService.createAppointment(equipmentAppointmentDTO);
@@ -200,5 +140,17 @@ public class AppointmentController {
         }
 
         return foundAppointmentsDTO;
+    }
+
+    @PutMapping(value = "/update")
+    @CrossOrigin(origins = "http://localhost:4200")
+    public AppointmentDTO expireReservation(@RequestBody AppointmentDTO appointmentDTO) {
+        try {
+            Appointment foundAppointment = appointmentService.findOne(appointmentDTO.getId());
+            Appointment updatedAppointment = appointmentService.update(foundAppointment);
+            return new AppointmentDTO(updatedAppointment);
+        } catch (Exception e) {
+            return null;
+        }
     }
 }

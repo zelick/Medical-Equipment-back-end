@@ -1,9 +1,11 @@
 package com.example.isaprojekat.service;
 
 import com.example.isaprojekat.dto.ReservationDTO;
+import com.example.isaprojekat.enums.AppointmentStatus;
 import com.example.isaprojekat.enums.ReservationStatus;
 import com.example.isaprojekat.model.*;
 import com.example.isaprojekat.repository.ItemRepository;
+import com.example.isaprojekat.repository.AppointmentRepository;
 import com.example.isaprojekat.repository.ReservationRepository;
 import com.example.isaprojekat.repository.UserRepository;
 import lombok.AllArgsConstructor;
@@ -11,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.imageio.ImageIO;
+import javax.transaction.Transactional;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.text.ParseException;
@@ -22,18 +25,22 @@ import java.util.Optional;
 
 @Service
 @AllArgsConstructor
+@Transactional
 public class ReservationService {
     @Autowired
     private ReservationRepository reservationRepository;
-    @Autowired
     private UserRepository userRepository;
     private ItemRepository itemRepository;
+    private AppointmentService appointmentService;
+    private EquipmentService equipmentService;
+
     public Reservation getById(Integer id){
         return reservationRepository.getById(id);
     }
     public List<Reservation> findAll() {
         return reservationRepository.findAll();
     }
+
     public Reservation createReservation(ReservationDTO reservationDTO) {
         Reservation newReservation = new Reservation();
         newReservation.setStatus(ReservationStatus.PENDING);
@@ -59,26 +66,42 @@ public class ReservationService {
         Reservation reservation = reservationRepository.getById(reservationDto.getId());
         reservation.setStatus(ReservationStatus.CANCELED);
         reservationRepository.save(reservation);
+        Appointment appointment = appointmentService.findOne(reservationDTO.getAppointment().getId());
+        Appointment updatedAppointment = appointmentService.update(appointment);
+        newReservation.setAppointment(updatedAppointment);
+        return reservationRepository.save(newReservation);
+    }
 
-        User user = reservation.getUser();
+    public Reservation findOne(Integer id)
+    {
+        return reservationRepository.findById(id).orElseGet(null);
+    }
 
-        // Proveri vreme do početka termina
+   public void cancelReservation(ReservationDTO reservationDto) {
+       Reservation reservation = reservationRepository.getById(reservationDto.getId());
+       reservation.setStatus(ReservationStatus.CANCELED);
+       reservationRepository.save(reservation);
+       User user = reservation.getUser();
+       int penaltyCount = calculatePenalty(reservation);
+       user.setPenaltyPoints(user.getPenaltyPoints() + penaltyCount);
+       Appointment appointment = appointmentService.findOne(reservation.getAppointment().getId());
+       appointment.setStatus(AppointmentStatus.FREE);
+       equipmentService.increaseEquimentMaxQuantity(reservation.getItems());
+       userRepository.save(user);
+   }
+
+    private int calculatePenalty(Reservation reservation) {
         Date now = new Date();
         Date reservationStart = reservation.getAppointment().getAppointmentDate();
         long millisecondsUntilReservation = reservationStart.getTime() - now.getTime();
         long hoursUntilReservation = millisecondsUntilReservation / (60 * 60 * 1000);
-
-        // Dodaj penale prema pravilima
-        int penaltyCount = 1;  // Podrazumevani broj penala
+        int penaltyCount = 1;
         if (hoursUntilReservation < 24) {
-            penaltyCount = 2;  // Dodatni penal ako je otkazano unutar 24 sata
+            penaltyCount = 2;
         }
-
-        // Ažuriraj penale korisnika
-        user.setPenaltyPoints(user.getPenaltyPoints()+penaltyCount);
-        userRepository.save(user);
-
+        return penaltyCount;
     }
+
 
     public List<Reservation> GetAllNotCancelledReservationsForUser(User user){
         List<Reservation> allByUser = reservationRepository.getAppointmentReservationsByUser(user);
@@ -97,15 +120,19 @@ public class ReservationService {
     public Reservation expireReservation(Reservation reservation){
         reservation.setStatus(ReservationStatus.EXPIRED);
         reservation.getUser().setPenaltyPoints(2.0);
+        equipmentService.increaseEquimentMaxQuantity(reservation.getItems());
+
         return reservationRepository.save(reservation);
     }
     public Reservation takeOverReservation(Reservation reservation){
+        /*
         for(Item item : reservation.getItems()){
             int itemQuantity = item.getQuantity();
             int itemMaxQuantity = item.getEquipment().getMaxQuantity();
             int newMaxQuantity = Math.max(itemMaxQuantity - itemQuantity, 0);
             item.getEquipment().setMaxQuantity(newMaxQuantity);
         }
+         */
         reservation.setStatus(ReservationStatus.TAKEN_OVER);
         return reservationRepository.save(reservation);
     }

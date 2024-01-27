@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-@Transactional(readOnly = true)
+//@Transactional(readOnly = true)
 public interface CompanyAdminRepository extends JpaRepository<CompanyAdmin, Integer> {
     Page<CompanyAdmin> findAll(Pageable pageable);
     @Query("SELECT DISTINCT ca.user_id FROM CompanyAdmin ca")

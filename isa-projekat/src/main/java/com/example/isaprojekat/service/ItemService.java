@@ -6,6 +6,8 @@ import com.example.isaprojekat.repository.ItemRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.List;
@@ -13,9 +15,11 @@ import java.util.Optional;
 
 @Service
 @AllArgsConstructor
+@Transactional
 public class ItemService {
     @Autowired
     private ItemRepository itemRepository;
+    private EquipmentService equipmentService;
 
     public List<Item> findAll(){
         return itemRepository.findAll();
@@ -52,6 +56,8 @@ public class ItemService {
         item.setQuantity(itemDTO.getQuantity());
         item.setEquipment(itemDTO.getEquipment());
         item.setReservation(itemDTO.getReservation());
+
+        equipmentService.reduceEquimentMaxQuantity(item.getEquipment(), item.getQuantity());
 
         return itemRepository.save(item);
     }

@@ -11,11 +11,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Repository
-@Transactional(readOnly = true)
+//@Transactional(readOnly = true)
 public interface EquipmentRepository extends JpaRepository<Equipment, Integer> {
-    List<Equipment> findAllByCompany(Company company);
-    //@Query("SELECT DISTINCT e FROM Equipment e JOIN FETCH e.companies")
-    //List<Equipment> findAllWithCompanies();*/
 
     Equipment getById(Integer id);
     /*@Query("SELECT e FROM Equipment e WHERE e.company.id = :companyId")

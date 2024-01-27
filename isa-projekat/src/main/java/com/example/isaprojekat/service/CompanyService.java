@@ -13,10 +13,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
+import javax.transaction.Transactional;
 import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
+@Transactional
 public class CompanyService {
     @Autowired
     private CompanyRepository companyRepository;
@@ -28,6 +30,8 @@ public class CompanyService {
     public List<Company> findAll() {
         return companyRepository.findAll();
     }
+    @Transactional
+    public Company save(Company company) { return companyRepository.save(company); }
 
     public void updateAverageGrade(Integer companyId) {
         Company existingCompany = findOne(companyId);

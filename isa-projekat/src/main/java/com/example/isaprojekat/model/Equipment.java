@@ -32,17 +32,22 @@ public class Equipment {
     @JoinColumn(name = "company_id")
     private Company company;
 
+     /*@Version
+    private Integer version = 0;*/
+
     public Equipment() {
     }
 
-    public Equipment(String name, String description, double price, double grade, String type, Integer maxQuantity) {
+    public Equipment(String name, String description, double price, double grade, String type, Integer maxQuantity, Company company) {
         this.name = name;
         this.description = description;
         this.price = price;
         this.grade = grade;
         this.type = type;
         this.maxQuantity = maxQuantity;
+        this.company = company;
     }
+
 
     public Equipment(EquipmentDTO equipmentDTO) {
         this.id = equipmentDTO.getId();
@@ -119,4 +124,12 @@ public class Equipment {
     public void setMaxQuantity(Integer maxQuantity) {
         this.maxQuantity = maxQuantity;
     }
+
+    /*public Integer getVersion() {
+        return version;
+    }
+
+    public void setVersion(Integer version) {
+        this.version = version;
+    }*/
 }
