@@ -10,10 +10,10 @@ import javax.persistence.LockModeType;
 import java.util.List;
 
 @Repository
-@Transactional(readOnly = true)
+//@Transactional(readOnly = true)
 public interface AppointmentRepository extends JpaRepository<Appointment, Integer> {
     //List<Appointment> findEquipmentAppointmentByEquipmentId(Integer equipmentId);
     //List<EquipmentAppointment> findAllByAdmin_Id(int adminId);
-    @Transactional(readOnly = false)
+    //@Transactional(readOnly = false)
     Appointment save(Appointment appointment);
 }

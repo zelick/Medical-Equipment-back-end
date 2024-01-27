@@ -11,7 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Repository
-@Transactional(readOnly = true)
+//@Transactional(readOnly = true)
 public interface EquipmentRepository extends JpaRepository<Equipment, Integer> {
 
     Equipment getById(Integer id);

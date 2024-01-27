@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-@Transactional(readOnly = true)
+//@Transactional(readOnly = true)
 public interface UserRepository extends JpaRepository<User, Integer> {
     public Page<User> findAll(Pageable pageable);
    // public  List<User> findAll(); //nez jel radi
@@ -24,8 +24,7 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     public User findUserByEmail(String email);
 
 
-
-    @Transactional
+    //@Transactional
     @Modifying
     @Query("UPDATE User a " +
             "SET a.isEnabled = TRUE WHERE a.email = ?1")
