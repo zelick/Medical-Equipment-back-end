@@ -32,6 +32,10 @@ public class Company {
 
     @Column(name= "workTimeEnd", nullable = true)
     private String workTimeEnd;
+
+    // za optimisticko zakljucavanje transakcije
+    //@Version
+    //private Integer version;
     public Company() {
     }
     public Company(String name, String address, String description, double averageGrade, Integer adminId,
@@ -139,5 +143,13 @@ public class Company {
 
     public void setWorkTimeEnd(String workTimeEnd) {
         this.workTimeEnd = workTimeEnd;
+    }
+
+    public Integer getVersion() {
+        return version;
+    }
+
+    public void setVersion(Integer version) {
+        this.version = version;
     }
 }

@@ -22,29 +22,26 @@ import javax.transaction.Transactional;
 import java.util.Date;
 import java.util.concurrent.*;
 
-
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class CompanyEquipmentTests {
-    @Autowired
+public class CompanyTests {
 
-    private EquipmentService equipmentService;
     @Autowired
     private CompanyService companyService;
 
     @Test(expected = ObjectOptimisticLockingFailureException.class)
-    public void testOptimisticLockingEquipment() throws Throwable { //3
+    public void testOptimisticLockingCompany() throws Throwable { //3
 
         ExecutorService executor = Executors.newFixedThreadPool(2);
         Future<?> future1 = executor.submit(new Runnable() {
             @Override
             public void run() {
                 System.out.println("Startovan Thread 1");
-                Equipment equipmentToUpdate = equipmentService.findOne(1);// ocitan objekat sa id 1
-                equipmentToUpdate.setPrice(230.5);// izmenjen ucitan objekat
+                Company companyToUpdate = companyService.findOne(1);// ocitan objekat sa id 1
+                companyToUpdate.setName("NewName1");// izmenjen ucitan objekat
 
                 try { Thread.sleep(3000); } catch (InterruptedException e) {}// thread uspavan na 3 sekunde da bi drugi thread mogao da izvrsi istu operaciju
-                equipmentService.save(equipmentToUpdate);// bacice ObjectOptimisticLockingFailureException
+                companyService.save(companyToUpdate);// bacice ObjectOptimisticLockingFailureException
             }
         });
         executor.submit(new Runnable() {
@@ -52,8 +49,8 @@ public class CompanyEquipmentTests {
             @Override
             public void run() {
                 System.out.println("Startovan Thread 2");
-                Equipment equipmentToUpdate = equipmentService.findOne(1);// ocitan objekat sa id 1
-                equipmentToUpdate.setPrice(550.4);// izmenjen ucitan objekat
+                Company companyToUpdate = companyService.findOne(1);// ocitan objekat sa id 1
+                companyToUpdate.setName("NewName2");// izmenjen ucitan objekat
                 /*
                  * prvi ce izvrsiti izmenu i izvrsi upit:
                  * Hibernate:
@@ -70,7 +67,7 @@ public class CompanyEquipmentTests {
                  *
                  * Moze se primetiti da automatski dodaje na upit i proveru o verziji
                  */
-                equipmentService.save(equipmentToUpdate);
+                companyService.save(companyToUpdate);
             }
         });
         try {
@@ -84,6 +81,4 @@ public class CompanyEquipmentTests {
         executor.shutdown();
 
     }
-
-
 }

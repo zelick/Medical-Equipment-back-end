@@ -34,27 +34,4 @@ public class RegistrationController {
     public String registerSystemAdmin(@RequestBody RegistrationRequest request) {
         return registrationService.register(request);
     }
-
-    //ovo obrisi posle
-    @PostMapping(value = "/readQrCodeImage")
-    @CrossOrigin(origins = "http://localhost:4200")
-    public ResponseEntity<String> handleFileUpload(@RequestParam("file") MultipartFile file) {
-        if (file.isEmpty()) {
-            return new ResponseEntity<>("No file received", HttpStatus.BAD_REQUEST);
-        }
-
-        try {
-            byte[] imageBytes = file.getBytes();
-
-            // Read QR Code
-            String qrCodeData = qrCodeService.readQRCode(imageBytes);
-
-            // Vratite string kao odgovor
-            return new ResponseEntity<>(qrCodeData, HttpStatus.OK);
-        } catch (IOException e) {
-            return new ResponseEntity<>("Error handling file upload", HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-
-
 }

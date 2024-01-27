@@ -36,15 +36,12 @@ public class ReservationController {
     @PostMapping(value = "/create")
     @CrossOrigin(origins = "http://localhost:4200")
     //@RequestParam(name = "id", required = false) Integer userId
-    public ResponseEntity<ReservationDTO> createReservation(@RequestBody ReservationDTO reservationDTO) {
-        /*User loggedInUser = userService.findOne(userId);
+    public ResponseEntity<ReservationDTO> createReservation(@RequestBody ReservationDTO reservationDTO, @RequestParam(name = "id", required = false) Integer userId) {
 
-        if(loggedInUser!=null) {
-            if (loggedInUser.getUserRole() != UserRole.USER) {
-                return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-            }
+        if(!userService.isUser(userId)){
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
-         */
+
         /*
         try {
             Reservation createdReservation = reservationService.createReservation(reservationDTO);
@@ -73,7 +70,10 @@ public class ReservationController {
     }
     @PutMapping(value = "/cancel")
     @CrossOrigin(origins = "http://localhost:4200")
-    public String cancelReservation(@RequestBody ReservationDTO reservationDTO) {
+    public String cancelReservation(@RequestBody ReservationDTO reservationDTO, @RequestParam(name = "id", required = false) Integer userId) {
+        if(!userService.isUser(userId)){
+            return "Unauthorized";
+        }
         try {
             reservationService.cancelReservation(reservationDTO);
             return "Reservation canceled successfully.";
@@ -86,11 +86,14 @@ public class ReservationController {
 
         User user = userService.findOneByEmail(username);
         User loggedInUser = userService.findOne(userId);
-
+        /*
         if(loggedInUser!=null) {
             if (loggedInUser.getUserRole() != UserRole.USER || !Objects.equals(loggedInUser.getEmail(), user.getEmail())) {
                 return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
             }
+        }*/
+        if(!userService.isUser(userId)|| !Objects.equals(loggedInUser.getEmail(), user.getEmail())){
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
         List<Reservation> reservations = reservationService.GetAllNotCancelledReservationsForUser(user);
         List<ReservationDTO> reservationsDTO = new ArrayList<>();
@@ -107,11 +110,14 @@ public class ReservationController {
 
         User user = userService.findOneByEmail(username);
         User loggedInUser = userService.findOne(userId);
-
+        /*
         if(loggedInUser!=null) {
             if (loggedInUser.getUserRole() != UserRole.USER || !Objects.equals(loggedInUser.getEmail(), user.getEmail())) {
                 return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
             }
+        }*/
+        if(!userService.isUser(userId)|| !Objects.equals(loggedInUser.getEmail(), user.getEmail())){
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
         List<Reservation> reservations = reservationService.GetAllUsersReservations(user);
         List<ReservationDTO> reservationsDTO = new ArrayList<>();
@@ -128,11 +134,14 @@ public class ReservationController {
 
         User user = userService.findOneByEmail(username);
         User loggedInUser = userService.findOne(userId);
-
+        /*
         if(loggedInUser!=null) {
             if (loggedInUser.getUserRole() != UserRole.USER || !Objects.equals(loggedInUser.getEmail(), user.getEmail())) {
                 return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
             }
+        }*/
+        if(!userService.isUser(userId)|| !Objects.equals(loggedInUser.getEmail(), user.getEmail())){
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
         List<Reservation> reservations = reservationService.getAllTakenUsersReservations(user);
         List<ReservationDTO> reservationsDTO = new ArrayList<>();

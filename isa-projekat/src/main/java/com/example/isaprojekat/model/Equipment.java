@@ -124,4 +124,12 @@ public class Equipment {
     public void setMaxQuantity(Integer maxQuantity) {
         this.maxQuantity = maxQuantity;
     }
+
+    /*public Integer getVersion() {
+        return version;
+    }
+
+    public void setVersion(Integer version) {
+        this.version = version;
+    }*/
 }
