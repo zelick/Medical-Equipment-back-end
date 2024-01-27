@@ -94,7 +94,8 @@ public class UserController {
         User user = userService.findOneByEmail(username);
 
         if (isFirstDayOfMonth()) {
-            resetPenaltyPoints(user);
+            user.setPenaltyPoints(0.0);
+            userService.save(user);
         }
 
         if (user == null) {
@@ -104,9 +105,9 @@ public class UserController {
         return new ResponseEntity<>(new UserDTO(user), HttpStatus.OK);
     }
 
-    @PutMapping(value= "/resetPenaltyPoints")
+    /*@PutMapping(value= "/resetPenaltyPoints")
     @CrossOrigin(origins = "http://localhost:4200")
-    public void resetPenaltyPoints (@RequestBody User user) {
+    public ResponseEntity<String> resetPenaltyPoints (@RequestBody User user) {
         User exactUser = userService.findOneByEmail(user.getEmail());
 
         if (exactUser == null) {
@@ -118,6 +119,7 @@ public class UserController {
 
         //return new ResponseEntity<>(new UserDTO(exactUser), HttpStatus.OK);
     }
+     */
 
     @PutMapping(value= "/updateUser/{username}")
     public ResponseEntity<UserDTO> updateUser (@PathVariable String username, @RequestBody User updatedUser) {
@@ -180,15 +182,14 @@ public class UserController {
     }
 
     @DeleteMapping(value = "/{id}")
-    public ResponseEntity<Void> deleteUser(@PathVariable Integer id) {
-
+    public ResponseEntity<String> deleteUser(@PathVariable Integer id) {
         User user = userService.findOne(id);
 
         if (user != null) {
             userService.remove(id);
-            return new ResponseEntity<>(HttpStatus.OK);
+            return new ResponseEntity<>("User successfully deleted", HttpStatus.OK);
         } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>("User not found", HttpStatus.NOT_FOUND);
         }
     }
 

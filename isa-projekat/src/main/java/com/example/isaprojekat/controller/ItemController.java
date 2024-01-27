@@ -30,14 +30,17 @@ public class ItemController {
 
     @PostMapping(value = "/create")
     @CrossOrigin(origins = "http://localhost:4200")
-    public ResponseEntity<ItemDTO> createItem(@RequestBody ItemDTO itemDTO,@RequestParam(name = "id", required = false) Integer userId) {
-        User loggedInUser = userService.findOne(userId);
-
+    public ResponseEntity<ItemDTO> createItem(@RequestBody ItemDTO itemDTO) {
+        //@RequestParam(name = "id", required = false) Integer userId
+        //User loggedInUser = userService.findOne(userId);
+/*
         if(loggedInUser!=null) {
             if (loggedInUser.getUserRole() != UserRole.USER) {
                 return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
             }
         }
+
+ */
         try {
             Item createdItem = itemService.createItem(itemDTO);
             return new ResponseEntity<>(new ItemDTO(createdItem), HttpStatus.CREATED);

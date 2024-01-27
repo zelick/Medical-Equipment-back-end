@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-@Transactional(readOnly = true)
+//@Transactional(readOnly = true)
 public interface CompanyRepository extends JpaRepository<Company, Integer> {
     Optional<Company> findByAdminId(Integer adminId);
 }

@@ -20,6 +20,9 @@ public class Item {
     @JoinColumn(name = "reservation_id", nullable = true)
     private Reservation reservation;
 
+    /*@Version
+    private Integer version = 0;*/
+
     public Item() {
     }
     public Item(Integer id, Equipment equipment, Integer quantity, Reservation reservation) {
