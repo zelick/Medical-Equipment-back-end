@@ -25,6 +25,7 @@ public class EquipmentService {
     public Equipment findOne(Integer id) {
         return equipmentRepository.findById(id).orElseGet(null);
     }
+    @Transactional
     public Equipment save(Equipment equipment) { return equipmentRepository.save(equipment); }
     public Equipment GetOne(Integer id){return equipmentRepository.getById(id);}
     public List<Equipment> findAllByCompanyId(Company company){
@@ -81,4 +82,6 @@ public class EquipmentService {
             equipmentRepository.save(equipment);
         }
     }
+
+
 }

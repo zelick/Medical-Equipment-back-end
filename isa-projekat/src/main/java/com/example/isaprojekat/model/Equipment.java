@@ -31,9 +31,9 @@ public class Equipment {
     @ManyToOne
     @JoinColumn(name = "company_id")
     private Company company;
-
     //@Version
     //private Integer version;
+
 
     public Equipment() {
     }
