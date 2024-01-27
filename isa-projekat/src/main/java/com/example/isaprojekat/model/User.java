@@ -104,7 +104,8 @@ public class User {
                 String country,
                 String phoneNumber,
                 String occupation,
-                String companyInfo) {
+                String companyInfo,
+                Boolean isUserFirstLogged) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
@@ -117,6 +118,7 @@ public class User {
         this.phoneNumber = phoneNumber;
         this.occupation = occupation;
         this.companyInfo = companyInfo;
+        this.isUserFirstLogged = isUserFirstLogged;
     }
     public String getCity() {
         return city;

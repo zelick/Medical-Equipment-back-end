@@ -129,10 +129,10 @@ public class CompanyService {
         return companyRepository.save(newCompany);
     }
 
-    public Company findByAdminId(Integer adminId) {
+    /*public Company findByAdminId(Integer adminId) {
         System.out.println("usao je u servis kompanije");
         return companyRepository.findByAdminId(adminId)
                 .orElseThrow(() -> new EntityNotFoundException("Company not found for adminId: " + adminId));
-    }
+    }*/
 
 }

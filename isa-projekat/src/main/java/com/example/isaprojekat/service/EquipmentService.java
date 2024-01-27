@@ -43,8 +43,8 @@ public class EquipmentService {
         existingEquipment.setName(equipmentDTO.getName());
         existingEquipment.setGrade(equipmentDTO.getGrade());
         existingEquipment.setDescription(equipmentDTO.getDescription());
-        existingEquipment.setPrice(equipmentDTO.getPrice());
         existingEquipment.setType(equipmentDTO.getType());
+        existingEquipment.setPrice(equipmentDTO.getPrice());
         existingEquipment.setMaxQuantity(equipmentDTO.getMaxQuantity());
 
         return equipmentRepository.save(existingEquipment);

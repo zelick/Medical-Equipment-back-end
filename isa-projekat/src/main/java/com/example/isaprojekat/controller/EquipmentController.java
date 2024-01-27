@@ -3,6 +3,7 @@ package com.example.isaprojekat.controller;
 import com.example.isaprojekat.dto.EquipmentDTO;
 import com.example.isaprojekat.model.Company;
 import com.example.isaprojekat.model.Equipment;
+import com.example.isaprojekat.service.CompanyAdminService;
 import com.example.isaprojekat.service.CompanyService;
 import com.example.isaprojekat.service.EquipmentService;
 import lombok.AllArgsConstructor;
@@ -23,6 +24,8 @@ public class EquipmentController {
     private EquipmentService equipmentService;
     @Autowired
     private CompanyService companyService;
+    @Autowired
+    private CompanyAdminService companyAdminService;
 
     @GetMapping(value = "/getEquipmentForCompany/{id}")
     @CrossOrigin(origins = "http://localhost:4200")
@@ -98,16 +101,15 @@ public class EquipmentController {
         }
     }
 
-    /*@GetMapping(value = "/getAllEquipmentWithCompanies")
-    @CrossOrigin(origins = "http://localhost:4200")
-    public List<EquipmentDTO> getAllEquipmentWithCompanies() {
-        List<Equipment> equipments = equipmentService.getAllEquipmentWithCompanies();
+  @GetMapping(value = "/getAllEquipmentForCompany/{id}")
+  @CrossOrigin(origins = "http://localhost:4200")
+  public List<EquipmentDTO> getAllEquipmentWithCompanies(@PathVariable Integer id){
+        Company adminCompany = companyAdminService.getCompanyForAdmin(id);
+        List<Equipment> equipments = equipmentService.findAllByCompanyId(adminCompany);
         List<EquipmentDTO> equipmentDTOs = new ArrayList<>();
-
         for (Equipment equipment : equipments) {
             equipmentDTOs.add(new EquipmentDTO(equipment));
         }
-        return equipmentDTOs;
+         return equipmentDTOs;
     }
-    }*/
 }

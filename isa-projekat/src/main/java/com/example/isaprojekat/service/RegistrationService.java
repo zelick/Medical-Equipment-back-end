@@ -152,19 +152,21 @@ public class RegistrationService {
                 request.getCompanyInfo().isEmpty()){
             throw new IllegalStateException("All fields must be filled in!");
         }
-        User newUser = userService.create(
-                new User(request.getFirstName(),
-                        request.getLastName(),
-                        request.getEmail(),
-                        request.getPassword(),
-                        UserRole.SYSTEM_ADMIN,
-                        request.getCity(),
-                        request.getCountry(),
-                        request.getPhoneNumber(),
-                        request.getOccupation(),
-                        request.getCompanyInfo(),
-                        false)
-        );
-        return new UserDTO(newUser);
+
+        User newSysAdmin = new User(request.getFirstName(),
+                request.getLastName(),
+                request.getEmail(),
+                request.getPassword(),
+                false,
+                true,
+                UserRole.SYSTEM_ADMIN,
+                request.getCity(),
+                request.getCountry(),
+                request.getPhoneNumber(),
+                request.getOccupation(),
+                request.getCompanyInfo(),
+                false);
+
+        return new UserDTO(userService.create(newSysAdmin));
     }
 }

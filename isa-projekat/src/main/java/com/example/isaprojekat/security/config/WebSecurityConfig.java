@@ -93,6 +93,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/reservations/getAllUsersReservations/**").permitAll()
                 .antMatchers("/api/reservations/getAllTakenUsersReservations/**").permitAll()
                 .antMatchers("/api/reservations/setPrice").permitAll()
+                .antMatchers("/api/equipment/getAllEquipmentForCompany/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .cors()
