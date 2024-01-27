@@ -56,30 +56,31 @@ public class ReservationService {
         return reservationRepository.findById(id).orElseGet(null);
     }
 
-    public void cancelReservation(ReservationDTO reservationDto){
-        Reservation reservation = reservationRepository.getById(reservationDto.getId());
-        reservation.setStatus(ReservationStatus.CANCELED);
-        reservationRepository.save(reservation);
+   public void cancelReservation(ReservationDTO reservationDto) {
+       Reservation reservation = reservationRepository.getById(reservationDto.getId());
+       reservation.setStatus(ReservationStatus.CANCELED);
+       reservationRepository.save(reservation);
+       User user = reservation.getUser();
+       int penaltyCount = calculatePenalty(reservation);
+       user.setPenaltyPoints(user.getPenaltyPoints() + penaltyCount);
+       Appointment appointment = appointmentService.findOne(reservation.getAppointment().getId());
+       appointment.setStatus(AppointmentStatus.FREE);
+       equipmentService.increaseEquimentMaxQuantity(reservation.getItems());
+       userRepository.save(user);
+   }
 
-        User user = reservation.getUser();
-
-        // Proveri vreme do početka termina
+    private int calculatePenalty(Reservation reservation) {
         Date now = new Date();
         Date reservationStart = reservation.getAppointment().getAppointmentDate();
         long millisecondsUntilReservation = reservationStart.getTime() - now.getTime();
         long hoursUntilReservation = millisecondsUntilReservation / (60 * 60 * 1000);
-
-        // Dodaj penale prema pravilima
-        int penaltyCount = 1;  // Podrazumevani broj penala
+        int penaltyCount = 1;
         if (hoursUntilReservation < 24) {
-            penaltyCount = 2;  // Dodatni penal ako je otkazano unutar 24 sata
+            penaltyCount = 2;
         }
-
-        // Ažuriraj penale korisnika
-        user.setPenaltyPoints(user.getPenaltyPoints()+penaltyCount);
-        equipmentService.increaseEquimentMaxQuantity(reservation.getItems());
-        userRepository.save(user);
+        return penaltyCount;
     }
+
 
     public List<Reservation> GetAllNotCancelledReservationsForUser(User user){
         List<Reservation> allByUser = reservationRepository.getAppointmentReservationsByUser(user);

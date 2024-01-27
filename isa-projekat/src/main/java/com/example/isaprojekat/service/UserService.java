@@ -1,6 +1,7 @@
 package com.example.isaprojekat.service;
 
 import com.example.isaprojekat.dto.UserDTO;
+import com.example.isaprojekat.enums.UserRole;
 import com.example.isaprojekat.model.Company;
 import com.example.isaprojekat.model.ConfirmationToken;
 import com.example.isaprojekat.model.User;
@@ -9,6 +10,8 @@ import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -89,4 +92,37 @@ public class UserService implements UserDetailsService {
         }
         return userRepository.save(user);
     }
+    public boolean isUser(Integer userId){
+        User loggedInUser = findOne(userId);
+
+        if(loggedInUser!=null) {
+            if (loggedInUser.getUserRole() != UserRole.USER) {
+                return false;
+            }
+        } else {return false;}
+        return true;
+    }
+
+    public boolean isCompanyAdmin(Integer userId){
+        User loggedInUser = findOne(userId);
+
+        if(loggedInUser!=null) {
+            if (loggedInUser.getUserRole() != UserRole.COMPANY_ADMIN) {
+                return false;
+            }
+        } else {return false;}
+        return true;
+    }
+
+    public boolean isSystemAdmin(Integer userId){
+        User loggedInUser = findOne(userId);
+
+        if(loggedInUser!=null) {
+            if (loggedInUser.getUserRole() != UserRole.SYSTEM_ADMIN) {
+                return false;
+            }
+        } else {return false;}
+        return true;
+    }
+
 }

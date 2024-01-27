@@ -29,6 +29,9 @@ public class AppointmentController {
     @GetMapping(value = "companyAppointments/{companyId}")
     @CrossOrigin(origins = "http://localhost:4200")
     public ResponseEntity<List<AppointmentDTO>> findCompanyAppointments(@PathVariable Integer companyId,@RequestParam(name = "id", required = false) Integer userId) {
+        if(!userService.isUser(userId)){
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
         List<AppointmentDTO> foundAppointmentsDTO = new ArrayList<>();
         List<Appointment> foundAppointments = appointmentService.findCompanyAppointments(companyId, userId);
         for (Appointment a : foundAppointments) {
@@ -39,8 +42,11 @@ public class AppointmentController {
 
     @PostMapping(value = "/addAdminToAppointment/{companyId}")
     @CrossOrigin(origins = "http://localhost:4200")
-    public ResponseEntity<AppointmentDTO> addAdminToAppointment(@PathVariable Integer companyId, @RequestBody AppointmentDTO appointmentDTO)
+    public ResponseEntity<AppointmentDTO> addAdminToAppointment(@PathVariable Integer companyId, @RequestBody AppointmentDTO appointmentDTO, @RequestParam(name = "id", required = false) Integer userId)
     {
+        if(!userService.isUser(userId)){
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
         try {
             Appointment updatedAppointment = appointmentService.addAdminToAppointment(appointmentDTO, companyId);
             return new ResponseEntity<>(new AppointmentDTO(updatedAppointment), HttpStatus.OK);
@@ -88,12 +94,8 @@ public class AppointmentController {
     @PostMapping(value = "/create")
     @CrossOrigin(origins = "http://localhost:4200")
     public ResponseEntity<AppointmentDTO> createAppointment(@RequestBody AppointmentDTO equipmentAppointmentDTO, @RequestParam(name = "id", required = false) Integer userId) {
-        User loggedInUser = userService.findOne(userId);
-
-        if(loggedInUser!=null) {
-            if (loggedInUser.getUserRole() != UserRole.COMPANY_ADMIN) {
-                return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-            }
+        if(!userService.isCompanyAdmin(userId)){
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
         try {
             Appointment createdAppointment = appointmentService.createAppointment(equipmentAppointmentDTO);

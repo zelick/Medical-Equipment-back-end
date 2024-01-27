@@ -1,10 +1,13 @@
 package com.example.isaprojekat.controller;
 
 import com.example.isaprojekat.dto.EquipmentDTO;
+import com.example.isaprojekat.enums.UserRole;
 import com.example.isaprojekat.model.Company;
 import com.example.isaprojekat.model.Equipment;
+import com.example.isaprojekat.model.User;
 import com.example.isaprojekat.service.CompanyService;
 import com.example.isaprojekat.service.EquipmentService;
+import com.example.isaprojekat.service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -23,6 +26,8 @@ public class EquipmentController {
     private EquipmentService equipmentService;
     @Autowired
     private CompanyService companyService;
+    @Autowired
+    private UserService userService;
 
     @GetMapping(value = "/getEquipmentForCompany/{id}")
     @CrossOrigin(origins = "http://localhost:4200")
@@ -86,7 +91,10 @@ public class EquipmentController {
     }
     @PutMapping(value = "/update/{id}")
     @CrossOrigin(origins = "http://localhost:4200")
-    public ResponseEntity<EquipmentDTO> updateEquipment(@PathVariable Integer id, @RequestBody EquipmentDTO equipmentDTO) {
+    public ResponseEntity<EquipmentDTO> updateEquipment(@PathVariable Integer id, @RequestBody EquipmentDTO equipmentDTO, @RequestParam(name = "id", required = false) Integer userId) {
+        if(!userService.isCompanyAdmin(userId)){
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
         try {
             Equipment updatedEquipment = equipmentService.updateEquipment(id, equipmentDTO);
             return new ResponseEntity<>(new EquipmentDTO(updatedEquipment), HttpStatus.OK);

@@ -24,8 +24,8 @@ public class Appointment {
     private AppointmentStatus status;
 
     // za optimisticko zakljucavanje transakcije
-    @Version
-    private Integer version;
+    //@Version
+    //private Integer version;
     public Appointment() {
     }
     public Appointment(Integer id, Integer adminId, Date appointmentDate,
@@ -88,11 +88,11 @@ public class Appointment {
         this.status = status;
     }
 
-    public Integer getVersion() {
+    /*public Integer getVersion() {
         return version;
     }
 
     public void setVersion(Integer version) {
         this.version = version;
-    }
+    }*/
 }

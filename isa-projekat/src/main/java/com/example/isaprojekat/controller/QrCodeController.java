@@ -2,8 +2,11 @@ package com.example.isaprojekat.controller;
 
 import com.example.isaprojekat.dto.CompanyDTO;
 import com.example.isaprojekat.dto.ReservationDTO;
+import com.example.isaprojekat.enums.UserRole;
+import com.example.isaprojekat.model.User;
 import com.example.isaprojekat.service.EmailService;
 import com.example.isaprojekat.service.QrCodeService;
+import com.example.isaprojekat.service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -21,14 +24,17 @@ import org.springframework.http.ResponseEntity;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
+import java.util.Map;
 
 @RestController
 @RequestMapping("api/qr-code")
 public class QrCodeController {
     @Autowired
     private QrCodeService qrCodeService;
+    @Autowired
+    private UserService userService;
 
-    @PostMapping(value = "/generateQrCodeSendMail")
+    /*@PostMapping(value = "/generateQrCodeSendMail")
     @CrossOrigin(origins = "http://localhost:4200")
     public ResponseEntity<String> generateQrCodeAndSendEmail(@RequestBody Integer reservationId) {
         try {
@@ -40,15 +46,37 @@ public class QrCodeController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error occurred: " + e.getMessage());
         }
+    }*/
+    @PostMapping(value = "/generateQrCodeSendMail")
+    @CrossOrigin(origins = "http://localhost:4200")
+    public ResponseEntity<String> generateQrCodeAndSendEmail(@RequestBody Map<String, Object> requestData) {
+        try {
+            Integer reservationId = (Integer) requestData.get("reservationId");
+            Integer userId = (Integer) requestData.get("userId");
+            if(!userService.isUser(userId)){
+                return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+            }
+
+            if (qrCodeService.generateQRCodeSendMail(reservationId)) {
+                return ResponseEntity.ok("Successfully created QR CODE");
+            } else {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error while creating QR CODE");
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error occurred: " + e.getMessage());
+        }
     }
+
 
     @PostMapping(value = "/readQrCodeImage")
     @CrossOrigin(origins = "http://localhost:4200")
-    public ResponseEntity<String> handleFileUpload(@RequestParam("file") MultipartFile file) {
+    public ResponseEntity<String> handleFileUpload(@RequestParam("file") MultipartFile file, @RequestParam(name = "id", required = false) Integer userId) {
         if (file.isEmpty()) {
             return new ResponseEntity<>("No file received", HttpStatus.BAD_REQUEST);
         }
-
+        if(!userService.isCompanyAdmin(userId)){
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
         try {
             byte[] imageBytes = file.getBytes();
 
@@ -64,7 +92,10 @@ public class QrCodeController {
 
     @GetMapping("/getQRCodeData/{id}")
     @CrossOrigin(origins = "http://localhost:4200")
-    public ResponseEntity<byte[]> getQRCodeImage(@PathVariable Integer id) {
+    public ResponseEntity<byte[]> getQRCodeImage(@PathVariable Integer id, @RequestParam(name = "id", required = false) Integer userId) {
+        if(!userService.isUser(userId)){
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
         try {
             byte[] qrCodeBytes = qrCodeService.displayQRcode(id);
             return ResponseEntity.ok().contentType(MediaType.IMAGE_PNG).body(qrCodeBytes);

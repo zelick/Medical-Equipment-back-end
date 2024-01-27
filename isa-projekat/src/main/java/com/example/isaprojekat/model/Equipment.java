@@ -32,8 +32,8 @@ public class Equipment {
     @JoinColumn(name = "company_id")
     private Company company;
 
-    @Version
-    private Integer version;
+    //@Version
+    //private Integer version;
 
     public Equipment() {
     }
@@ -123,12 +123,12 @@ public class Equipment {
     public void setMaxQuantity(Integer maxQuantity) {
         this.maxQuantity = maxQuantity;
     }
-    public Integer getVersion() {
+    /*public Integer getVersion() {
         return version;
     }
 
     public void setVersion(Integer version) {
         this.version = version;
-    }
+    }*/
 
 }

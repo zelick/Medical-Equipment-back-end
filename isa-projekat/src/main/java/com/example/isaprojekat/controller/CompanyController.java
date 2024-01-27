@@ -47,8 +47,11 @@ public class CompanyController {
     @GetMapping(value = "removeFrom/{companyId}/{equipmentId}")
     @CrossOrigin(origins = "http://localhost:4200")
     public ResponseEntity<CompanyDTO> removeEqFromCom(@PathVariable Integer companyId,
-                                                      @PathVariable Integer equipmentId) {
-
+                                                      @PathVariable Integer equipmentId
+            , @RequestParam(name = "id", required = false) Integer userId) {
+        if(!userService.isCompanyAdmin(userId)){
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
         Company company = companyService.removeEquipmentFromCompany(companyId, equipmentId);
         companyService.updateAverageGrade(companyId);
         System.out.println("Kompanija:");
@@ -64,8 +67,11 @@ public class CompanyController {
     @GetMapping(value = "addTo/{companyId}/{equipmentId}")
     @CrossOrigin(origins = "http://localhost:4200")
     public ResponseEntity<CompanyDTO> addEqToCom(@PathVariable Integer companyId,
-                                                      @PathVariable Integer equipmentId) {
-
+                                                      @PathVariable Integer equipmentId
+            , @RequestParam(name = "id", required = false) Integer userId) {
+        if(!userService.isCompanyAdmin(userId)){
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
         Company company = companyService.addEquipmentToCompany(companyId, equipmentId);
         companyService.updateAverageGrade(companyId);
         System.out.println("Kompanija:");
@@ -96,14 +102,9 @@ public class CompanyController {
     @PutMapping(value = "/update/{id}")
     @CrossOrigin(origins = "http://localhost:4200")
     public ResponseEntity<CompanyDTO> updateCompany(@PathVariable Integer id, @RequestBody CompanyDTO companyDTO,@RequestParam(name = "id", required = false) Integer userId) {
-        User loggedInUser = userService.findOne(userId);
-
-        if(loggedInUser!=null){
-
-            if(loggedInUser.getUserRole()!= UserRole.COMPANY_ADMIN) {
-                return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-
-            }}
+        if(!userService.isCompanyAdmin(userId)){
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
         try {
             Company updatedCompany = companyService.updateCompany(id, companyDTO);
             return new ResponseEntity<>(new CompanyDTO(updatedCompany), HttpStatus.OK);
@@ -116,13 +117,9 @@ public class CompanyController {
     @PostMapping(value = "/create")
     @CrossOrigin(origins = "http://localhost:4200")
     public ResponseEntity<CompanyDTO> createCompany(@RequestBody CompanyDTO companyDTO,@RequestParam(name = "id", required = false) Integer userId) {
-        User loggedInUser = userService.findOne(userId);
-
-        if(loggedInUser!=null){
-
-            if(loggedInUser.getUserRole()!= UserRole.SYSTEM_ADMIN){
-                return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-       }}
+        if(!userService.isSystemAdmin(userId)){
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
         try {
             Company createdCompany = companyService.createCompany(companyDTO);
             return new ResponseEntity<>(new CompanyDTO(createdCompany), HttpStatus.CREATED);
