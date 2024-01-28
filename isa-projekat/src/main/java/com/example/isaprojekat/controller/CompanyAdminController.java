@@ -22,7 +22,6 @@ import java.util.List;
 public class CompanyAdminController {
     @Autowired
     private CompanyAdminService companyAdminService;
-    @Autowired
     private UserService userService;
 
     @GetMapping("/getCompanyForAdmin/{id}")

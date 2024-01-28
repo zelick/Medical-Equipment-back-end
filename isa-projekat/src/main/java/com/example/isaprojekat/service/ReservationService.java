@@ -4,13 +4,12 @@ import com.example.isaprojekat.dto.ReservationDTO;
 import com.example.isaprojekat.enums.AppointmentStatus;
 import com.example.isaprojekat.enums.ReservationStatus;
 import com.example.isaprojekat.model.*;
-import com.example.isaprojekat.repository.ItemRepository;
-import com.example.isaprojekat.repository.AppointmentRepository;
-import com.example.isaprojekat.repository.ReservationRepository;
-import com.example.isaprojekat.repository.UserRepository;
+import com.example.isaprojekat.repository.*;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import javax.imageio.ImageIO;
 import javax.transaction.Transactional;
@@ -30,13 +29,10 @@ public class ReservationService {
     @Autowired
     private ReservationRepository reservationRepository;
     private UserRepository userRepository;
-    private ItemRepository itemRepository;
     private AppointmentService appointmentService;
     private EquipmentService equipmentService;
+    private CompanyAdminService companyAdminService;
 
-    public Reservation getById(Integer id){
-        return reservationRepository.getById(id);
-    }
     public List<Reservation> findAll() {
         return reservationRepository.findAll();
     }
@@ -46,7 +42,7 @@ public class ReservationService {
         newReservation.setStatus(ReservationStatus.PENDING);
         newReservation.setAppointment(reservationDTO.getAppointment());
         newReservation.setUser(reservationDTO.getUser());
-        newReservation.setTotalPrice(0.0);
+        newReservation.setTotalPrice(reservationDTO.getTotalPrice());
 
         return reservationRepository.save(newReservation);
     }
@@ -62,23 +58,22 @@ public class ReservationService {
         return reservationRepository.save(reservation);
     }
 
-    public Reservation findOne(Integer id)
-    {
+    public Reservation findOne(Integer id) {
         return reservationRepository.findById(id).orElseGet(null);
     }
 
-   public void cancelReservation(ReservationDTO reservationDto) {
-       Reservation reservation = reservationRepository.getById(reservationDto.getId());
-       reservation.setStatus(ReservationStatus.CANCELED);
-       reservationRepository.save(reservation);
-       User user = reservation.getUser();
-       int penaltyCount = calculatePenalty(reservation);
-       user.setPenaltyPoints(user.getPenaltyPoints() + penaltyCount);
-       Appointment appointment = appointmentService.findOne(reservation.getAppointment().getId());
-       appointment.setStatus(AppointmentStatus.FREE);
-       equipmentService.increaseEquimentMaxQuantity(reservation.getItems());
-       userRepository.save(user);
-   }
+    public void cancelReservation(ReservationDTO reservationDto) {
+        Reservation reservation = reservationRepository.getById(reservationDto.getId());
+        reservation.setStatus(ReservationStatus.CANCELED);
+        reservationRepository.save(reservation);
+        User user = reservation.getUser();
+        int penaltyCount = calculatePenalty(reservation);
+        user.setPenaltyPoints(user.getPenaltyPoints() + penaltyCount);
+        Appointment appointment = appointmentService.findOne(reservation.getAppointment().getId());
+        appointment.setStatus(AppointmentStatus.FREE);
+        equipmentService.increaseEquimentMaxQuantity(reservation.getItems());
+        userRepository.save(user);
+    }
 
     private int calculatePenalty(Reservation reservation) {
         Date now = new Date();
@@ -92,56 +87,65 @@ public class ReservationService {
         return penaltyCount;
     }
 
-
-    public List<Reservation> GetAllNotCancelledReservationsForUser(User user){
+    public List<Reservation> GetAllNotCancelledReservationsForUser(User user) {
         List<Reservation> allByUser = reservationRepository.getAppointmentReservationsByUser(user);
         List<Reservation> notCancelledReservations = new ArrayList<>();
-        for (Reservation r: allByUser
-             ) {
-            if(r.getStatus().equals(ReservationStatus.PENDING)){
+        for (Reservation r : allByUser) {
+            if (r.getStatus().equals(ReservationStatus.PENDING)) {
                 notCancelledReservations.add(r);
             }
         }
         return notCancelledReservations;
     }
-    public Reservation getReservationById(int id){
+
+    public Reservation getReservationById(int id) {
         return reservationRepository.findById(id);
     }
-    public Reservation expireReservation(Reservation reservation){
+
+    public Reservation expireReservation(Reservation reservation) {
         reservation.setStatus(ReservationStatus.EXPIRED);
         reservation.getUser().setPenaltyPoints(2.0);
         equipmentService.increaseEquimentMaxQuantity(reservation.getItems());
 
         return reservationRepository.save(reservation);
     }
-    public Reservation takeOverReservation(Reservation reservation){
-        /*
-        for(Item item : reservation.getItems()){
-            int itemQuantity = item.getQuantity();
-            int itemMaxQuantity = item.getEquipment().getMaxQuantity();
-            int newMaxQuantity = Math.max(itemMaxQuantity - itemQuantity, 0);
-            item.getEquipment().setMaxQuantity(newMaxQuantity);
-        }
-         */
+
+    public Reservation takeOverReservation(Reservation reservation) {
         reservation.setStatus(ReservationStatus.TAKEN_OVER);
         return reservationRepository.save(reservation);
     }
 
-    public List<Reservation> GetAllUsersReservations(User user){
+    public List<Reservation> GetAllUsersReservations(User user) {
         return reservationRepository.getAppointmentReservationsByUser(user);
     }
 
-    public List<Reservation> getAllTakenUsersReservations(User user){
+    public List<Reservation> getAllTakenUsersReservations(User user) {
         List<Reservation> foundReservations = new ArrayList<>();
         List<Reservation> allUsersReservations = reservationRepository.getAppointmentReservationsByUser(user);
 
         for (Reservation r : allUsersReservations) {
-            if (r.getStatus().equals(ReservationStatus.TAKEN_OVER)){
+            if (r.getStatus().equals(ReservationStatus.TAKEN_OVER)) {
                 foundReservations.add(r);
             }
         }
 
         return foundReservations;
+    }
 
+    public List<Reservation> getAdminsAppointmentReservations (Integer adminId) {
+        List<Reservation> reservations = reservationRepository.findAll();
+        List <Appointment> companyAppointments = appointmentService.getCompanyAppointments(adminId);
+        List<Reservation> foundReservations = new ArrayList<>();
+
+        for (Reservation r : reservations) {
+            for (Appointment a : companyAppointments) {
+                if (a.getId().equals(r.getAppointment().getId())
+                        && r.getStatus().equals(ReservationStatus.PENDING)) {
+                    foundReservations.add(r);
+                }
+            }
+        }
+
+        return foundReservations;
     }
 }

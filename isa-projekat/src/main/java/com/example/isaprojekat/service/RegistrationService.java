@@ -8,6 +8,7 @@ import com.example.isaprojekat.model.RegistrationRequest;
 import com.example.isaprojekat.model.User;
 import com.example.isaprojekat.validation.EmailValidator;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import org.springframework.transaction.annotation.Transactional;
@@ -15,11 +16,14 @@ import java.time.LocalDateTime;
 
 @Service
 @AllArgsConstructor
+@Transactional
 public class RegistrationService {
+    @Autowired
     private final UserService userService;
     private EmailValidator emailValidator;
     private final ConfirmationTokenService confirmationTokenService;
     private final EmailSender emailSender;
+
     public String register(RegistrationRequest request) {
         boolean isValidEmail = emailValidator.test(request.getEmail());
         if(!isValidEmail){
@@ -51,7 +55,7 @@ public class RegistrationService {
         emailSender.send(request.getEmail(),buildEmail(request.getFirstName(),link ));
         return token;
     }
-    @Transactional
+
     public String confirmToken(String token) {
         ConfirmationToken confirmationToken = confirmationTokenService
                 .getToken(token)
@@ -73,6 +77,7 @@ public class RegistrationService {
                 confirmationToken.getUser().getEmail());
         return "confirmed";
     }
+
     private String buildEmail(String name, String link) {
         return "<div style=\"font-family:Helvetica,Arial,sans-serif;font-size:16px;margin:0;color:#0b0c0c\">\n" +
                 "\n" +

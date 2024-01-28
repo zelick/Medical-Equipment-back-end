@@ -1,52 +1,25 @@
 package com.example.isaprojekat.controller;
 
-import com.example.isaprojekat.dto.CompanyDTO;
-import com.example.isaprojekat.dto.ReservationDTO;
-import com.example.isaprojekat.enums.UserRole;
-import com.example.isaprojekat.model.User;
-import com.example.isaprojekat.service.EmailService;
 import com.example.isaprojekat.service.QrCodeService;
 import com.example.isaprojekat.service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-//dodala:
 import org.springframework.web.multipart.MultipartFile;
-import java.io.File;
 import java.io.IOException;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayOutputStream;
 import java.util.Map;
 
 @RestController
 @RequestMapping("api/qr-code")
+@AllArgsConstructor
 public class QrCodeController {
     @Autowired
     private QrCodeService qrCodeService;
-    @Autowired
     private UserService userService;
 
-    /*@PostMapping(value = "/generateQrCodeSendMail")
-    @CrossOrigin(origins = "http://localhost:4200")
-    public ResponseEntity<String> generateQrCodeAndSendEmail(@RequestBody Integer reservationId) {
-        try {
-            if (qrCodeService.generateQRCodeSendMail(reservationId)) {
-                return ResponseEntity.ok("Successfully created QR CODE");
-            } else {
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error while creating QR CODE");
-            }
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error occurred: " + e.getMessage());
-        }
-    }*/
     @PostMapping(value = "/generateQrCodeSendMail")
     @CrossOrigin(origins = "http://localhost:4200")
     public ResponseEntity<String> generateQrCodeAndSendEmail(@RequestBody Map<String, Object> requestData) {
@@ -66,7 +39,6 @@ public class QrCodeController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error occurred: " + e.getMessage());
         }
     }
-
 
     @PostMapping(value = "/readQrCodeImage")
     @CrossOrigin(origins = "http://localhost:4200")
@@ -104,5 +76,4 @@ public class QrCodeController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
     }
-
 }

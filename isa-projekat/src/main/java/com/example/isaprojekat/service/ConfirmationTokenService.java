@@ -4,12 +4,14 @@ import com.example.isaprojekat.model.ConfirmationToken;
 import com.example.isaprojekat.repository.ConfirmationTokenRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Service
 @AllArgsConstructor
+@Transactional
 public class ConfirmationTokenService {
     private final ConfirmationTokenRepository confirmationTokenRepository;
     public void saveConfirmationToken(ConfirmationToken token){

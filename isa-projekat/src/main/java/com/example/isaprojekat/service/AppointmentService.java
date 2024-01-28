@@ -36,15 +36,16 @@ public class AppointmentService {
     public Appointment findOne(Integer id) {
         return appointmentRepository.findById(id).orElseGet(null);
     }
+
     public List<Appointment> findAll() {
         return appointmentRepository.findAll();
     }
 
-    public void deleteById(Integer id){appointmentRepository.deleteById(id);}
+    public void deleteById(Integer id) {
+        appointmentRepository.deleteById(id);
+    }
 
-    @Transactional
     public Appointment createAppointment(AppointmentDTO equipmentAppointmentDTO) {
-
         Appointment newAppointment = new Appointment();
         newAppointment.setAppointmentDate(equipmentAppointmentDTO.getAppointmentDate());
         newAppointment.setAppointmentDuration(equipmentAppointmentDTO.getAppointmentDuration());
@@ -52,21 +53,6 @@ public class AppointmentService {
         newAppointment.setAdminId(equipmentAppointmentDTO.getAdminId());
         newAppointment.setStatus(equipmentAppointmentDTO.getStatus());
         return appointmentRepository.save(newAppointment);
-    }
-
-
-
-    private boolean isAppointmentAvailable(Appointment appointment, List<Appointment> availableAppointments) {
-        for (Appointment availableAppointment : availableAppointments) {
-            if (isTimeSlotOverlap(appointment, availableAppointment)) {
-                return true;
-            }
-        }
-        return false;
-    }
-    private boolean isTimeSlotOverlap(Appointment appointment1, Appointment appointment2) {
-        return appointment1.getAppointmentDate().equals(appointment2.getAppointmentDate())
-                && appointment1.getAppointmentTime().equals(appointment2.getAppointmentTime());
     }
 
     public Appointment addAdminToAppointment(AppointmentDTO appointmentDTO, Integer companyId) {
@@ -86,50 +72,77 @@ public class AppointmentService {
         return appointmentRepository.save(appointment);
     }
 
-    private Integer findAvailableAdmin(Appointment appointment, Integer companyId) {
-        List<Reservation> reservations = reservationRepository.findAll();
-        List<CompanyAdmin> allCompanyAdmins = companyAdminRepository.findAll();
-        List<Integer> companyAdmins = new ArrayList<>();
-        List<Integer> unavailableInDates = new ArrayList<>();
-        List<Integer> unavailableInTimes = new ArrayList<>();
-        List<Integer> companyAdminsCopy = new ArrayList<>();
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-
-
-        for (CompanyAdmin ca : allCompanyAdmins) {
+    List<Integer> findCompanyAdmins(List<CompanyAdmin> allAdmins, Integer companyId) {
+        List<Integer> companyAdmins = new ArrayList<Integer>();
+        for (CompanyAdmin ca : allAdmins) {
             if (ca.getCompany_id().equals(companyId)) {
                 companyAdmins.add(ca.getUser_id());
-                companyAdminsCopy.add(ca.getUser_id());
             }
         }
+        return companyAdmins;
+    }
+
+    List<Integer> findUnavailableAdminsPerDate(Appointment appointment, List<Reservation> reservations) {
+        List<Integer> unavailableAdmins = new ArrayList<Integer>();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+
         String appointmentDateStr = dateFormat.format(appointment.getAppointmentDate());
         for (Reservation r : reservations) {
             String reservationDateStr = dateFormat.format(r.getAppointment().getAppointmentDate());
             if (appointmentDateStr.equals(reservationDateStr)) {
-                unavailableInDates.add(r.getAppointment().getAdminId());
+                unavailableAdmins.add(r.getAppointment().getAdminId());
+            }
+        }
+        return unavailableAdmins;
+    }
+
+    private boolean isAdminAvailable(int existingAppointmentTime, int existingAppointmentDuration,
+                                     int newAppointmentTime, int newAppointmentDuration) {
+        if (existingAppointmentTime <= newAppointmentTime + newAppointmentDuration &&
+                newAppointmentTime <= existingAppointmentTime + existingAppointmentDuration) {
+            return false;
+        }
+
+        return true;
+    }
+
+    List<Integer> findUnavailableAdminsPerTime(Appointment appointment, List<Reservation> reservations) {
+        List<Integer> unavailableAdmins = new ArrayList<Integer>();
+
+        for (Reservation r : reservations) {
+            int existingAppointmentTime = convertTimeToMinutes(r.getAppointment().getAppointmentTime());
+            int existingAppointmentDuration = r.getAppointment().getAppointmentDuration();
+            int newAppointmentTime = convertTimeToMinutes(appointment.getAppointmentTime());
+            int newAppointmentDuration = appointment.getAppointmentDuration();
+
+            if (!isAdminAvailable(existingAppointmentTime, existingAppointmentDuration,
+                    newAppointmentTime, newAppointmentDuration)) {
+                unavailableAdmins.add(r.getAppointment().getAdminId());
             }
         }
 
-        if (!unavailableInDates.isEmpty()) {
-            companyAdmins.removeAll(unavailableInDates);
+        return unavailableAdmins;
+    }
+
+    private Integer findAvailableAdmin(Appointment appointment, Integer companyId) {
+        List<Integer> companyAdmins = findCompanyAdmins(companyAdminRepository.findAll(), companyId);
+        List<Integer> companyAdminsCopy = new ArrayList<>(companyAdmins);
+        List<Reservation> reservations = reservationRepository.findAll();
+        List<Integer> unavailableAdmins = findUnavailableAdminsPerDate(appointment, reservations);
+
+        if (!unavailableAdmins.isEmpty()) {
+            companyAdmins.removeAll(unavailableAdmins);
         }
 
         if (companyAdmins.isEmpty()) {
-            for (Reservation r : reservations) {
-                int existingAppointmentTime = convertTimeToMinutes(r.getAppointment().getAppointmentTime());
-                int existingAppointmentDuration = r.getAppointment().getAppointmentDuration();
-                int newAppointmentTime = convertTimeToMinutes(appointment.getAppointmentTime());
-                if (existingAppointmentTime <= newAppointmentTime + appointment.getAppointmentDuration() &&
-                        newAppointmentTime <= existingAppointmentTime + existingAppointmentDuration) {
-                    unavailableInTimes.add(r.getAppointment().getAdminId());
-                }
-            }
+            unavailableAdmins.clear();
+            unavailableAdmins = findUnavailableAdminsPerTime(appointment, reservations);
         }
 
         companyAdmins.addAll(companyAdminsCopy);
 
-        if (!unavailableInTimes.isEmpty()) {
-            companyAdmins.removeAll(unavailableInTimes);
+        if (!unavailableAdmins.isEmpty()) {
+            companyAdmins.removeAll(unavailableAdmins);
         }
 
         if (companyAdmins.isEmpty()) {
@@ -145,6 +158,7 @@ public class AppointmentService {
         int minutes = Integer.parseInt(parts[1]);
         return hours * 60 + minutes;
     }
+
     public List<Appointment> findCompanyAppointments(Integer companyId, Integer userId) {
         Date currentDate = new Date();
         List<Appointment> appointments = appointmentRepository.findAll();
@@ -178,14 +192,40 @@ public class AppointmentService {
     private void removeAppointmentsWithPastDates(List<Appointment> appointments, Date currentDate) {
         appointments.removeIf(a -> a.getAppointmentDate().before(currentDate));
     }
-    public Appointment update(Appointment appointment)
-    {
+
+    public Appointment update(Appointment appointment) {
         appointment.setStatus(AppointmentStatus.RESERVED);
         return appointmentRepository.save(appointment);
     }
 
-    public Appointment save(Appointment appointment)
-    {
+    public Appointment save(Appointment appointment) {
         return appointmentRepository.save(appointment);
+    }
+
+    public List<Appointment> getCompanyAppointments (Integer adminId) {
+        List<Appointment> foundAppointments = new ArrayList<>();
+        Company company = companyAdminService.getCompanyForAdmin(adminId);
+        Date currentDate = new Date();
+
+        for (Appointment a : appointmentRepository.findAll()) {
+            if (company.getId().equals(companyAdminService.getCompanyForAdmin(a.getAdminId()).getId())
+                && !a.getAppointmentDate().before(currentDate)) {
+                foundAppointments.add(a);
+            }
+        }
+
+        return foundAppointments;
+    }
+
+    public List<Appointment> getCompanyAvailableAppointments (Integer adminId) {
+        List<Appointment> foundAppointments = new ArrayList<>();
+
+        for (Appointment a : getCompanyAppointments(adminId)) {
+            if (a.getStatus().equals(AppointmentStatus.FREE)) {
+                foundAppointments.add(a);
+            }
+        }
+
+        return foundAppointments;
     }
 }

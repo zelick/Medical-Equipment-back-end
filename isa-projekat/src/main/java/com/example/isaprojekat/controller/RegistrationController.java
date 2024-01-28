@@ -17,9 +17,9 @@ import java.io.IOException;
 @AllArgsConstructor
 @CrossOrigin(origins = "http://localhost:4200")
 public class RegistrationController {
-    private final RegistrationService registrationService;
     @Autowired
-    private QrCodeService qrCodeService;
+    private final RegistrationService registrationService;
+
     @PostMapping
     public String register(@RequestBody RegistrationRequest request) {
         return registrationService.register(request);

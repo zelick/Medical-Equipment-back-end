@@ -28,8 +28,6 @@ import java.util.UUID;
 public class UserService implements UserDetailsService {
     @Autowired
     private UserRepository userRepository;
-    @Autowired
-    private RoleService roleService;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final ConfirmationTokenService confirmationTokenService;
     public User findOne(Integer id) {
@@ -42,7 +40,6 @@ public class UserService implements UserDetailsService {
     public List<User> findAll() {
         return userRepository.findAll();
     }
-
     public Page<User> findAll(Pageable page) {
         return userRepository.findAll(page);
     }
@@ -59,6 +56,7 @@ public class UserService implements UserDetailsService {
         return userRepository.findByEmail(email)
                 .orElseThrow(()->new UsernameNotFoundException("User with email" + email +  "not found!"));
     }
+
     public String signUpUser(User user){
         boolean userExists = userRepository.
                 findByEmail(user.getEmail())
@@ -80,6 +78,7 @@ public class UserService implements UserDetailsService {
         confirmationTokenService.saveConfirmationToken(confirmationToken);
         return token;
     }
+
     public int enableAppUser(String email) {
         return userRepository.enableAppUser(email);
     }
@@ -92,6 +91,7 @@ public class UserService implements UserDetailsService {
         }
         return userRepository.save(user);
     }
+
     public boolean isUser(Integer userId){
         User loggedInUser = findOne(userId);
 
@@ -124,5 +124,4 @@ public class UserService implements UserDetailsService {
         } else {return false;}
         return true;
     }
-
 }

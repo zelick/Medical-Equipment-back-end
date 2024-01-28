@@ -24,9 +24,7 @@ import java.util.List;
 public class EquipmentController {
     @Autowired
     private EquipmentService equipmentService;
-    @Autowired
     private CompanyService companyService;
-    @Autowired
     private UserService userService;
 
     @GetMapping(value = "/getEquipmentForCompany/{id}")
@@ -35,7 +33,6 @@ public class EquipmentController {
         Company company = companyService.findOne(id);
         List<Equipment> equipment = equipmentService.findAllByCompanyId(company);
 
-        // convert students to DTOs
         List<EquipmentDTO> equipmentDTO = new ArrayList<>();
         for (Equipment e : equipment) {
             equipmentDTO.add(new EquipmentDTO(e));
@@ -59,7 +56,6 @@ public class EquipmentController {
     @GetMapping(value = "/all")
     @CrossOrigin(origins = "http://localhost:4200")
     public ResponseEntity<List<EquipmentDTO>> getAllCompanies() {
-
         List<Equipment> equipments = equipmentService.findAll();
 
         List<EquipmentDTO> equipmentDTOS = new ArrayList<>();
@@ -74,21 +70,18 @@ public class EquipmentController {
     @CrossOrigin(origins = "http://localhost:4200")
     public ResponseEntity<List<EquipmentDTO>> searchEquipmentByName(
             @RequestParam(required = false) String searchName
-    ){
-        List<Equipment> foundEquipments = new ArrayList<>();
-
-        for (Equipment e : equipmentService.findAll()) {
-            if (searchName == null || e.getName().toLowerCase().contains(searchName.toLowerCase())) {
-                foundEquipments.add(e);
-            }
-        }
-
+    )
+    {
+        List<Equipment> foundEquipments = equipmentService.searchEquipmentByName(searchName);
         List<EquipmentDTO> equipmentDTO = new ArrayList<>();
+
         for (Equipment e : foundEquipments) {
             equipmentDTO.add(new EquipmentDTO(e));
         }
+
         return new ResponseEntity<>(equipmentDTO, HttpStatus.OK);
     }
+
     @PutMapping(value = "/update/{id}")
     @CrossOrigin(origins = "http://localhost:4200")
     public ResponseEntity<EquipmentDTO> updateEquipment(@PathVariable Integer id, @RequestBody EquipmentDTO equipmentDTO, @RequestParam(name = "id", required = false) Integer userId) {
@@ -103,17 +96,4 @@ public class EquipmentController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
-    /*@GetMapping(value = "/getAllEquipmentWithCompanies")
-    @CrossOrigin(origins = "http://localhost:4200")
-    public List<EquipmentDTO> getAllEquipmentWithCompanies() {
-        List<Equipment> equipments = equipmentService.getAllEquipmentWithCompanies();
-        List<EquipmentDTO> equipmentDTOs = new ArrayList<>();
-
-        for (Equipment equipment : equipments) {
-            equipmentDTOs.add(new EquipmentDTO(equipment));
-        }
-        return equipmentDTOs;
-    }
-    }*/
 }

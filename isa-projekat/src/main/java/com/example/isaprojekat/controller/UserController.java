@@ -57,30 +57,20 @@ public class UserController {
 
     @GetMapping
     public ResponseEntity<List<UserDTO>> getUsersPage(Pageable page) {
-
-        // page object holds data about pagination and sorting
-        // the object is created based on the url parameters "page", "size" and "sort"
         Page<User> users = userService.findAll(page);
-
-        // convert students to DTOs
         List<UserDTO> usersDTO = new ArrayList<>();
         for (User s : users) {
             usersDTO.add(new UserDTO(s));
         }
-
         return new ResponseEntity<>(usersDTO, HttpStatus.OK);
     }
 
     @GetMapping(value = "/{id}")
     public ResponseEntity<UserDTO> getUser(@PathVariable Integer id) {
-
         User user = userService.findOne(id);
-
-        // studen must exist
         if (user == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-
         return new ResponseEntity<>(new UserDTO(user), HttpStatus.OK);
     }
 
@@ -105,22 +95,6 @@ public class UserController {
         return new ResponseEntity<>(new UserDTO(user), HttpStatus.OK);
     }
 
-    /*@PutMapping(value= "/resetPenaltyPoints")
-    @CrossOrigin(origins = "http://localhost:4200")
-    public ResponseEntity<String> resetPenaltyPoints (@RequestBody User user) {
-        User exactUser = userService.findOneByEmail(user.getEmail());
-
-        if (exactUser == null) {
-            //return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
-        }
-        exactUser.setPenaltyPoints(0.0);
-
-        userService.save(exactUser);
-
-        //return new ResponseEntity<>(new UserDTO(exactUser), HttpStatus.OK);
-    }
-     */
-
     @PutMapping(value= "/updateUser/{username}")
     public ResponseEntity<UserDTO> updateUser (@PathVariable String username, @RequestBody User updatedUser) {
         User exactUser = userService.findOneByEmail(username);
@@ -141,20 +115,6 @@ public class UserController {
         return new ResponseEntity<>(new UserDTO(exactUser), HttpStatus.OK);
     }
 
-    /*
-    @GetMapping(value= "/validatePassword/{newPassword}/{username}")
-    public boolean validateUsersPassword(@PathVariable String newPassword, @PathVariable String username) {
-        User exactUser = userService.findOneByEmail(username);
-
-        if (exactUser.getPassword().equals(newPassword)) {
-            return true;
-        }
-        else {
-            return false;
-        }
-    }
-    */
-
     @PostMapping(consumes = "application/json")
     public ResponseEntity<UserDTO> saveUser(@RequestBody UserDTO usersDTO) {
 
@@ -167,8 +127,6 @@ public class UserController {
 
     @PutMapping(consumes = "application/json")
     public ResponseEntity<UserDTO> updateUser(@RequestBody UserDTO userDTO) {
-
-        // a student must exist
         User user = userService.findOne(userDTO.getId());
 
         if (user == null) {
@@ -205,8 +163,6 @@ public class UserController {
         }
         return new ResponseEntity<>(usersDTO, HttpStatus.OK);
     }
-
-    //change password
 
     @GetMapping(value= "/updateUsersPassword/{password}/{userId}")
     @CrossOrigin(origins = "http://localhost:4200")

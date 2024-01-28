@@ -1,7 +1,6 @@
 package com.example.isaprojekat.controller;
 
 import com.example.isaprojekat.dto.AppointmentDTO;
-import com.example.isaprojekat.enums.UserRole;
 import com.example.isaprojekat.model.*;
 import com.example.isaprojekat.service.*;
 import lombok.AllArgsConstructor;
@@ -23,8 +22,6 @@ public class AppointmentController {
     @Autowired
     private AppointmentService appointmentService;
     private UserService userService;
-    private CompanyAdminService companyAdminService;
-    private ReservationService reservationService;
 
     @GetMapping(value = "companyAppointments/{companyId}")
     @CrossOrigin(origins = "http://localhost:4200")
@@ -56,7 +53,6 @@ public class AppointmentController {
         }
     }
 
-
     @GetMapping(value = "getById/{id}")
     @CrossOrigin(origins = "http://localhost:4200")
     public ResponseEntity<AppointmentDTO> getCompany(@PathVariable Integer id) {
@@ -67,10 +63,7 @@ public class AppointmentController {
     @GetMapping(value = "/all")
     @CrossOrigin(origins = "http://localhost:4200")
     public ResponseEntity<List<AppointmentDTO>> getAllAppointments() {
-
         List<Appointment> appointments = appointmentService.findAll();
-
-        // convert comapnies to DTOs
         List<AppointmentDTO> appointmentDTOS = new ArrayList<>();
         for (Appointment a : appointments) {
             appointmentDTOS.add(new AppointmentDTO(a));
@@ -109,36 +102,11 @@ public class AppointmentController {
     @GetMapping(value = "/companyAvailableAppointments/{admin_id}")
     @CrossOrigin(origins = "http://localhost:4200")
     public List<AppointmentDTO> getCompanyAvailableAppointments(@PathVariable Integer admin_id) {
-        Company company = companyAdminService.getCompanyForAdmin(admin_id);
-        Date currentDate = new Date();
-        List<Appointment> foundAppointments = new ArrayList<>();
+        List<Appointment> foundAppointments = appointmentService.getCompanyAvailableAppointments(admin_id);
         List<AppointmentDTO> foundAppointmentsDTO = new ArrayList<>();
-        List<Appointment> appointments = appointmentService.findAll();
-        List<Reservation> reservations = reservationService.findAll();
-
-        for (Appointment a : appointments) {
-            if (company.getId().equals(companyAdminService.getCompanyForAdmin(a.getAdminId()).getId())) {
-                foundAppointments.add(a);
-            }
-        }
-
-        List<Appointment> appointmentsToRemove = new ArrayList<>(foundAppointments);
-
-        for (Reservation r : reservations) {
-            for (Appointment a : foundAppointments) {
-                if (a.getId().equals(r.getAppointment().getId())) {
-                    appointmentsToRemove.remove(a);
-                }
-                if(a.getAppointmentDate().before(currentDate)){
-                    appointmentsToRemove.remove(a);
-                }
-            }
-        }
-
-        for (Appointment a : appointmentsToRemove) {
+        for (Appointment a : foundAppointments) {
             foundAppointmentsDTO.add(new AppointmentDTO(a));
         }
-
         return foundAppointmentsDTO;
     }
 

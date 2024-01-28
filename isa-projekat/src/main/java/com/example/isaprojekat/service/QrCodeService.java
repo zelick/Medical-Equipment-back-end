@@ -12,11 +12,11 @@ import com.google.zxing.qrcode.QRCodeWriter;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-//dodala
 import com.google.zxing.*;
 import com.google.zxing.common.HybridBinarizer;
 import com.google.zxing.client.j2se.BufferedImageLuminanceSource;
 import javax.imageio.ImageIO;
+import javax.transaction.Transactional;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -29,6 +29,7 @@ import java.util.List;
 
 @Service
 @AllArgsConstructor
+@Transactional
 public class QrCodeService {
     @Autowired
     private ReservationRepository reservationRepository;

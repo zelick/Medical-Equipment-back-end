@@ -23,17 +23,19 @@ import java.util.Set;
 public class EquipmentService {
     @Autowired
     private EquipmentRepository equipmentRepository;
+
     public Equipment findOne(Integer id) {
         return equipmentRepository.findById(id).orElseGet(null);
     }
-    @Transactional
+
     public Equipment save(Equipment equipment) { return equipmentRepository.save(equipment); }
+
     public Equipment GetOne(Integer id){return equipmentRepository.getById(id);}
+
     public List<Equipment> findAllByCompanyId(Company company){
-        List<Equipment> allEquipment = findAll();
         List<Equipment> foundEquipment = new ArrayList<>();
 
-        for (Equipment e : allEquipment) {
+        for (Equipment e : findAll()) {
             if (e.getCompany().getId().equals(company.getId())) {
                 foundEquipment.add(e);
             }
@@ -41,13 +43,9 @@ public class EquipmentService {
 
         return foundEquipment;
     }
-    //public List<Equipment> findAllByCompanies_Id(Integer id){return equipmentRepository.findAllByCompanyId(id);}
     public List<Equipment> findAll() {
         return equipmentRepository.findAll();
     }
-    /*public List<Equipment> getAllEquipmentWithCompanies() {
-        return equipmentRepository.findAllWithCompanies();
-    }*/
 
     public Equipment updateEquipment(Integer id, EquipmentDTO equipmentDTO) {
         Equipment existingEquipment = findOne(id);
@@ -84,5 +82,15 @@ public class EquipmentService {
         }
     }
 
+    public List<Equipment> searchEquipmentByName(String name) {
+        List<Equipment> foundEquipments = new ArrayList<>();
 
+        for (Equipment e : equipmentRepository.findAll()) {
+            if (name == null || e.getName().toLowerCase().contains(name.toLowerCase())) {
+                foundEquipments.add(e);
+            }
+        }
+
+        return foundEquipments;
+    }
 }

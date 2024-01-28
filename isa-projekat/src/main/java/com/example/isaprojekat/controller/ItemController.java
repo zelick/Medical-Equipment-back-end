@@ -25,22 +25,20 @@ import java.util.List;
 public class ItemController {
     @Autowired
     private ItemService itemService;
-    @Autowired
     private UserService userService;
 
     @PostMapping(value = "/create")
     @CrossOrigin(origins = "http://localhost:4200")
-    public ResponseEntity<ItemDTO> createItem(@RequestBody ItemDTO itemDTO) {
-        //@RequestParam(name = "id", required = false) Integer userId
-        //User loggedInUser = userService.findOne(userId);
-/*
+    public ResponseEntity<ItemDTO> createItem(@RequestBody ItemDTO itemDTO,
+                                              @RequestParam(name = "id", required = false) Integer userId) {
+
+        User loggedInUser = userService.findOne(userId);
         if(loggedInUser!=null) {
             if (loggedInUser.getUserRole() != UserRole.USER) {
                 return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
             }
         }
 
- */
         try {
             Item createdItem = itemService.createItem(itemDTO);
             return new ResponseEntity<>(new ItemDTO(createdItem), HttpStatus.CREATED);
@@ -53,9 +51,6 @@ public class ItemController {
     @CrossOrigin(origins = "http://localhost:4200")
     public ResponseEntity<ItemDTO> updateItem(@PathVariable Integer id, @RequestBody ItemDTO itemDTO)
     {
-        Item updatedItem = itemService.updateItem(id, itemDTO);
-        return new ResponseEntity<>(new ItemDTO(updatedItem), HttpStatus.OK);
-        /*
         try {
             Item updatedItem = itemService.updateItem(id, itemDTO);
             return new ResponseEntity<>(new ItemDTO(updatedItem), HttpStatus.OK);
@@ -63,16 +58,13 @@ public class ItemController {
             e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
-         */
     }
+
     @GetMapping(value = "/byReservation/{id}")
     public ResponseEntity<List<ItemDTO>> getByReservation(@PathVariable Integer id) {
-
-        //User user = userService.findOneByEmail(username);
         List<Item> items = itemService.getItemsByReservationId(id);
         List<ItemDTO> itemsDTO = new ArrayList<>();
-        for (Item r: items
-        ) {
+        for (Item r: items) {
             ItemDTO itemDTO = new ItemDTO(r);
             itemsDTO.add(itemDTO);
         }

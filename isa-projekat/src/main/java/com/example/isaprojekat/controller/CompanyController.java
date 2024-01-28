@@ -1,12 +1,7 @@
 package com.example.isaprojekat.controller;
 
 import com.example.isaprojekat.dto.CompanyDTO;
-import com.example.isaprojekat.dto.EquipmentDTO;
-import com.example.isaprojekat.dto.UserDTO;
-import com.example.isaprojekat.enums.UserRole;
 import com.example.isaprojekat.model.Company;
-import com.example.isaprojekat.model.Equipment;
-import com.example.isaprojekat.model.User;
 import com.example.isaprojekat.service.CompanyService;
 import com.example.isaprojekat.service.UserService;
 import lombok.AllArgsConstructor;
@@ -18,7 +13,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
 
-
 @RestController
 @RequestMapping(value = "api/companies")
 @AllArgsConstructor
@@ -26,39 +20,31 @@ import java.util.List;
 public class CompanyController {
     @Autowired
     private CompanyService companyService;
-    @Autowired
     private UserService userService;
 
     @GetMapping(value = "getById/{id}")
     @CrossOrigin(origins = "http://localhost:4200")
     public ResponseEntity<CompanyDTO> getCompany(@PathVariable Integer id) {
-
         Company company = companyService.findOne(id);
-        System.out.println("Kompanija:");
-        System.out.println(company);
-
         if (company == null) {
-            //return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-
         return new ResponseEntity<>(new CompanyDTO(company), HttpStatus.OK);
     }
 
     @GetMapping(value = "removeFrom/{companyId}/{equipmentId}")
     @CrossOrigin(origins = "http://localhost:4200")
     public ResponseEntity<CompanyDTO> removeEqFromCom(@PathVariable Integer companyId,
-                                                      @PathVariable Integer equipmentId
-            , @RequestParam(name = "id", required = false) Integer userId) {
+                                                      @PathVariable Integer equipmentId,
+                                                      @RequestParam(name = "id", required = false) Integer userId) {
         if(!userService.isCompanyAdmin(userId)){
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
         Company company = companyService.removeEquipmentFromCompany(companyId, equipmentId);
         companyService.updateAverageGrade(companyId);
-        System.out.println("Kompanija:");
-        System.out.println(company);
 
         if (company == null) {
-            //return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
         return new ResponseEntity<>(new CompanyDTO(company), HttpStatus.OK);
@@ -74,11 +60,9 @@ public class CompanyController {
         }
         Company company = companyService.addEquipmentToCompany(companyId, equipmentId);
         companyService.updateAverageGrade(companyId);
-        System.out.println("Kompanija:");
-        System.out.println(company);
 
         if (company == null) {
-            //return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
         return new ResponseEntity<>(new CompanyDTO(company), HttpStatus.OK);
@@ -87,11 +71,9 @@ public class CompanyController {
     @GetMapping(value = "/all")
     @CrossOrigin(origins = "http://localhost:4200")
     public ResponseEntity<List<CompanyDTO>> getAllCompanies() {
-
         List<Company> companies = companyService.findAll();
-
-        // convert comapnies to DTOs
         List<CompanyDTO> companyDTO = new ArrayList<>();
+
         for (Company s : companies) {
             companyDTO.add(new CompanyDTO(s));
         }
@@ -128,10 +110,10 @@ public class CompanyController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
     @GetMapping(value = "/getForAdmin/{id}")
     @CrossOrigin(origins = "http://localhost:4200")
     public ResponseEntity<CompanyDTO> getCompanyByAdminId(@PathVariable Integer id){
-        System.out.println("USAO JE U KONTROLER KOMPANIJE");
         try {
             Company company = companyService.findByAdminId(id);
             CompanyDTO companyDTO = new CompanyDTO(company);
@@ -141,7 +123,6 @@ public class CompanyController {
         }
     }
 
-
     @GetMapping(value = "/search")
     @CrossOrigin(origins = "http://localhost:4200")
     public ResponseEntity<List<CompanyDTO>> searchCompany(
@@ -149,22 +130,13 @@ public class CompanyController {
             @RequestParam(required = false) String searchLocation
     )
     {
-        List<Company> foundCompanies = new ArrayList<>();
-
-        for (Company c : companyService.findAll()) {
-            if ((searchName == null || c.getName().toLowerCase().contains(searchName.toLowerCase())) &&
-                    (searchLocation == null || c.getAddress().toLowerCase().contains(searchLocation.toLowerCase()))) {
-                foundCompanies.add(c);
-            }
-        }
-
+        List<Company> foundCompanies = companyService.searchCompany(searchName, searchLocation);
         List<CompanyDTO> companyDTO = new ArrayList<>();
+
         for (Company c : foundCompanies) {
             companyDTO.add(new CompanyDTO(c));
         }
 
         return new ResponseEntity<>(companyDTO, HttpStatus.OK);
     }
-
-
 }

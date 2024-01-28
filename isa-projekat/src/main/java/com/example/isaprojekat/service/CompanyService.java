@@ -27,10 +27,11 @@ public class CompanyService {
     public Company findOne(Integer id) {
         return companyRepository.findById(id).orElseGet(null);
     }
+
     public List<Company> findAll() {
         return companyRepository.findAll();
     }
-    @Transactional
+
     public Company save(Company company) { return companyRepository.save(company); }
 
     public void updateAverageGrade(Integer companyId) {
@@ -58,7 +59,6 @@ public class CompanyService {
 
         companyRepository.save(existingCompany);
     }
-
 
     public Company updateCompany(Integer id, CompanyDTO companyDTO) {
         Company existingCompany = findOne(id);
@@ -123,7 +123,6 @@ public class CompanyService {
     }
 
     public Company createCompany(CompanyDTO companyDTO) {
-
         Company newCompany = new Company();
         newCompany.setName(companyDTO.getName());
         newCompany.setAddress(companyDTO.getAddress());
@@ -139,4 +138,16 @@ public class CompanyService {
                 .orElseThrow(() -> new EntityNotFoundException("Company not found for adminId: " + adminId));
     }
 
+    public List<Company> searchCompany(String searchName, String searchLocation) {
+        List<Company> foundCompanies = new ArrayList<>();
+
+        for (Company c : companyRepository.findAll()) {
+            if ((searchName == null || c.getName().toLowerCase().contains(searchName.toLowerCase())) &&
+                    (searchLocation == null || c.getAddress().toLowerCase().contains(searchLocation.toLowerCase()))) {
+                foundCompanies.add(c);
+            }
+        }
+
+        return foundCompanies;
+    }
 }

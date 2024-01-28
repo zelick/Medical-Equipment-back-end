@@ -48,7 +48,6 @@ public class Appointment {
         this.id = id;
     }
 
-
     public Integer getAdminId() {
         return adminId;
     }
