@@ -96,13 +96,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/reservations/getAllTakenUsersReservations/**").permitAll()
                 .antMatchers("/api/reservations/setPrice").permitAll()
                 .antMatchers("/custom-api-docs-path/**").permitAll()
+                .antMatchers("/swagger-ui/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .cors()
                 .and()
                 .csrf().disable();
-
-
     }
 
     @Override
@@ -118,9 +117,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         provider.setUserDetailsService(userService);
         return provider;
     }
-
-    //
-
+    
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
@@ -133,4 +130,3 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         return source;
     }
 }
-
