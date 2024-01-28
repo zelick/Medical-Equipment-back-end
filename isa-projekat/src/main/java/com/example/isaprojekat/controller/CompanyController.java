@@ -2,6 +2,9 @@ package com.example.isaprojekat.controller;
 
 import com.example.isaprojekat.dto.CompanyDTO;
 import com.example.isaprojekat.model.Company;
+import com.example.isaprojekat.model.Equipment;
+import com.example.isaprojekat.model.User;
+import com.example.isaprojekat.service.CompanyAdminService;
 import com.example.isaprojekat.service.CompanyService;
 import com.example.isaprojekat.service.UserService;
 import lombok.AllArgsConstructor;
@@ -21,6 +24,7 @@ public class CompanyController {
     @Autowired
     private CompanyService companyService;
     private UserService userService;
+    private CompanyAdminService companyAdminService;
 
     @GetMapping(value = "getById/{id}")
     @CrossOrigin(origins = "http://localhost:4200")
@@ -115,7 +119,7 @@ public class CompanyController {
     @CrossOrigin(origins = "http://localhost:4200")
     public ResponseEntity<CompanyDTO> getCompanyByAdminId(@PathVariable Integer id){
         try {
-            Company company = companyService.findByAdminId(id);
+            Company company = companyAdminService.getCompanyForAdmin(id);
             CompanyDTO companyDTO = new CompanyDTO(company);
             return new ResponseEntity<>(companyDTO, HttpStatus.OK);
         } catch (Exception e) {

@@ -34,8 +34,7 @@ public class RegistrationService {
         || request.getCity().isEmpty() ||   // Add new fields to the validation
                 request.getCountry().isEmpty() ||
                 request.getPhoneNumber().isEmpty() ||
-                request.getOccupation().isEmpty() ||
-                request.getCompanyInfo().isEmpty()){
+                request.getOccupation().isEmpty()){
             throw new IllegalStateException("All fields must be filled in!");
         }
         String token = userService.signUpUser(
@@ -48,7 +47,6 @@ public class RegistrationService {
                 request.getCountry(),
                 request.getPhoneNumber(),
                 request.getOccupation(),
-                request.getCompanyInfo(),
                         false)
         );
         String link = "http://localhost:8080/api/registration/confirm?token=" + token;
@@ -153,23 +151,23 @@ public class RegistrationService {
                 || request.getCity().isEmpty() ||   // Add new fields to the validation
                 request.getCountry().isEmpty() ||
                 request.getPhoneNumber().isEmpty() ||
-                request.getOccupation().isEmpty() ||
-                request.getCompanyInfo().isEmpty()){
+                request.getOccupation().isEmpty()){
             throw new IllegalStateException("All fields must be filled in!");
         }
-        User newUser = userService.create(
-                new User(request.getFirstName(),
-                        request.getLastName(),
-                        request.getEmail(),
-                        request.getPassword(),
-                        UserRole.SYSTEM_ADMIN,
-                        request.getCity(),
-                        request.getCountry(),
-                        request.getPhoneNumber(),
-                        request.getOccupation(),
-                        request.getCompanyInfo(),
-                        false)
-        );
-        return new UserDTO(newUser);
+
+        User newSysAdmin = new User(request.getFirstName(),
+                request.getLastName(),
+                request.getEmail(),
+                request.getPassword(),
+                false,
+                true,
+                UserRole.SYSTEM_ADMIN,
+                request.getCity(),
+                request.getCountry(),
+                request.getPhoneNumber(),
+                request.getOccupation(),
+                false);
+
+        return new UserDTO(userService.create(newSysAdmin));
     }
 }

@@ -19,9 +19,6 @@ public class Company {
     private String description;
     @Column(name = "averageGrade", nullable = true)
     private double averageGrade;
-    @Column(name = "adminId", nullable = true)
-    private Integer adminId;
-    //slobodni termini za preuzimanje opreme - dodati
 
     @OneToMany(mappedBy = "company", cascade = CascadeType.PERSIST, orphanRemoval = false)
     @JsonIgnore
@@ -38,13 +35,12 @@ public class Company {
     //private Integer version;
     public Company() {
     }
-    public Company(String name, String address, String description, double averageGrade, Integer adminId,
+    public Company(String name, String address, String description, double averageGrade,
                    String workTimeBegin, String workTimeEnd) {
         this.name = name;
         this.address = address;
         this.description = description;
         this.averageGrade = averageGrade;
-        this.adminId = adminId;
         this.workTimeBegin = workTimeBegin;
         this.workTimeEnd = workTimeEnd;
     }
@@ -107,14 +103,6 @@ public class Company {
         this.equipments.remove(equipment);
         equipment.setCompany(null);
         recalculateAverageGrade();
-    }
-
-    public Integer getAdminId() {
-        return adminId;
-    }
-
-    public void setAdminId(Integer adminId) {
-        this.adminId = adminId;
     }
 
     private void recalculateAverageGrade() {

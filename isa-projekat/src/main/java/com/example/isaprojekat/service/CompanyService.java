@@ -127,15 +127,11 @@ public class CompanyService {
         newCompany.setName(companyDTO.getName());
         newCompany.setAddress(companyDTO.getAddress());
         newCompany.setDescription(companyDTO.getDescription());
-        newCompany.setAverageGrade(5.0);
-        newCompany.setEquipments(null);
+        newCompany.setAverageGrade(0.0);
+        //newCompany.setEquipments(null);
+        newCompany.setWorkTimeBegin(companyDTO.getWorkTimeBegin());
+        newCompany.setWorkTimeEnd(companyDTO.getWorkTimeEnd());
         return companyRepository.save(newCompany);
-    }
-
-    public Company findByAdminId(Integer adminId) {
-        System.out.println("usao je u servis kompanije");
-        return companyRepository.findByAdminId(adminId)
-                .orElseThrow(() -> new EntityNotFoundException("Company not found for adminId: " + adminId));
     }
 
     public List<Company> searchCompany(String searchName, String searchLocation) {

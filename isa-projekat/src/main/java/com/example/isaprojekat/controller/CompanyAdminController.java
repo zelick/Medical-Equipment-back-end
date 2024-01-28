@@ -23,7 +23,6 @@ public class CompanyAdminController {
     @Autowired
     private CompanyAdminService companyAdminService;
     private UserService userService;
-
     @GetMapping("/getCompanyForAdmin/{id}")
     @CrossOrigin(origins = "http://localhost:4200")
     public ResponseEntity<CompanyDTO> getCompanyForAdmin(@PathVariable Integer id){

@@ -1,5 +1,6 @@
 package com.example.isaprojekat.controller;
 
+import com.example.isaprojekat.dto.UserDTO;
 import com.example.isaprojekat.model.RegistrationRequest;
 import com.example.isaprojekat.service.QrCodeService;
 import com.example.isaprojekat.service.RegistrationService;
@@ -31,7 +32,7 @@ public class RegistrationController {
 
     @PostMapping(value = "/registerSystemAdmin")
     @CrossOrigin(origins = "http://localhost:4200")
-    public String registerSystemAdmin(@RequestBody RegistrationRequest request) {
-        return registrationService.register(request);
+    public UserDTO registerSystemAdmin(@RequestBody RegistrationRequest request) {
+        return registrationService.registerSystemAdmin(request);
     }
 }

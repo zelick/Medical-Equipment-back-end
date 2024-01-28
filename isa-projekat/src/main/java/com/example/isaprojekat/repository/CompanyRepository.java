@@ -12,5 +12,6 @@ import java.util.Optional;
 @Repository
 //@Transactional(readOnly = true)
 public interface CompanyRepository extends JpaRepository<Company, Integer> {
-    Optional<Company> findByAdminId(Integer adminId);
+   // Optional<Company> findByAdminId(Integer adminId);
+   Company save(Company company );
 }

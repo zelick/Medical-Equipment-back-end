@@ -4,6 +4,7 @@ import com.example.isaprojekat.dto.EquipmentDTO;
 import com.example.isaprojekat.enums.UserRole;
 import com.example.isaprojekat.model.Company;
 import com.example.isaprojekat.model.Equipment;
+import com.example.isaprojekat.service.CompanyAdminService;
 import com.example.isaprojekat.model.User;
 import com.example.isaprojekat.service.CompanyService;
 import com.example.isaprojekat.service.EquipmentService;
@@ -25,6 +26,7 @@ public class EquipmentController {
     @Autowired
     private EquipmentService equipmentService;
     private CompanyService companyService;
+    private CompanyAdminService companyAdminService;
     private UserService userService;
 
     @GetMapping(value = "/getEquipmentForCompany/{id}")
@@ -96,4 +98,17 @@ public class EquipmentController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    @GetMapping(value = "/getAllEquipmentForCompany/{id}")
+    @CrossOrigin(origins = "http://localhost:4200")
+    public List<EquipmentDTO> getAllEquipmentWithCompanies(@PathVariable Integer id){
+        Company adminCompany = companyAdminService.getCompanyForAdmin(id);
+        List<Equipment> equipments = equipmentService.findAllByCompanyId(adminCompany);
+        List<EquipmentDTO> equipmentDTOs = new ArrayList<>();
+        for (Equipment equipment : equipments) {
+            equipmentDTOs.add(new EquipmentDTO(equipment));
+        }
+        return equipmentDTOs;
+    }
+
 }

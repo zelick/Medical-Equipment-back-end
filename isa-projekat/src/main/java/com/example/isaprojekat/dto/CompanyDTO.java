@@ -13,7 +13,6 @@ public class CompanyDTO {
     private String address;
     private String description;
     private double averageGrade;
-    private Integer adminId;
 
     private List<EquipmentDTO> equipments;
 
@@ -30,7 +29,6 @@ public class CompanyDTO {
         this.address = company.getAddress();
         this.description = company.getDescription();
         this.averageGrade = company.getAverageGrade();
-        this.adminId = company.getAdminId();
 
         // Mapiraj opremu u DTO format
         this.equipments = company.getEquipments()
@@ -60,10 +58,6 @@ public class CompanyDTO {
 
     public double getAverageGrade() {
         return averageGrade;
-    }
-
-    public Integer getAdminId() {
-        return adminId;
     }
 
     public List<EquipmentDTO> getEquipments() {

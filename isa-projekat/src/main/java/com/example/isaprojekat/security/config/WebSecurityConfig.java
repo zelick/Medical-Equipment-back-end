@@ -95,6 +95,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/reservations/getAllUsersReservations/**").permitAll()
                 .antMatchers("/api/reservations/getAllTakenUsersReservations/**").permitAll()
                 .antMatchers("/api/reservations/setPrice").permitAll()
+                .antMatchers("/api/equipment/getAllEquipmentForCompany/**").permitAll()
                 .antMatchers("/custom-api-docs-path/**").permitAll()
                 .antMatchers("/swagger-ui/**").permitAll()
                 .anyRequest().authenticated()

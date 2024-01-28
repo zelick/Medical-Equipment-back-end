@@ -35,7 +35,6 @@ public class UserDTO {
                 user.getCountry(),
                 user.getPhoneNumber(),
                 user.getOccupation(),
-                user.getCompanyInfo(),
                 user.getPassword(),
                 user.getEnabled(),
                 user.getEmail(),
@@ -45,7 +44,7 @@ public class UserDTO {
     }
     
     public UserDTO(Integer id, String firstName, String lastName, Double penaltyPoints, UserRole userRole,
-                   String city, String country, String phoneNumber, String occupation, String companyInfo,
+                   String city, String country, String phoneNumber, String occupation,
                    String password, boolean isEnabled, String email,boolean isUserFirstLogged,boolean isLocked) {
         this.id = id;
         this.firstName = firstName;
@@ -57,7 +56,6 @@ public class UserDTO {
         this.phoneNumber = phoneNumber;
         this.occupation = occupation;
         this.email=email;
-        this.companyInfo = companyInfo;
         this.password= password;
         this.isEnabled=isEnabled;
         this.isUserFirstLogged = isUserFirstLogged;
