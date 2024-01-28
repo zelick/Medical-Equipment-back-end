@@ -16,7 +16,6 @@ public class UserDTO {
     private String country;
     private String phoneNumber;
     private String occupation;
-    private String companyInfo;
     private Boolean isUserFirstLogged;
     private Boolean isLocked;
 
@@ -109,9 +108,6 @@ public class UserDTO {
         return occupation;
     }
 
-    public String getCompanyInfo() {
-        return companyInfo;
-    }
 
     //seteri:
     public void setId(Integer id) {
@@ -152,10 +148,6 @@ public class UserDTO {
 
     public void setOccupation(String occupation) {
         this.occupation = occupation;
-    }
-
-    public void setCompanyInfo(String companyInfo) {
-        this.companyInfo = companyInfo;
     }
 
     public String getPassword() {
