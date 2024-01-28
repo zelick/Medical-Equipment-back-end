@@ -30,7 +30,7 @@ public class CompanyService {
     public List<Company> findAll() {
         return companyRepository.findAll();
     }
-    @Transactional
+    //@Transactional
     public Company save(Company company) { return companyRepository.save(company); }
 
     public void updateAverageGrade(Integer companyId) {
@@ -128,8 +128,10 @@ public class CompanyService {
         newCompany.setName(companyDTO.getName());
         newCompany.setAddress(companyDTO.getAddress());
         newCompany.setDescription(companyDTO.getDescription());
-        newCompany.setAverageGrade(5.0);
-        newCompany.setEquipments(null);
+        newCompany.setAverageGrade(0.0);
+        //newCompany.setEquipments(null);
+        newCompany.setWorkTimeBegin(companyDTO.getWorkTimeBegin());
+        newCompany.setWorkTimeEnd(companyDTO.getWorkTimeEnd());
         return companyRepository.save(newCompany);
     }
 

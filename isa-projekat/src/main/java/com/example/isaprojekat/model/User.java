@@ -59,9 +59,6 @@ public class User {
     @Column(name = "occupation", nullable = false)
     private String occupation;
 
-    @Column(name = "companyInfo", nullable = false)
-    private String companyInfo;
-
     @Column(name = "is_user_first_logged", nullable = true)
     private Boolean isUserFirstLogged;
 
@@ -74,7 +71,7 @@ public class User {
                 String country,
                 String phoneNumber,
                 String occupation,
-                String companyInfo, boolean isUserFirstLogged){
+                boolean isUserFirstLogged){
         super();
         this.id=id;
         this.firstName=firstName;
@@ -89,7 +86,6 @@ public class User {
         this.country = country;
         this.phoneNumber = phoneNumber;
         this.occupation = occupation;
-        this.companyInfo = companyInfo;
         this.isUserFirstLogged = isUserFirstLogged;
     }
 
@@ -104,7 +100,6 @@ public class User {
                 String country,
                 String phoneNumber,
                 String occupation,
-                String companyInfo,
                 Boolean isUserFirstLogged) {
         this.firstName = firstName;
         this.lastName = lastName;
@@ -117,7 +112,6 @@ public class User {
         this.country = country;
         this.phoneNumber = phoneNumber;
         this.occupation = occupation;
-        this.companyInfo = companyInfo;
         this.isUserFirstLogged = isUserFirstLogged;
     }
     public String getCity() {
@@ -152,13 +146,6 @@ public class User {
         this.occupation = occupation;
     }
 
-    public String getCompanyInfo() {
-        return companyInfo;
-    }
-
-    public void setCompanyInfo(String companyInfo) {
-        this.companyInfo = companyInfo;
-    }
     public String getUsername(){
         return email;
     }
@@ -175,7 +162,6 @@ public class User {
                 String country,
                 String phoneNumber,
                 String occupation,
-                String companyInfo,
                 boolean isUserFirstLogged) {
         this.firstName = firstName;
         this.lastName = lastName;
@@ -186,7 +172,6 @@ public class User {
         this.country = country;
         this.phoneNumber = phoneNumber;
         this.occupation = occupation;
-        this.companyInfo = companyInfo;
         this.isUserFirstLogged = isUserFirstLogged;
     }
     public User(String firstName,
@@ -197,8 +182,7 @@ public class User {
                 String city,
                 String country,
                 String phoneNumber,
-                String occupation,
-                String companyInfo) {
+                String occupation) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
@@ -208,7 +192,6 @@ public class User {
         this.country = country;
         this.phoneNumber = phoneNumber;
         this.occupation = occupation;
-        this.companyInfo = companyInfo;
     }
 
     /*
