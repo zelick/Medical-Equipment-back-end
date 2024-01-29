@@ -17,10 +17,7 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.text.ParseException;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @AllArgsConstructor
@@ -31,7 +28,8 @@ public class ReservationService {
     private UserRepository userRepository;
     private AppointmentService appointmentService;
     private EquipmentService equipmentService;
-    private CompanyAdminService companyAdminService;
+    private QrCodeService qrCodeService;
+    private ItemService itemService;
 
     public List<Reservation> findAll() {
         return reservationRepository.findAll();
@@ -42,20 +40,23 @@ public class ReservationService {
         newReservation.setStatus(ReservationStatus.PENDING);
         newReservation.setAppointment(reservationDTO.getAppointment());
         newReservation.setUser(reservationDTO.getUser());
-        newReservation.setTotalPrice(reservationDTO.getTotalPrice());
+        newReservation.setTotalPrice(calculateReservationPrice(reservationDTO.getItems()));
 
-        return reservationRepository.save(newReservation);
+        newReservation = reservationRepository.save(newReservation);
+
+        itemService.createReservationItem(reservationDTO.getItems(), newReservation);
+
+        qrCodeService.generateQRCodeSendMail(newReservation.getId());
+
+        return newReservation;
     }
 
-    public Reservation setReservationPrice(Integer reservationId) {
-        Reservation reservation = getReservationById(reservationId);
+    public double calculateReservationPrice(Set<Item> items) {
         double totalPrice = 0;
-        for (Item i : reservation.getItems()) {
+        for (Item i : items) {
             totalPrice += i.getEquipment().getPrice() * i.getQuantity();
         }
-        reservation.setTotalPrice(totalPrice);
-
-        return reservationRepository.save(reservation);
+        return totalPrice;
     }
 
     public Reservation findOne(Integer id) {

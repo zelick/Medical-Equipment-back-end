@@ -1,12 +1,9 @@
 package com.example.isaprojekat.controller;
 
 import com.example.isaprojekat.dto.*;
-import com.example.isaprojekat.enums.ReservationStatus;
-import com.example.isaprojekat.enums.UserRole;
 import com.example.isaprojekat.model.*;
 import com.example.isaprojekat.service.*;
 import lombok.AllArgsConstructor;
-import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,9 +19,7 @@ public class ReservationController {
     @Autowired
     private ReservationService reservationService;
     private UserService userService;
-    private CompanyAdminService companyAdminService;
     private EmailService emailService;
-    private AppointmentService appointmentService;
 
     @PostMapping(value = "/create")
     @CrossOrigin(origins = "http://localhost:4200")
@@ -68,18 +63,6 @@ public class ReservationController {
         }
     }
 
-    @PutMapping(value = "/setPrice")
-    @CrossOrigin(origins = "http://localhost:4200")
-    public ReservationDTO setReservationPrice (@RequestBody Integer reservationId) {
-        try {
-            Reservation updatedReservation = reservationService.setReservationPrice(reservationId);
-
-            return new ReservationDTO(updatedReservation);
-        } catch (Exception e) {
-            return null;
-        }
-    }
-
     @GetMapping(value = "/byUser/{username}")
     public ResponseEntity<List<ReservationDTO>> getByUser(@PathVariable String username, @RequestParam(name = "id", required = false) Integer userId) {
 
@@ -91,8 +74,7 @@ public class ReservationController {
         }
         List<Reservation> reservations = reservationService.GetAllNotCancelledReservationsForUser(user);
         List<ReservationDTO> reservationsDTO = new ArrayList<>();
-        for (Reservation r: reservations
-             ) {
+        for (Reservation r: reservations) {
             ReservationDTO reservationDTO = new ReservationDTO(r);
             reservationsDTO.add(reservationDTO);
         }
