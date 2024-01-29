@@ -41,3 +41,4 @@ values (2,2);
 insert into company_equipment (equipment_id, company_id)
 values (3,2);
 */
+
