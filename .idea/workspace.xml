@@ -5,27 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e9c8321f-f1cc-4d1f-87e3-6d77573d9a3b" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/isa-projekat/src/main/java/com/example/isaprojekat/model/Role.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/isa-projekat/src/main/java/com/example/isaprojekat/repository/RoleRepository.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/isa-projekat/src/main/java/com/example/isaprojekat/service/RoleService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/isa-projekat/src/main/resources/import.sql" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/1c3d0718-be71-462f-92a6-d68ea473cc74.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/1c3d0718-be71-462f-92a6-d68ea473cc74/storage_v2/_src_/database/postgres.edMnLQ.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/1c3d0718-be71-462f-92a6-d68ea473cc74/storage_v2/_src_/database/postgres.edMnLQ/schema/information_schema.FNRwLQ.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/1c3d0718-be71-462f-92a6-d68ea473cc74/storage_v2/_src_/database/postgres.edMnLQ/schema/pg_catalog.0S1ZNQ.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/1c3d0718-be71-462f-92a6-d68ea473cc74/storage_v2/_src_/database/postgres.edMnLQ/schema/public.abK9xQ.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/isa-projekat/src/main/java/com/example/isaprojekat/controller/UserController.java" beforeDir="false" afterPath="$PROJECT_DIR$/isa-projekat/src/main/java/com/example/isaprojekat/controller/UserController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/isa-projekat/src/main/java/com/example/isaprojekat/dto/UserDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/isa-projekat/src/main/java/com/example/isaprojekat/dto/UserDTO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/isa-projekat/src/main/java/com/example/isaprojekat/model/ConfirmationToken.java" beforeDir="false" afterPath="$PROJECT_DIR$/isa-projekat/src/main/java/com/example/isaprojekat/model/ConfirmationToken.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/isa-projekat/src/main/java/com/example/isaprojekat/model/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/isa-projekat/src/main/java/com/example/isaprojekat/model/User.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/isa-projekat/src/main/java/com/example/isaprojekat/repository/UserRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/isa-projekat/src/main/java/com/example/isaprojekat/repository/UserRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/isa-projekat/src/main/java/com/example/isaprojekat/service/CompanyAdminService.java" beforeDir="false" afterPath="$PROJECT_DIR$/isa-projekat/src/main/java/com/example/isaprojekat/service/CompanyAdminService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/isa-projekat/src/main/java/com/example/isaprojekat/service/RegistrationService.java" beforeDir="false" afterPath="$PROJECT_DIR$/isa-projekat/src/main/java/com/example/isaprojekat/service/RegistrationService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/isa-projekat/src/main/java/com/example/isaprojekat/service/UserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/isa-projekat/src/main/java/com/example/isaprojekat/service/UserService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/isa-projekat/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/isa-projekat/src/main/resources/application.properties" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -51,12 +31,14 @@
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "WebServerToolWindowFactoryState": "false",
-    "git-widget-placeholder": "develop",
+    "git-widget-placeholder": "feature/contracts",
+    "kotlin-language-version-configured": "true",
     "last_opened_file_path": "C:/Users/PC/Desktop/isa-back/isa-back",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
     "project.structure.last.edited": "Project",
     "project.structure.proportion": "0.15",
     "project.structure.side.proportion": "0.2",
@@ -68,6 +50,13 @@
     ]
   }
 }]]></component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="jdk-21.0.2-openjdk-21.0.2-f644763e9732-c0c073db" />
+      </set>
+    </attachedChunks>
+  </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
@@ -78,6 +67,7 @@
       <updated>1699973479181</updated>
       <workItem from="1699973483079" duration="1021000" />
       <workItem from="1702400538922" duration="52000" />
+      <workItem from="1706541974403" duration="338000" />
     </task>
     <servers />
   </component>
