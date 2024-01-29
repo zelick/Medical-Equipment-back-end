@@ -25,9 +25,14 @@ public class ContractService {
         try {
             Contract contract = objectMapper.readValue(json, Contract.class);
             contract.setValid(true);
+            setInvalid(contract.getHospitalId());
             contractRepository.save(contract);
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private void setInvalid(Integer hospitalId) {
+        contractRepository.setInvalidForHospital(hospitalId);
     }
 }
