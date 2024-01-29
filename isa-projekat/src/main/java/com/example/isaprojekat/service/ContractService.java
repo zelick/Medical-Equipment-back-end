@@ -11,6 +11,7 @@ import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -34,5 +35,9 @@ public class ContractService {
 
     private void setInvalid(Integer hospitalId) {
         contractRepository.setInvalidForHospital(hospitalId);
+    }
+
+    public List<Contract> getAll() {
+        return contractRepository.findAll();
     }
 }
