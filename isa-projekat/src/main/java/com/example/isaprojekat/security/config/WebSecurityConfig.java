@@ -99,6 +99,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/equipment/getAllEquipmentForCompany/**").permitAll()
                 .antMatchers("/custom-api-docs-path/**").permitAll()
                 .antMatchers("/swagger-ui/**").permitAll()
+                .antMatchers("/actuator/prometheus").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .cors()

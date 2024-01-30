@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 //@Transactional(readOnly = true)
@@ -21,4 +22,6 @@ public interface EquipmentRepository extends JpaRepository<Equipment, Integer> {
 
     @Query("SELECT e FROM Equipment e WHERE e.id = :id")
     Equipment findEqById(@Param("id") Integer id);
+
+    Optional<Equipment> findFirstByType(String type);
 }

@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.awt.image.RescaleOp;
 import java.util.List;
 
 @RestController
@@ -33,4 +34,9 @@ public class ContractController {
     }
 
 
+    @GetMapping("/{id}")
+    public ResponseEntity<ContractDTO> getById(@PathVariable int id) {
+        Contract contract = contractService.getById(id);
+        return new ResponseEntity<>(new ContractDTO(contract), HttpStatus.OK);
+    }
 }
