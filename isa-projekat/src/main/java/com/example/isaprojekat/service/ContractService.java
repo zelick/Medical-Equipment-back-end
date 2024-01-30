@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -36,8 +37,12 @@ public class ContractService {
     private void setInvalid(Integer hospitalId) {
         contractRepository.setInvalidForHospital(hospitalId);
     }
-
     public List<Contract> getAll() {
         return contractRepository.findAll();
+    }
+
+    @Cacheable(value = "contract")
+    public Contract getById(Integer id) {
+        return contractRepository.findById(id).get();
     }
 }
