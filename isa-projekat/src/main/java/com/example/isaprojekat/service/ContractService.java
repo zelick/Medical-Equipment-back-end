@@ -86,10 +86,12 @@ public class ContractService {
         }
         return contracts;
     }
-
+    private boolean inDateRange(LocalDate date) {
+        return date.isBefore(LocalDate.now().minusDays(3));
+    }
     public Contract update(int contractId, ContractDTO dto) {
         Contract contract = contractRepository.findById(contractId).get();
-        if(contract == null) return null;
+        if(inDateRange(contract.getDate())) return null;
         contract.setDate(contract.getDate().plusMonths(1));
         contractRepository.save(contract);
         return contract;
