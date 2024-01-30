@@ -24,5 +24,7 @@ public class RabbitMQConfig {
     public Binding binding(Queue orderQueue, TopicExchange exchange) {
         return BindingBuilder.bind(orderQueue).to(exchange).with("order.#");
     }
+
+    
 }
 
