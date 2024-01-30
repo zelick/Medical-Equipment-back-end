@@ -31,8 +31,8 @@ public class Company {
     private String workTimeEnd;
 
     // za optimisticko zakljucavanje transakcije
-    //@Version
-    //private Integer version;
+    @Version
+    private Integer version;
     public Company() {
     }
     public Company(String name, String address, String description, double averageGrade,

@@ -25,7 +25,7 @@ public class Appointment {
 
     // za optimisticko zakljucavanje transakcije
     @Version
-    private Integer version = 0;
+    private Integer version;
 
     public Appointment() {
     }

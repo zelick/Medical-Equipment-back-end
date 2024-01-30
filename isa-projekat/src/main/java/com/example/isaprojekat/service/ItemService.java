@@ -32,11 +32,22 @@ public class ItemService {
             Item item = new Item();
             item.setReservation(reservation);
             item.setQuantity(i.getQuantity());
-            Equipment equipment = i.getEquipment();
+            Equipment equipment = equipmentRepository.findEqById(i.getEquipment().getId());
+            //Equipment equipment = i.getEquipment();
             equipment.setMaxQuantity(equipment.getMaxQuantity() - i.getQuantity());
-            equipmentRepository.save(equipment);
+            try {
+                equipment = equipmentRepository.save(equipment);
+                equipmentRepository.flush();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             item.setEquipment(equipment);
-            itemRepository.save(item);
+            try {
+                itemRepository.save(item);
+                itemRepository.flush();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 

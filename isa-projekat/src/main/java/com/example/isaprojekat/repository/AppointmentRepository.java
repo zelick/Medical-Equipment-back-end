@@ -1,8 +1,11 @@
 package com.example.isaprojekat.repository;
 
 import com.example.isaprojekat.model.Appointment;
+import com.example.isaprojekat.model.Equipment;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Lock;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,4 +19,7 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Intege
     //List<EquipmentAppointment> findAllByAdmin_Id(int adminId);
     //@Transactional(readOnly = false)
     Appointment save(Appointment appointment);
+
+    @Query("SELECT a FROM Appointment a WHERE a.id = :id")
+    Appointment findApById(@Param("id") Integer id);
 }

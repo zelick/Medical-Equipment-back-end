@@ -12,7 +12,7 @@ public class Reservation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    @OneToOne
+    @OneToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "appointmentId")
     private Appointment appointment;
     @ManyToOne
@@ -28,6 +28,9 @@ public class Reservation {
 
     @Column(name = "totalPrice", nullable = false)
     private double totalPrice;
+
+    @Version
+    private Integer version;
     public Reservation() {
 
     }
@@ -87,4 +90,5 @@ public class Reservation {
     public void setTotalPrice(double totalPrice) {
         this.totalPrice = totalPrice;
     }
+
 }
