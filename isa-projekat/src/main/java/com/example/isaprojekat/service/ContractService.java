@@ -1,17 +1,25 @@
 package com.example.isaprojekat.service;
 
+import com.example.isaprojekat.dto.DeliveryDTO;
+import com.example.isaprojekat.dto.EquipmentDTO;
 import com.example.isaprojekat.model.Contract;
+import com.example.isaprojekat.model.Equipment;
 import com.example.isaprojekat.repository.ContractRepository;
+import com.example.isaprojekat.repository.EquipmentRepository;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -20,6 +28,8 @@ public class ContractService {
 
     private final ObjectMapper objectMapper;
     private final ContractRepository contractRepository;
+    private final EquipmentRepository equipmentRepository;
+    private final RabbitTemplate rabbitTemplate;
 
     @RabbitListener(queues = "order")
     public void receiveMessage(Message message) {
@@ -32,6 +42,36 @@ public class ContractService {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public void checkAndUpdateContracts() {
+
+        List<Contract> contracts = contractRepository.getAllValidContracts();
+
+        contracts.forEach(contract -> {
+            if (contract.getDate().equals(LocalDate.now())) {
+
+                contract.setDate(contract.getDate().plusMonths(1));
+
+                contractRepository.save(contract);
+
+                Equipment equipment = equipmentRepository.findFirstByType(contract.getType()).get();
+
+                rabbitTemplate.convertAndSend("order-exchange", "equipment.#", createMessage(equipment, contract.getQuantity()));
+            }
+        });
+    }
+
+    private String createMessage(Equipment equipment, Integer quantity) {
+        try {
+            DeliveryDTO dto = new DeliveryDTO(equipment, quantity);
+            return objectMapper.writeValueAsString(dto);
+
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+            return "Delivery got lost :/";
+        }
+
     }
 
     private void setInvalid(Integer hospitalId) {

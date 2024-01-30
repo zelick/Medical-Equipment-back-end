@@ -16,13 +16,23 @@ public class RabbitMQConfig {
     }
 
     @Bean
+    public Queue equipmentQueue() {
+        return new Queue("equipment", true);
+    }
+
+    @Bean
     public TopicExchange exchange() {
         return new TopicExchange("order-exchange");
     }
 
     @Bean
-    public Binding binding(Queue orderQueue, TopicExchange exchange) {
+    public Binding orderBinding(Queue orderQueue, TopicExchange exchange) {
         return BindingBuilder.bind(orderQueue).to(exchange).with("order.#");
+    }
+
+    @Bean
+    public Binding equipmentBinding(Queue equipmentQueue, TopicExchange exchange) {
+        return BindingBuilder.bind(equipmentQueue).to(exchange).with("equipment.#");
     }
 }
 
