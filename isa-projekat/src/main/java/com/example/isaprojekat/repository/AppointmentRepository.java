@@ -17,7 +17,7 @@ import java.util.List;
 public interface AppointmentRepository extends JpaRepository<Appointment, Integer> {
     //List<Appointment> findEquipmentAppointmentByEquipmentId(Integer equipmentId);
     //List<EquipmentAppointment> findAllByAdmin_Id(int adminId);
-    //@Transactional(readOnly = false)
+    @Transactional(readOnly = false)
     Appointment save(Appointment appointment);
 
     @Query("SELECT a FROM Appointment a WHERE a.id = :id")
