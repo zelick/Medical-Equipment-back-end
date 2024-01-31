@@ -27,6 +27,13 @@ public class ContractController {
         return new ResponseEntity<>(ContractDTO.contractsToDtos(contracts), HttpStatus.OK);
     }
 
+    @PostMapping(value = "{contractId}")
+    public ResponseEntity<ContractDTO> update(@PathVariable int contractId, @RequestBody ContractDTO dto) {
+        Contract c = contractService.update(contractId, dto);
+        return c == null ? new ResponseEntity<>(null, HttpStatus.BAD_REQUEST) : new ResponseEntity<>(new ContractDTO(c), HttpStatus.OK);
+    }
+
+
     @GetMapping("/{id}")
     public ResponseEntity<ContractDTO> getById(@PathVariable int id) {
         Contract contract = contractService.getById(id);

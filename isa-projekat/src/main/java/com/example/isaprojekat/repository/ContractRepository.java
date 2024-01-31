@@ -8,6 +8,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Repository
 public interface ContractRepository extends JpaRepository<Contract, Integer> {
 
@@ -15,4 +17,7 @@ public interface ContractRepository extends JpaRepository<Contract, Integer> {
     @Transactional
     @Query("UPDATE Contract c SET c.valid = false WHERE c.hospitalId = :hospitalId")
     void setInvalidForHospital(Integer hospitalId);
+
+    @Query("SELECT c FROM Contract c WHERE c.valid = true")
+    List<Contract> getAllValidContracts();
 }
