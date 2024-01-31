@@ -8,10 +8,12 @@ import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -20,6 +22,8 @@ public class ContractService {
 
     private final ObjectMapper objectMapper;
     private final ContractRepository contractRepository;
+
+    private final RabbitTemplate rabbitTemplate;
 
     @RabbitListener(queues = "order")
     public void receiveMessage(Message message) {
@@ -31,6 +35,13 @@ public class ContractService {
             contractRepository.save(contract);
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    public void checkAndPublish(LocalDate contractDate) {
+        if (contractDate.equals(LocalDate.now())) {
+            String message = "Sending equipment to hospital...";
+            rabbitTemplate.convertAndSend("equipment-exchange", "equipment", message);
         }
     }
 
