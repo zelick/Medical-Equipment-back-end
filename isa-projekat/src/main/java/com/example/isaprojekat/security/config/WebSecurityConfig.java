@@ -103,6 +103,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/swagger-ui/**").permitAll()
                 .antMatchers("/actuator/prometheus").permitAll()
                 .antMatchers("/api/users/getUsersPenaltyPoints/**").permitAll()
+                .antMatchers("/api/equipment/create").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .cors()

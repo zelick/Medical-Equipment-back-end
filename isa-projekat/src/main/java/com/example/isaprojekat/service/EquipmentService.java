@@ -5,6 +5,7 @@ import com.example.isaprojekat.dto.EquipmentDTO;
 import com.example.isaprojekat.model.Company;
 import com.example.isaprojekat.model.Equipment;
 import com.example.isaprojekat.model.Item;
+import com.example.isaprojekat.repository.CompanyRepository;
 import com.example.isaprojekat.repository.EquipmentRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,7 @@ import java.util.Set;
 public class EquipmentService {
     @Autowired
     private EquipmentRepository equipmentRepository;
+    private CompanyRepository companyRepository;
 
     public Equipment findOne(Integer id) {
         return equipmentRepository.findById(id).orElseGet(null);
@@ -92,5 +94,18 @@ public class EquipmentService {
         }
 
         return foundEquipments;
+    }
+
+    public Equipment createEquipment(EquipmentDTO equipmentDTO) {
+        Equipment newEquipment = new Equipment();
+        newEquipment.setName(equipmentDTO.getName());
+        newEquipment.setType(equipmentDTO.getType());
+        newEquipment.setGrade(equipmentDTO.getGrade());
+        Company company = companyRepository.findCById(equipmentDTO.getCompany().getId());
+        newEquipment.setCompany(company);
+        newEquipment.setDescription(equipmentDTO.getDescription());
+        newEquipment.setMaxQuantity(equipmentDTO.getMaxQuantity());
+        newEquipment.setPrice(equipmentDTO.getPrice());
+        return equipmentRepository.save(newEquipment);
     }
 }

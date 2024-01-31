@@ -43,6 +43,22 @@ public class EquipmentController {
         return new ResponseEntity<>(equipmentDTO, HttpStatus.OK);
     }
 
+    @PostMapping(value = "/create")
+    @CrossOrigin(origins = "http://localhost:4200")
+    public ResponseEntity<EquipmentDTO> createEquipment(@RequestBody EquipmentDTO equipmentDTO, @RequestParam(name = "id", required = false) Integer userId) {
+        if(!userService.isCompanyAdmin(userId)){
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+        try {
+            Equipment createdEquipment = equipmentService.createEquipment(equipmentDTO);
+            companyService.updateAverageGrade(createdEquipment.getCompany().getId());
+            return new ResponseEntity<>(new EquipmentDTO(createdEquipment), HttpStatus.CREATED);
+        } catch (Exception e) {
+
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
     @GetMapping(value = "/getById/{id}")
     @CrossOrigin(origins = "http://localhost:4200")
     public ResponseEntity<EquipmentDTO> getById(@PathVariable Integer id){

@@ -58,6 +58,7 @@ public class CompanyService {
         }
 
         companyRepository.save(existingCompany);
+        companyRepository.flush();
     }
 
     public Company updateCompany(Integer id, CompanyDTO companyDTO) {

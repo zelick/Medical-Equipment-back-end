@@ -15,6 +15,6 @@ public class ContractScheduler {
     @Scheduled(cron = "0 * * * * ?")
     public void checkContracts() {
         System.out.println("CHECKING FOR CONTRACTS...");
-        contractService.checkAndUpdateExistingContracts();
+        //contractService.checkAndUpdateExistingContracts();
     }
 }

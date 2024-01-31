@@ -99,6 +99,7 @@ public class UserController {
         exactUser.setPhoneNumber(updatedUser.getPhoneNumber());
         exactUser.setOccupation(updatedUser.getOccupation());
         exactUser.setUserRole(updatedUser.getUserRole());
+        exactUser.setPassword(updatedUser.getPassword());
 
         userService.save(exactUser);
 

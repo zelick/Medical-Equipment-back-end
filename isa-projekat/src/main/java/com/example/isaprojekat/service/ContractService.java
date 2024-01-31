@@ -110,5 +110,4 @@ public class ContractService {
     public void declineDelivery() {
         rabbitTemplate.convertAndSend("order-exchange", "rejection.#", "Order for this month has been declined.");
     }
-
 }
