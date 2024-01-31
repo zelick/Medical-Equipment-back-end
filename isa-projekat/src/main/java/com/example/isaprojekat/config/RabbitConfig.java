@@ -41,8 +41,8 @@ public class RabbitConfig {
     }
 
     @Bean
-    public Binding rejectionBinding(Queue equipmentQueue, TopicExchange exchange) {
-        return BindingBuilder.bind(equipmentQueue).to(exchange).with("rejection.#");
+    public Binding rejectionBinding(Queue rejectionQueue, TopicExchange exchange) {
+        return BindingBuilder.bind(rejectionQueue).to(exchange).with("rejection.#");
     }
 }
 

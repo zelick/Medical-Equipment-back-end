@@ -30,6 +30,7 @@ public class ContractController {
     @PostMapping(value = "{contractId}")
     public ResponseEntity<ContractDTO> update(@PathVariable int contractId, @RequestBody ContractDTO dto) {
         Contract c = contractService.update(contractId, dto);
+        contractService.declineDelivery();
         return c == null ? new ResponseEntity<>(null, HttpStatus.BAD_REQUEST) : new ResponseEntity<>(new ContractDTO(c), HttpStatus.OK);
     }
 

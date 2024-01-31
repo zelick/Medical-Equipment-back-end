@@ -92,11 +92,11 @@ public class ContractService {
         return contracts;
     }
     private boolean inDateRange(LocalDate date) {
-        return date.isBefore(LocalDate.now().minusDays(3));
+        return LocalDate.now().isBefore(date.minusDays(3));
     }
     public Contract update(int contractId, ContractDTO dto) {
         Contract contract = contractRepository.findById(contractId).get();
-        if(inDateRange(contract.getDate())) return null;
+        if(!inDateRange(contract.getDate())) return null;
         contract.setDate(contract.getDate().plusMonths(1));
         contractRepository.save(contract);
         return contract;
@@ -106,4 +106,9 @@ public class ContractService {
     public Contract getById(Integer id) {
         return contractRepository.findById(id).get();
     }
+
+    public void declineDelivery() {
+        rabbitTemplate.convertAndSend("order-exchange", "rejection.#", "Order for this month has been declined.");
+    }
+
 }
