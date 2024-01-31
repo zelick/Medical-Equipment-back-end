@@ -37,7 +37,12 @@ public class CompanyAdminService {
         Integer companyId = companyAdminRepository.findCompanyIdByUserId(adminId);
 
         if (companyId != null) {
-            return companyRepository.findById(companyId).orElse(null);
+            try {
+                return companyRepository.findById(companyId).orElse(null);
+            }catch (Exception e) {
+                e.printStackTrace();
+                return null;
+            }
         }
 
         return null;
