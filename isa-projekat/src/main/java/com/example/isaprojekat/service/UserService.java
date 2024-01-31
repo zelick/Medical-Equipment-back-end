@@ -19,6 +19,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import com.example.isaprojekat.model.Role;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
@@ -26,6 +27,7 @@ import java.util.UUID;
 @Service
 @AllArgsConstructor
 public class UserService implements UserDetailsService {
+    public static boolean alreadyReset = false;
     @Autowired
     private UserRepository userRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
@@ -78,6 +80,23 @@ public class UserService implements UserDetailsService {
         confirmationTokenService.saveConfirmationToken(confirmationToken);
         return token;
     }
+
+    private boolean isFirstDayOfMonth() {
+        LocalDate currentDate = LocalDate.now();
+        return currentDate.getDayOfMonth() == 1;
+    }
+
+    public void resetPenaltyPoints(User user) {
+         if (isFirstDayOfMonth() && !alreadyReset) {
+             user.setPenaltyPoints(0.0);
+             userRepository.save(user);
+             alreadyReset = true;
+         }
+
+         if (!isFirstDayOfMonth() && alreadyReset) {
+             alreadyReset = false;
+         }
+     }
 
     public int enableAppUser(String email) {
         return userRepository.enableAppUser(email);

@@ -1,30 +1,22 @@
 package com.example.isaprojekat;
 
-import com.example.isaprojekat.dto.ReservationDTO;
-import com.example.isaprojekat.enums.AppointmentStatus;
-import com.example.isaprojekat.model.Appointment;
 import com.example.isaprojekat.model.Equipment;
-import com.example.isaprojekat.model.Reservation;
-import com.example.isaprojekat.service.AppointmentService;
 import com.example.isaprojekat.service.EquipmentService;
-import com.example.isaprojekat.service.ReservationService;
 import org.springframework.test.context.junit4.SpringRunner;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.orm.ObjectOptimisticLockingFailureException;
-import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class EquipmentTransactionalTests {
+public class EquipmentTests {
     @Autowired
     private EquipmentService equipmentService;
 

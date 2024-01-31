@@ -8,6 +8,7 @@ import com.example.isaprojekat.repository.*;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
 
@@ -30,6 +31,7 @@ public class ReservationService {
     private EquipmentService equipmentService;
     private QrCodeService qrCodeService;
     private ItemService itemService;
+    private AppointmentRepository appointmentRepository;
 
     public List<Reservation> findAll() {
         return reservationRepository.findAll();
@@ -38,15 +40,36 @@ public class ReservationService {
     public Reservation createReservation(ReservationDTO reservationDTO) {
         Reservation newReservation = new Reservation();
         newReservation.setStatus(ReservationStatus.PENDING);
-        newReservation.setAppointment(reservationDTO.getAppointment());
+        if (reservationDTO.getAppointment().getId() != null) {
+            Appointment ap = appointmentRepository.findApById(reservationDTO.getAppointment().getId());
+            ap.setStatus(AppointmentStatus.RESERVED);
+            newReservation.setAppointment(ap);
+        }
+        else {
+            newReservation.setAppointment(reservationDTO.getAppointment());
+        }
         newReservation.setUser(reservationDTO.getUser());
         newReservation.setTotalPrice(calculateReservationPrice(reservationDTO.getItems()));
 
-        newReservation = reservationRepository.save(newReservation);
+        try {
+            newReservation = reservationRepository.save(newReservation);
+            reservationRepository.flush();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
-        itemService.createReservationItem(reservationDTO.getItems(), newReservation);
+        try {
+            itemService.createReservationItem(reservationDTO.getItems(), newReservation);
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
 
-        qrCodeService.generateQRCodeSendMail(newReservation.getId());
+        try{
+            qrCodeService.generateQRCodeSendMail(newReservation.getId());
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         return newReservation;
     }

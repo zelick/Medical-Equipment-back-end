@@ -69,7 +69,14 @@ public class AppointmentService {
 
         appointment.setAdminId(findAvailableAdmin(appointment, companyId));
 
-        return appointmentRepository.save(appointment);
+        try{
+            //appointment = appointmentRepository.save(appointment);
+            //appointmentRepository.flush();
+            return appointment;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return appointment;
+        }
     }
 
     List<Integer> findCompanyAdmins(List<CompanyAdmin> allAdmins, Integer companyId) {

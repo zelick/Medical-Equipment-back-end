@@ -25,15 +25,15 @@ public class Equipment {
     @Column(name = "type", nullable = false)
     private String type;
 
-    @Column(name = "maxQunatity", nullable = false)
+    @Column(name = "maxQunatity", nullable = true)
     private Integer maxQuantity;
 
     @ManyToOne
     @JoinColumn(name = "company_id")
     private Company company;
 
-     /*@Version
-    private Integer version = 0;*/
+    @Version
+    private Integer version;
 
     public Equipment() {
     }

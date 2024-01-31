@@ -71,17 +71,22 @@ public class CompanyService {
         existingCompany.setAddress(companyDTO.getAddress());
         existingCompany.setDescription(companyDTO.getDescription());
         existingCompany.setAverageGrade(companyDTO.getAverageGrade());
-        List<EquipmentDTO> equipmentDTOList = companyDTO.getEquipments();
+        /*List<EquipmentDTO> equipmentDTOList = companyDTO.getEquipments();
         Set<Equipment> newEquipments = new HashSet<>();
         for (EquipmentDTO equipmentDTO : equipmentDTOList) {
             Equipment equipment = new Equipment(equipmentDTO);
             newEquipments.add(equipment);
         }
-        existingCompany.setEquipments(newEquipments);
+        existingCompany.setEquipments(newEquipments);*/
         existingCompany.setWorkTimeBegin(companyDTO.getWorkTimeBegin());
         existingCompany.setWorkTimeEnd(companyDTO.getWorkTimeEnd());
 
-        return companyRepository.save(existingCompany);
+        try {
+            return companyRepository.save(existingCompany);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     public Company removeEquipmentFromCompany(Integer companyId, Integer equipmentId){
@@ -131,7 +136,13 @@ public class CompanyService {
         //newCompany.setEquipments(null);
         newCompany.setWorkTimeBegin(companyDTO.getWorkTimeBegin());
         newCompany.setWorkTimeEnd(companyDTO.getWorkTimeEnd());
-        return companyRepository.save(newCompany);
+        try {
+            return companyRepository.save(newCompany);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     public List<Company> searchCompany(String searchName, String searchLocation) {

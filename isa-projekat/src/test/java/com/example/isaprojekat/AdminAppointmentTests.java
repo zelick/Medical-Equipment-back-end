@@ -1,15 +1,12 @@
 package com.example.isaprojekat;
 
-import com.example.isaprojekat.dto.AppointmentDTO;
 import com.example.isaprojekat.enums.AppointmentStatus;
 import com.example.isaprojekat.model.Appointment;
 import com.example.isaprojekat.repository.AppointmentRepository;
-import com.example.isaprojekat.service.AppointmentService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.dao.PessimisticLockingFailureException;
@@ -20,7 +17,7 @@ import java.util.concurrent.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class TxAdminAppointmentTests {
+public class AdminAppointmentTests {
 
     @Autowired
     private AppointmentRepository appointmentRepository;
@@ -40,10 +37,9 @@ public class TxAdminAppointmentTests {
                 newAppointment.setAppointmentDate(new Date());
                 newAppointment.setAppointmentDuration(20);
                 newAppointment.setAppointmentTime("12:00");
-                newAppointment.setAdminId(1);
+                newAppointment.setAdminId(3);
                 newAppointment.setStatus(AppointmentStatus.FREE);
                 appointmentRepository.save(newAppointment); // izvrsavanje transakcione metode traje oko 200 milisekundi
-
             }
         });
         Future<?> future2 = executor.submit(new Runnable() {
@@ -55,7 +51,7 @@ public class TxAdminAppointmentTests {
                 newAppointment.setAppointmentDate(new Date());
                 newAppointment.setAppointmentDuration(20);
                 newAppointment.setAppointmentTime("12:00");
-                newAppointment.setAdminId(1);
+                newAppointment.setAdminId(3);
                 newAppointment.setStatus(AppointmentStatus.FREE);
                 try { Thread.sleep(150); } catch (InterruptedException e) { }// otprilike 150 milisekundi posle prvog threada krece da se izvrsava drugi
                 /*

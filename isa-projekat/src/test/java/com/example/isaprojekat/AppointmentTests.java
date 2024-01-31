@@ -1,10 +1,7 @@
 package com.example.isaprojekat;
 
-import com.example.isaprojekat.dto.ReservationDTO;
 import com.example.isaprojekat.enums.AppointmentStatus;
 import com.example.isaprojekat.model.Appointment;
-import com.example.isaprojekat.model.Reservation;
-import com.example.isaprojekat.model.User;
 import com.example.isaprojekat.service.AppointmentService;
 import com.example.isaprojekat.service.ReservationService;
 import com.example.isaprojekat.service.UserService;
@@ -14,19 +11,17 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.orm.ObjectOptimisticLockingFailureException;
-import org.springframework.test.context.junit4.SpringRunner;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class TxOptimisticApplicationTests {
+public class AppointmentTests {
 
     @Autowired
     private AppointmentService appointmentService;
@@ -44,7 +39,7 @@ public class TxOptimisticApplicationTests {
             @Override
             public void run() {
                 System.out.println("Startovan Thread 1");
-                Appointment appointmentToUpdate = appointmentService.findOne(1);// ocitan objekat sa id 1
+                Appointment appointmentToUpdate = appointmentService.findOne(14);// ocitan objekat sa id 1
                 appointmentToUpdate.setStatus(AppointmentStatus.RESERVED);// izmenjen ucitan objekat
 
                 try { Thread.sleep(3000); } catch (InterruptedException e) {}// thread uspavan na 3 sekunde da bi drugi thread mogao da izvrsi istu operaciju
@@ -56,7 +51,7 @@ public class TxOptimisticApplicationTests {
             @Override
             public void run() {
                 System.out.println("Startovan Thread 2");
-                Appointment appointmentToUpdate = appointmentService.findOne(1);// ocitan isti objekat sa id 1 kao i iz prvog threada
+                Appointment appointmentToUpdate = appointmentService.findOne(14);// ocitan isti objekat sa id 1 kao i iz prvog threada
                 appointmentToUpdate.setStatus(AppointmentStatus.RESERVED);// izmenjen ucitan objekat
                 /*
                  * prvi ce izvrsiti izmenu i izvrsi upit:

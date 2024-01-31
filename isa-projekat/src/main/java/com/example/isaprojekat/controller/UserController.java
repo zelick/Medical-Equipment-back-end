@@ -74,23 +74,13 @@ public class UserController {
         return new ResponseEntity<>(new UserDTO(user), HttpStatus.OK);
     }
 
-    public boolean isFirstDayOfMonth() {
-        LocalDate currentDate = LocalDate.now();
-        return currentDate.getDayOfMonth() == 1;
-    }
-
     @GetMapping(value = "/getUserByUsername/{username}")
     public ResponseEntity<UserDTO> getUserByUsername(@PathVariable String username) {
         User user = userService.findOneByEmail(username);
-
-        if (isFirstDayOfMonth()) {
-            user.setPenaltyPoints(0.0);
-            userService.save(user);
-        }
-
         if (user == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
+        userService.resetPenaltyPoints(user);
 
         return new ResponseEntity<>(new UserDTO(user), HttpStatus.OK);
     }
@@ -177,5 +167,19 @@ public class UserController {
         userService.save(foundedUser);
 
         return new ResponseEntity<>(new UserDTO(foundedUser), HttpStatus.OK);
+    }
+
+    @GetMapping(value= "/getUsersPenaltyPoints/{userId}")
+    @CrossOrigin(origins = "http://localhost:4200")
+    public ResponseEntity<Double> getPenaltyPoints (@PathVariable int userId) {
+        User foundedUser = userService.findOne(userId);
+
+        if (foundedUser == null) {
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        }
+
+        userService.resetPenaltyPoints(foundedUser);
+
+        return new ResponseEntity<>(foundedUser.getPenaltyPoints(), HttpStatus.OK);
     }
 }
