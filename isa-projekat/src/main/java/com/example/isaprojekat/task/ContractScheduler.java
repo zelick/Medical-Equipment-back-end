@@ -12,7 +12,7 @@ public class ContractScheduler {
     @Autowired
     private ContractService contractService;
 
-    @Scheduled(cron = "0 0 * * * ?")
+    @Scheduled(cron = "0 * * * * ?")
     public void checkContracts() {
         System.out.println("CHECKING FOR CONTRACTS...");
         contractService.checkAndUpdateExistingContracts();
