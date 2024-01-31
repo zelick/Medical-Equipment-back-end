@@ -21,6 +21,11 @@ public class RabbitConfig {
     }
 
     @Bean
+    public Queue rejectionQueue() {
+        return new Queue("rejection", true);
+    }
+
+    @Bean
     public TopicExchange exchange() {
         return new TopicExchange("order-exchange");
     }
@@ -33,6 +38,11 @@ public class RabbitConfig {
     @Bean
     public Binding equipmentBinding(Queue equipmentQueue, TopicExchange exchange) {
         return BindingBuilder.bind(equipmentQueue).to(exchange).with("equipment.#");
+    }
+
+    @Bean
+    public Binding rejectionBinding(Queue equipmentQueue, TopicExchange exchange) {
+        return BindingBuilder.bind(equipmentQueue).to(exchange).with("rejection.#");
     }
 }
 
