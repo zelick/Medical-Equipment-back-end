@@ -52,7 +52,7 @@ public class ContractService {
         }
     }
 
-    public void checkAndUpdateContracts() {
+    public void checkAndUpdateExistingContracts() {
 
         List<Contract> contracts = contractRepository.getAllValidContracts();
 
@@ -65,12 +65,12 @@ public class ContractService {
 
                 Equipment equipment = equipmentRepository.findFirstByType(contract.getType()).get();
 
-                rabbitTemplate.convertAndSend("order-exchange", "equipment.#", createMessage(equipment, contract.getQuantity()));
+                rabbitTemplate.convertAndSend("order-exchange", "equipment.#", createNewMessage(equipment, contract.getQuantity()));
             }
         });
     }
 
-    private String createMessage(Equipment equipment, Integer quantity) {
+    private String createNewMessage(Equipment equipment, Integer quantity) {
         try {
             DeliveryDTO dto = new DeliveryDTO(equipment, quantity);
             return objectMapper.writeValueAsString(dto);
